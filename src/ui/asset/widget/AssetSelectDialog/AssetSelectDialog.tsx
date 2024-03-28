@@ -2,38 +2,38 @@ import en from "./string/en.json";
 import styles from "./AssetSelectDialog.module.scss";
 import SaltireIconSvg from "@public/icon/saltire.svg";
 
-import {Button, Dialog} from "@ui/widget";
+import {For, JSXElement, createEffect, createSignal, on} from "solid-js";
+import {Button, Dialog, Modal} from "@ui/widget";
 import {AssetCreateDialog} from "@ui/asset/widget/AssetCreateDialog";
 import i18next from "i18next";
-import {For, JSXElement, createEffect, createSignal, on} from "solid-js";
-import {Modal} from "@ui/widget/Modal";
 import {useViewerContext} from "@ui/viewer/context";
-import {Asset} from "@type";
+import {Asset, Id} from "@type";
+import {EntityType} from "@enum";
 
 i18next.addResourceBundle("en", "asset", {"AssetSelectDialog": en}, true, true);
 
 type Props = {
-    onSelect?: (asset: string) => void;
+    onSelect?: (assetId: Id) => void;
     onComplete: () => void;
 };
 
 export function AssetSelectDialog(props: Props): JSXElement {
     const viewerCtx = useViewerContext();
 
-    const getAssets = (): [string, Asset][] => Object
-        .entries(viewerCtx.project().getAssets());
+    const {id: assetTypeId} = viewerCtx.store.type
+        .getByParams({name: EntityType.ASSET})[0];
+
+    const getAssets = (): Asset[] => viewerCtx.store.entity
+        .getByParams<Asset>({typeId: assetTypeId});
 
     const [assets, setAssets] = createSignal(getAssets());
 
-    createEffect(on(viewerCtx.project, () => setAssets(getAssets())));
+    createEffect(on(viewerCtx.init, () => setAssets(getAssets())));
 
     const assetCreateModal = new Modal("#modal");
     assetCreateModal.render(
         <AssetCreateDialog
-            onComplete={() => {
-                assetCreateModal.hide();
-                setAssets(Object.entries(viewerCtx.project().getAssets()));
-            }}
+            onComplete={() => assetCreateModal.hide()}
             onClose={() => assetCreateModal.hide()}
         />
     );
@@ -58,19 +58,24 @@ export function AssetSelectDialog(props: Props): JSXElement {
             </div>
             <div>
                 <For each={assets()}>
-                    {([id, data]) =>
+                    {(asset) =>
                         <div class={styles.AssetArea}>
                             <Button
                                 class={styles.CloseButton}
                                 icon={SaltireIconSvg}
                                 onClick={() => {
-                                    viewerCtx.project().delAsset(id);
+                                    //viewerCtx.project().delAsset(id);
                                 }}
                             />
                             <img
-                                src={viewerCtx.project().getSource(data.sourceId)}
+                                src={
+                                    viewerCtx.store.source
+                                        .getById(asset.sourceId).content
+                                }
                                 onClick={() => {
-                                    if (props.onSelect) props.onSelect(id);
+                                    if (props.onSelect) {
+                                        props.onSelect(asset.id);
+                                    }
                                     props.onComplete();
                                 }}
                             />

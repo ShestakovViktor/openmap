@@ -1,4 +1,6 @@
-export type Asset = {
+import {Entity, Id} from "@type";
+
+export type Asset = Entity & {
     name: string;
-    sourceId: string;
+    sourceId: Id;
 };

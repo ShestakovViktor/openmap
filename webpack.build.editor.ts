@@ -19,7 +19,8 @@ export default merge<Configuration>(common, {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./src/index.html",
+            template: "./public/template.html",
+            minify: false,
         }),
         new CopyWebpackPlugin({
             patterns: [{from: "./public/", to: "./"}],

@@ -7,9 +7,21 @@ export type ImageTile = {
 };
 
 export interface ImageDriver {
-    initImage(blob: Blob, rows: number, cols: number): Promise<{
+    initImage(
+        blob: Blob,
+        rows: number,
+        cols: number,
+        mime: string
+    ): Promise<{
         width: number;
         height: number;
         tiles: ImageTile[];
     }>;
+
+    fooImage(
+        file: File,
+        width: number,
+        height: number,
+        mime: string
+    ): Promise<string>;
 }

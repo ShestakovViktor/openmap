@@ -16,14 +16,15 @@ interface Configuration extends WebpackConfiguration {
 export default merge<Configuration>(common, {
     mode: "development",
     entry: {
-        editor: "/src/editor.tsx",
+        editor: "./src/editor.tsx",
     },
     output: {
         filename: "[name].[fullhash].js",
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "/src/index.html",
+            template: "./public/template.html",
+            minify: false,
         }),
     ],
     devtool: "inline-source-map",

@@ -1,13 +1,13 @@
-import {Marker} from "@src/type";
+import {Asset, Id, Marker} from "@src/type";
 
 import {Modal} from "@ui/widget";
 import {MarkerCreateDialog} from "@src/ui/marker/widget";
-import {OVERLAY} from "@project";
 import {Mode} from "@ui/editor/utility";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {AddEntityAction} from "@core/action";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {blobToBase64} from "@src/util";
+import {EntityType, LayerName} from "@enum";
 
 export class MarkerMode implements Mode {
     private click: [number, number] = [0, 0];
@@ -42,7 +42,7 @@ export class MarkerMode implements Mode {
         form.reset();
 
         const text = String(formData.get("text"));
-        const assetId = String(formData.get("assetId"));
+        const assetId = Number(formData.get("assetId"));
         const graphic = formData.getAll("graphic") as File[];
 
         const files = graphic.filter((file) => file.size > 0);
@@ -50,28 +50,33 @@ export class MarkerMode implements Mode {
         const strings = await Promise
             .all(files.map((file) => blobToBase64(file)));
 
-        const graphicIds = strings.map((base64: string): string => {
-            return this.viewerCtx.project().addSource(base64);
+        const graphicIds = strings.map((base64: string): Id => {
+            return this.viewerCtx.store.source.add({
+                content: base64,
+                path: "",
+                mime: "image/jpg",
+            });
         });
 
-        const {sourceId} = this.viewerCtx.project()
-            .getAsset(assetId);
+        const asset = this.viewerCtx.store.entity.getById<Asset>(assetId);
+        const {id: typeId} = this.viewerCtx.store.type
+            .getByParams({name: EntityType.MARKER})[0];
 
-        const markerData: Marker = {
-            type: "marker",
+        const markerData: Omit<Marker, "id"> = {
+            typeId,
             x: this.click[0],
             y: this.click[1],
-            sourceId,
+            assetId: asset.sourceId,
             text,
             graphicIds,
         };
 
-        const layerId = this.viewerCtx.project()
-            .getEntityByParams({name: OVERLAY});
+        const {id: layerId} = this.viewerCtx.store.entity
+            .getByParams({name: LayerName.OVERLAY})[0];
 
         if (!layerId) throw new Error("There is no overlay layer");
         const addEntityAction = new AddEntityAction(
-            this.viewerCtx.project(),
+            this.viewerCtx.store,
             markerData,
             layerId
         );

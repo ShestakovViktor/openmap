@@ -12,8 +12,10 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@solidjs/meta": "^0.29.3",
         "i18next": "^23.7.6",
-        "jszip": "^3.10.1"
+        "jszip": "^3.10.1",
+        "solid-js": "^1.8.15"
     },
     "devDependencies": {
         "@babel/core": "^7.23.9",
@@ -33,7 +35,6 @@
         "mocha": "^10.2.0",
         "sass": "^1.69.5",
         "sass-loader": "^13.3.2",
-        "solid-js": "^1.8.15",
         "style-loader": "^3.3.3",
         "svg-inline-loader": "^0.8.2",
         "ts-loader": "^9.5.1",

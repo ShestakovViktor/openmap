@@ -1,11 +1,11 @@
 import {JSX, JSXElement, createMemo} from "solid-js";
 import styles from "./Group.module.scss";
 import {useViewerContext} from "@ui/viewer/context";
-import {Group as GroupData} from "@type";
-import {Entity} from "../Entity";
+import {Group as GroupData, Id} from "@type";
+import {Entity} from "@ui/viewer/widget";
 
 type Props = {
-    entityId: string;
+    entityId: Id;
     ref?: HTMLDivElement;
 };
 
@@ -13,13 +13,13 @@ export function Group(props: Props): JSXElement {
     const context = useViewerContext();
 
     const entity = createMemo(
-        () => context.project().getEntityById(props.entityId) as GroupData,
+        () => context.store.entity.getById<GroupData>(props.entityId),
         undefined,
         {equals: false}
     );
 
     const childs = createMemo(
-        () => entity().childs.map(child => <Entity entityId={child}/>)
+        () => entity().childrenIds.map(child => <Entity entityId={child}/>)
     );
 
     function foo(name: string): JSX.CSSProperties {

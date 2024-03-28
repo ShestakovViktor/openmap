@@ -4,6 +4,8 @@ import en from "./string/en.json";
 import i18next from "i18next";
 import {Dialog, Form, Row} from "@ui/widget";
 import {JSXElement} from "solid-js";
+import {useEditorContext} from "@ui/editor/context";
+import {Id} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
 
 i18next.addResourceBundle(
@@ -11,12 +13,13 @@ i18next.addResourceBundle(
 );
 
 type Props = {
-    onComplete?: (assetId: string) => void;
+    onComplete?: (assetId: Id) => void;
     onClose?: () => void;
 };
 
 export function AssetCreateDialog(props?: Props): JSXElement {
-    const context = useViewerContext();
+    const editorCtx = useEditorContext();
+    const viewerCtx = useViewerContext();
 
     async function handleSubmit(event: SubmitEvent): Promise<void> {
         event.preventDefault();
@@ -30,8 +33,10 @@ export function AssetCreateDialog(props?: Props): JSXElement {
         const height = Number(formData.get("height"));
         const file = formData.get("file") as File;
 
-        const assetId = await context.project()
+        const assetId = await editorCtx.core
             .initAsset({name, file, width, height});
+
+        viewerCtx.reInit();
 
         if (props?.onComplete) props.onComplete(assetId);
     }

@@ -1,20 +1,20 @@
 import {Action} from "@core/action";
-import {Entity} from "@src/type";
-import {Project} from "@project";
+import {Entity, Group, Id} from "@src/type";
+import {Store} from "@core";
 
 export class AddEntityAction extends Action {
-    private entityId?: string;
-
     constructor(
-        private project: Project,
-        private data: Entity,
-        private parentId: string
+        private store: Store,
+        private data: Omit<Entity, "id">,
+        private parentId: Id
     ) {
         super();
     }
 
     execute(): void {
-        this.entityId = this.project.addEntity(this.data);
-        this.project.appendChild(this.entityId, this.parentId);
+        const entityId = this.store.entity.add(this.data);
+        const parent = this.store.entity.getById<Group>(this.parentId);
+        parent.childrenIds.push(entityId);
+        this.store.entity.set<Group>(parent);
     }
 }

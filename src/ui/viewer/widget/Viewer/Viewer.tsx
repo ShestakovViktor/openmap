@@ -6,26 +6,38 @@ import {Entity} from "@ui/viewer/widget";
 import {useViewerContext} from "@ui/viewer/context";
 import {Viewport} from "@ui/viewer/utility";
 
+export const VIEWER_ID = "viewer";
+
 export function Viewer(): JSXElement {
     const viewerCtx = useViewerContext();
     let viewerEl: HTMLDivElement;
 
-    const [rootId, setRootId] = createSignal("", {equals: false});
+    const [rootId, setRootId] = createSignal(
+        viewerCtx.store.entity
+            .getByParams({name:"root"})[0].id,
+        {equals: false}
+    );
 
-    createEffect(on(viewerCtx.project, () => {
-        const size = viewerCtx.project().getData().size;
+    createEffect(on(viewerCtx.init, () => {
+        const {value: width} = viewerCtx.store.config
+            .getByParams({name: "width"})[0];
+        const {value: height} = viewerCtx.store.config
+            .getByParams({name: "height"})[0];
 
         viewerCtx.setMapCtx({
             x: 0,
             y: 0,
-            width: size.width,
-            height: size.height,
+            width: Number(width),
+            height: Number(height),
             scale: 1,
         });
     }));
 
     createEffect(on(viewerCtx.render, () => {
-        setRootId(viewerCtx.project().getRootId());
+        const {id: rootId} = viewerCtx.store.entity
+            .getByParams({name:"root"})[0];
+        if (!rootId) throw new Error();
+        setRootId(rootId);
     }));
 
     onMount((): void => {
@@ -57,7 +69,7 @@ export function Viewer(): JSXElement {
     });
 
     return (
-        <div id="viewer" class={styles.Viewer} ref={viewerEl!}>
+        <div id={VIEWER_ID} class={styles.Viewer} ref={viewerEl!}>
             <Entity entityId={rootId()} ref={(el) => viewerCtx.setRoot(el)} />
         </div>
     );

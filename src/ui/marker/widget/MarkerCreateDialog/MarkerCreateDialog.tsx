@@ -6,8 +6,9 @@ import i18next from "i18next";
 import {AssetSelectDialog} from "@ui/asset/widget";
 import {JSXElement} from "solid-js";
 import {Modal} from "@ui/widget/Modal";
+import {Id} from "@type";
 
-i18next.addResourceBundle("en", "marker", {CreateMarkerDialog: en}, true, true);
+i18next.addResourceBundle("en", "marker", {MarkerCreateDialog: en}, true, true);
 
 type Props = {
     onClose: () => void;
@@ -20,8 +21,8 @@ export function MarkerCreateDialog(props: Props): JSXElement {
     const assetSelectModal = new Modal("#modal");
     assetSelectModal.render(
         <AssetSelectDialog
-            onSelect={(asset: string) => {
-                if (assetInput) assetInput.value = asset;
+            onSelect={(assetId: Id) => {
+                if (assetInput) assetInput.value = String(assetId);
             }}
             onComplete={() => assetSelectModal.hide()}
         />
@@ -30,9 +31,9 @@ export function MarkerCreateDialog(props: Props): JSXElement {
     return (
         <Dialog
             onClose={props.onClose}
-            class={styles.CreateMarkerDialog}
+            class={styles.MarkerCreateDialog}
             title={i18next.t(
-                "marker:CreateMarkerDialog.dialogTitle",
+                "marker:MarkerCreateDialog.dialogTitle",
                 {postProcess: ["capitalize"]}
             )}
         >
@@ -45,7 +46,7 @@ export function MarkerCreateDialog(props: Props): JSXElement {
                         type="button"
                         value={
                             i18next.t(
-                                "marker:CreateMarkerDialog.chooseAsset",
+                                "marker:MarkerCreateDialog.chooseAsset",
                                 {postProcess: ["capitalize"]}
                             )}
                         onClick={() => assetSelectModal.show()}
@@ -60,7 +61,7 @@ export function MarkerCreateDialog(props: Props): JSXElement {
                 <Column>
                     <label for="text">
                         {i18next.t(
-                            "marker:CreateMarkerDialog.text",
+                            "marker:MarkerCreateDialog.text",
                             {postProcess: ["capitalize"]}
                         )}
                     </label>
@@ -69,7 +70,7 @@ export function MarkerCreateDialog(props: Props): JSXElement {
                 <Row>
                     {/* <label for="graphic">
                         {i18next.t(
-                            "marker:CreateMarkerDialog.graphic",
+                            "marker:MarkerCreateDialog.graphic",
                             {postProcess: ["capitalize"]}
                         )}
                     </label> */}
@@ -84,7 +85,7 @@ export function MarkerCreateDialog(props: Props): JSXElement {
                 <input
                     type="submit"
                     value={i18next.t(
-                        "marker:CreateMarkerDialog.createMarker",
+                        "marker:MarkerCreateDialog.createMarker",
                         {postProcess: ["capitalize"]}
                     )}
                 />

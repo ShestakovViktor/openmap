@@ -34,23 +34,23 @@
             "@ui/*": [
                 "src/ui/*"
             ],
-            "@project": [
-                "src/project"
+            "@type": [
+                "src/type"
             ],
-            "@project/*": [
-                "src/project/*"
+            "@type/*": [
+                "src/type/*"
+            ],
+            "@enum": [
+                "src/enum"
+            ],
+            "@enum/*": [
+                "src/enum/*"
             ],
             "@style": [
                 "src/style"
             ],
             "@style/*": [
                 "src/style/*"
-            ],
-            "@type": [
-                "src/type"
-            ],
-            "@type/*": [
-                "src/type/*"
             ],
             "@src": [
                 "src",

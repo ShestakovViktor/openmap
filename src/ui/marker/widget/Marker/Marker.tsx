@@ -1,16 +1,18 @@
 import styles from "./Marker.module.scss";
 import {JSXElement, Show, createSignal} from "solid-js";
-import {Marker as Data} from "@src/type";
+import {Marker as MarkerData, Id} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
 
 type Props = {
-    entityId: string;
+    entityId: Id;
 };
 
 export function Marker(props: Props): JSXElement {
     const viewerCtx = useViewerContext();
-    const entity = viewerCtx.project().getEntityById(props.entityId) as Data;
-    const src = viewerCtx.project().getSource(entity.sourceId);
+    const entity = viewerCtx.store.entity
+        .getById<MarkerData>(props.entityId);
+    const source = viewerCtx.store.source
+        .getById(entity.assetId);
 
     const [show, setShow] = createSignal(false);
 
@@ -29,7 +31,7 @@ export function Marker(props: Props): JSXElement {
         >
             <img
                 class={styles.Mark}
-                src={src}
+                src={source.path || source.content}
                 onclick={(event) => {
                     setShow(true);
 
@@ -50,8 +52,8 @@ export function Marker(props: Props): JSXElement {
                         <img
                             class={styles.Graphic}
                             src={
-                                viewerCtx.project()
-                                    .getSource(entity.graphicIds[0])
+                                viewerCtx.store.source
+                                    .getById(entity.graphicIds[0]).content
                             }
                         />
                     </Show>

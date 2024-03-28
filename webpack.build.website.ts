@@ -1,5 +1,4 @@
 import path from "path";
-import HtmlWebpackPlugin from "html-webpack-plugin";
 
 import {Configuration} from "webpack";
 import {merge} from "webpack-merge";
@@ -14,11 +13,4 @@ export default merge<Configuration>(common, {
         filename: "[name].js",
         path: path.resolve(__dirname, "./build"),
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: "./src/website.html",
-            filename: "website.html",
-            minify: false,
-        }),
-    ],
 });
