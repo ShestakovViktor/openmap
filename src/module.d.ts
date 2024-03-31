@@ -13,4 +13,4 @@ declare module "*.module.scss" {
     export default content;
 }
 
-declare const qwerty: string = undefined;
+declare const OPEN_MAP_DATA: string = undefined;

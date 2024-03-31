@@ -140,25 +140,25 @@ export class Converter {
         const inject = ""
             + `<script defer src="${name}/data.js"></script>`
             + "\n    "
-            + "<script defer src=\"website.js\"></script>";
+            + "<script defer src=\"openmap.js\"></script>";
 
         const website = template.replace("<!--foo-->", inject);
         const blob = new Blob([website], {type: "text/html"});
 
-        return {["website.html"]: blob};
+        return {["OpenMap.html"]: blob};
     }
 
     private async getBundleBlob(): Promise<Blobs> {
-        const fileName = "website.js";
+        const fileName = "viewer.js";
         const response = await fetch(fileName);
         const viewerBundle = await response.blob();
 
-        return {["website.js"]: viewerBundle};
+        return {["openmap.js"]: viewerBundle};
     }
 
     private getDataBlob(data: Data): Blobs {
         const dataString = JSON.stringify(data, null, 4);
-        const dataTemplate = `const qwerty = \`${dataString}\`;`;
+        const dataTemplate = `const OPEN_MAP_DATA = \`${dataString}\`;`;
         const dataBlob = new Blob([dataTemplate], {type: "text/javascript"});
 
         const {value: name} = this.store.config.getByParams({name: "name"})[0];

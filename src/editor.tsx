@@ -10,8 +10,8 @@ import {ViewerProvider} from "@ui/viewer/context";
 import {Editor} from "./ui/editor/widget";
 import {EditorProvider} from "@ui/editor/context";
 
-const app = document.querySelector("#app");
-if (!app) throw new Error("There is no element with \"app\" id");
+const container = document.querySelector("#openmap");
+if (!container) throw new Error("There is no container element");
 
 const store = new Store();
 const core = new Core(store);
@@ -25,4 +25,4 @@ render(() => {
             </EditorProvider>
         </ViewerProvider>
     );
-}, app);
+}, container);

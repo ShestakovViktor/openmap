@@ -1,1 +1,1 @@
-Mapkin - editor for creating maps
+OpenMap

@@ -24,12 +24,11 @@ jobs:
         cache: "npm"
     - run: npm install
     - run: npm run build-editor
-    - run: npm run build-website
-    - uses: actions/upload-artifact@master
+    - run: npm run build-viewer
+    - uses: actions/configure-pages@main
+    - uses: actions/upload-pages-artifact@main
       with:
-        name: page
         path: build
-        if-no-files-found: error
 
   deploy:
     runs-on: ubuntu-latest
@@ -39,13 +38,5 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-    - uses: actions/download-artifact@master
-      with:
-        name: page
-        path: .
-    - uses: actions/configure-pages@main
-    - uses: actions/upload-pages-artifact@main
-      with:
-        path: .
     - id: deployment
       uses: actions/deploy-pages@main
