@@ -1,9 +1,8 @@
-import DisketteIconSvg from "@public/icon/diskette.svg";
+import FileIconSvg from "@public/icon/file.svg";
 
 import {Button} from "@ui/widget";
 import i18next from "i18next";
 import {JSXElement} from "solid-js";
-import {useViewerContext} from "@ui/viewer/context";
 import {useEditorContext} from "@ui/editor/context";
 
 export function ProjectExportButton(): JSXElement {
@@ -14,8 +13,10 @@ export function ProjectExportButton(): JSXElement {
 
         const projectFileUrl = URL.createObjectURL(projectFile);
 
+        const {value: projectName} = editorCtx.store.config
+            .getByParams({name: "name"})[0];
         const tempLink = document.createElement("a");
-        tempLink.download = "project.mp";
+        tempLink.download = projectName + ".om";
         tempLink.href = projectFileUrl;
         tempLink.click();
         tempLink.remove();
@@ -23,7 +24,7 @@ export function ProjectExportButton(): JSXElement {
 
     return (
         <Button
-            icon={ DisketteIconSvg }
+            icon={FileIconSvg}
             tooltip={i18next.t(
                 "layout:SystemBar.exportProject",
                 {postProcess: ["capitalize"]}

@@ -20,7 +20,7 @@ render(() => {
     return (
         <ViewerProvider store={store}>
             <Viewer/>
-            <EditorProvider value={{core}}>
+            <EditorProvider value={{store, core}}>
                 <Editor/>
             </EditorProvider>
         </ViewerProvider>

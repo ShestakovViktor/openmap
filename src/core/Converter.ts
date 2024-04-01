@@ -51,6 +51,10 @@ export class Converter {
         return [sources, blobs];
     }
 
+    loadProject(data: Data): void {
+        this.store.setData(data);
+    }
+
     async importProject(blob: Blob): Promise<void> {
         const files = await this.archiveDriver.extract(blob);
         const data = await this.importData(files);

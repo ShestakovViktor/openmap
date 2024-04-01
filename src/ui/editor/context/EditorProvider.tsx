@@ -1,11 +1,12 @@
 import {JSXElement, createSignal} from "solid-js";
 import {EditorContext} from "@ui/editor/context";
-import {Core} from "@core";
+import {Core, Store} from "@core";
 import {Mode} from "@ui/editor/utility";
 
 type Props = {
     value: {
         core: Core;
+        store: Store;
     };
     children: JSXElement | JSXElement[];
 };

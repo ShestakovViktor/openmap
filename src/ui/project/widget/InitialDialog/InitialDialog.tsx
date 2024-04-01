@@ -10,6 +10,7 @@ import {JSXElement} from "solid-js";
 import {Modal} from "@ui/widget/Modal";
 import {useViewerContext} from "@ui/viewer/context";
 import {useEditorContext} from "@ui/editor/context";
+import {Data} from "@type";
 
 i18next.addResourceBundle("en", "project", {InitialDialog: en}, true, true);
 
@@ -21,22 +22,25 @@ export function InitialDialog(props: Props): JSXElement {
     const editorCtx = useEditorContext();
     const viewerCtx = useViewerContext();
 
-    function loadTestProject(): void {
-        fetch("/project.mp")
-            .then(async (resp) => resp.blob())
-            .then(async (blob) => {
-                await editorCtx.core.converter.importProject(blob);
-                viewerCtx.reInit();
-                viewerCtx.reRender();
-                props.onComplete();
-            })
-            .catch((err) => {throw err;});
+    async function handleProjectRestore(): Promise<void> {
+        const root = await navigator.storage.getDirectory();
+        const dataFileHandle = await root.getFileHandle("data.om");
+        const dataFile = await dataFileHandle.getFile();
+        const dataString = await dataFile.text();
+        const data = JSON.parse(dataString);
+
+        editorCtx.core.converter.loadProject(data);
+
+        viewerCtx.reInit();
+        viewerCtx.reRender();
+
+        props.onComplete();
     }
 
     function handleProjectUpload(): void {
         const input = document.createElement("input");
         input.type = "file";
-        input.accept = ".mp";
+        input.accept = ".om";
         input.click();
         input.addEventListener("change", (): void => {
             if (!input.files?.length) return;
@@ -87,13 +91,16 @@ export function InitialDialog(props: Props): JSXElement {
                 onClick={() => handleProjectUpload()}
             />
 
-            {/* <Button
+            <Button
                 label={i18next.t(
-                    "project:InitialDialog.demo",
+                    "project:InitialDialog.load",
                     {postProcess: ["capitalize"]}
                 )}
-                onClick={() => loadTestProject()}
-            /> */}
+                onClick={() => {
+                    handleProjectRestore()
+                        .catch((error) => {throw new Error(error);});
+                }}
+            />
         </Dialog>
     );
 }
