@@ -3,14 +3,11 @@ import en from "./string/en.json";
 
 import {Button} from "@ui/widget";
 import i18next from "i18next";
-import {useEditorContext} from "@ui/editor/context";
-import {JSXElement} from "solid-js";
+import {JSX} from "solid-js";
 
 i18next.addResourceBundle("en", "layout", {SystemBar: en}, true, true);
 
-export function ProjectMenuButton(): JSXElement {
-    const context = useEditorContext();
-
+export function ProjectMenuButton(): JSX.Element {
     return (
         <Button
             icon={ GearIconSvg }

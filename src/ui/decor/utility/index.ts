@@ -1,1 +1,1 @@
-export * from "./DecorMode";
+export * from "./DecorIOMode";

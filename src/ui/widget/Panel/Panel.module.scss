@@ -4,6 +4,8 @@
     justify-content: center;
     gap: 8px;
 
+    pointer-events: auto;
+
     > * {
         padding: 8px;
         aspect-ratio: 1;

@@ -1,14 +1,14 @@
-import {JSXElement, createSignal} from "solid-js";
+import {JSX, createSignal} from "solid-js";
 import {MapContext, ViewerContext} from "@ui/viewer/context";
 import {createStore} from "solid-js/store";
 import {Store} from "@core";
 
 type Props = {
     store: Store;
-    children: JSXElement | JSXElement[];
+    children: JSX.Element | JSX.Element[];
 };
 
-export function ViewerProvider(props: Props): JSXElement {
+export function ViewerProvider(props: Props): JSX.Element {
     const [init, reInit] = createSignal(undefined, {equals: false});
     const [render, reRender] = createSignal(undefined, {equals: false});
     const [root, setRoot] = createSignal<HTMLElement | undefined>();

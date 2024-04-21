@@ -1,9 +1,7 @@
-import {Invoker, Converter} from "@core";
+import {Invoker, Converter, Store} from "@core";
+import {WebArchiveDriver, WebImageDriver} from "@core/driver";
 import {ArchiveDriver, ImageDriver} from "@src/interface";
-import {WebArchiveDriver, WebImageDriver} from "./driver";
-import {Store} from "@core";
-import {Group, Id, Motion, Tile} from "@type";
-import {Asset} from "@type";
+import {Group, Id, Motion, Source, Tile, Asset} from "@type";
 import {EntityType, LayerName} from "@enum";
 
 export class Core {
@@ -25,24 +23,16 @@ export class Core {
     async initProject(params: {
         projectName: string;
         mapFile: File;
-        horizontalTilesNumber: number;
-        verticalTilesNumber: number;
     }): Promise<void> {
         const mime = "image/jpeg";
-        const {width, height, tiles} = await this.imageDriver.initImage(
-            params.mapFile,
-            params.horizontalTilesNumber,
-            params.verticalTilesNumber,
-            mime
-        );
+        const {width, height, tiles} = await this.imageDriver
+            .initImage(params.mapFile, mime);
 
         this.store.setData({
             config: {
                 1: {id: 1, name: "name", value: params.projectName},
                 2: {id: 2, name: "width", value: width},
                 3: {id: 3, name: "height", value: height},
-                4: {id: 4, name: "row", value: params.verticalTilesNumber},
-                5: {id: 5, name: "column", value: params.horizontalTilesNumber},
             },
         });
 
@@ -52,10 +42,12 @@ export class Core {
         const {id: typeId} = this.store.type
             .getByParams({name: EntityType.TILE})[0];
 
-        const promises = tiles.map((tile) => {
-
-            const sourceId = this.store.source
-                .add({content: tile.base64, path: "", mime});
+        const tileIds = tiles.map((tile) => {
+            const sourceId = this.store.source.add<Source>({
+                content: tile.base64,
+                path: "",
+                mime,
+            });
 
             const tileId = this.store.entity.add<Tile>({
                 typeId,
@@ -66,13 +58,10 @@ export class Core {
                 sourceId,
             });
 
-            this.store.entity.set<Group>({
-                id: map.id,
-                childrenIds: [...map.childrenIds, tileId],
-            });
+            return tileId;
         });
 
-        await Promise.all(promises);
+        this.store.entity.set<Group>({id: map.id, childrenIds: tileIds});
     }
 
     async initAsset({name, file, width, height}: {

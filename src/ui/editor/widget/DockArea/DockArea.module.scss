@@ -1,0 +1,9 @@
+.DockArea {
+    flex-direction: column;
+    padding: 16px;
+
+    > div {
+        width: 100%;
+        height: 100%;
+    }
+}

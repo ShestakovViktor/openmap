@@ -1,12 +1,12 @@
-import {JSXElement} from "solid-js";
+import {JSX} from "solid-js";
 import styles from "./Panel.module.scss";
 
 type Props = {
     class?: string;
-    children?: JSXElement | JSXElement[];
+    children?: JSX.Element | JSX.Element[];
 };
 
-export function Panel(props: Props): JSXElement {
+export function Panel(props: Props): JSX.Element {
     return (
         <div class={`${styles.Panel} ${props.class ?? ""}`}>
             {props.children}

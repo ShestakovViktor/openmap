@@ -3,7 +3,7 @@ import {ImageDriver, ImageTile} from "@src/interface";
 
 export class MockImageDriver implements ImageDriver {
 
-    async initImage(blob: Blob, rows: number, cols: number): Promise<{
+    async initImage(blob: Blob): Promise<{
         width: number;
         height: number;
         tiles: ImageTile[];

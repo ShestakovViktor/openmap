@@ -16,3 +16,11 @@ body {
     font-family: Inter;
     color: var(--grey-20);
 }
+
+label {
+    white-space: nowrap;
+}
+
+.Selected {
+    border: 2px dashed black;
+}

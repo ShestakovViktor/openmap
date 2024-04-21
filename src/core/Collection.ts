@@ -21,10 +21,18 @@ export class Collection<U extends {id: Id}> {
         return id;
     }
 
+    set<T extends U = U>(data: Partial<T> & {id: Id}): void {
+        Object.assign(this.data[data.id], data);
+    }
+
+    del(id: Id): void {
+        delete this.data[id];
+    }
+
     getById<T extends U = U>(id: Id): T {
         const entity = this.data[id] as T | undefined;
         if (!entity) throw new Error(`There is no ${id} in ${JSON.stringify(this.data)}`);
-        return entity;
+        return structuredClone(entity);
     }
 
     getByParams<T extends U = U>(params: {[key: string]: any}): T[] {
@@ -35,7 +43,7 @@ export class Collection<U extends {id: Id}> {
             for (const prop in params) {
                 if (!(prop in item)) break;
                 if (params[prop] == (item as any)[prop]) {
-                    result.push(item as T);
+                    result.push(structuredClone(item) as T);
                 }
             }
         }
@@ -43,7 +51,4 @@ export class Collection<U extends {id: Id}> {
         return result;
     }
 
-    set<T extends U = U>(data: Partial<T> & {id: Id}): void {
-        Object.assign(this.data[data.id], data);
-    }
 }

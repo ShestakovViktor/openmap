@@ -3,7 +3,7 @@ export const EntityType = {
     TILE: "tile",
     MARKER: "marker",
     DECOR: "decor",
-    FIELD: "field",
+    AREA: "area",
     ASSET: "asset",
     MOTION: "motion",
 };

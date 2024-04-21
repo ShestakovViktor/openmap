@@ -1,5 +1,5 @@
 import styles from "./Tile.module.scss";
-import {JSXElement} from "solid-js";
+import {JSX, createMemo} from "solid-js";
 import {Id, Tile as TileData} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
 
@@ -7,22 +7,25 @@ type Props = {
     entityId: Id;
 };
 
-export function Tile(props: Props): JSXElement {
+export function Tile(props: Props): JSX.Element {
     const context = useViewerContext();
+
     const entity = context.store.entity
         .getById<TileData>(props.entityId);
-    const src = context.store.source
-        .getById(entity.sourceId);
+
+    const source = createMemo(
+        () => context.store.source.getById(entity.sourceId),
+        "",
+        {equals: () => true}
+    );
 
     return (
         <img
             class={styles.Tile}
-            src={src.path || src.content}
+            src={source().path || source().content}
             draggable={false}
             style={{
                 transform: `translate3d(${entity.x + "px"}, ${entity.y + "px"}, 0)`,
-                // width: String(entity.width) + "px",
-                // height: String(entity.height) + "px",
             }}
         />
     );

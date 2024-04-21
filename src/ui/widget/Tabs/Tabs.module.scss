@@ -1,0 +1,40 @@
+.Tabs {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
+
+
+    .TabBar {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 1em;
+
+        .TabButton {
+            cursor: pointer;
+            &.Selected {
+                border-bottom: 2px solid seagreen;
+            }
+        }
+    }
+
+    .TabArea {
+        flex-grow: 1;
+        .TabView {
+            display: none;
+            flex-direction: column;
+            gap: 18px;
+
+            width: 100%;
+            height: 100%;
+
+            &.Selected {
+                display: flex;
+            }
+        }
+    }
+}

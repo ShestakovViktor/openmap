@@ -1,12 +1,7 @@
 .InitialDialog {
-    display: flex;
-    justify-content: center;
-    gap: 10%;
-
-    font-size: 20px;
-
-    > * {
+    > section {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        gap: 18px;
     }
 }

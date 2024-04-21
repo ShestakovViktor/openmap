@@ -1,0 +1,13 @@
+.DecorWidget {
+    position: absolute;
+    pointer-events: auto;
+
+    .Mark {
+        cursor: pointer;
+        user-select: none;
+
+        width: 64px;
+        height: 64px;
+    }
+
+}

@@ -1,0 +1,20 @@
+.Toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    > * {
+        flex: 0 0 auto;
+
+        padding: 8px;
+        aspect-ratio: 1;
+        width: 42px;
+        background-color: white !important;
+        box-shadow: 0px 2px 4px 0px hsla(0, 0%, 30%, 0.4);
+
+        * {
+            width: 16px;
+            height: 16px;
+        }
+    }
+}

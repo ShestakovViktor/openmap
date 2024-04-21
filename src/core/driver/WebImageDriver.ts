@@ -1,6 +1,7 @@
 import {ImageDriver, ImageTile} from "@src/interface";
 
 export class WebImageDriver implements ImageDriver {
+    private tile = 512;
 
     async fooImage(
         file: File,
@@ -30,10 +31,13 @@ export class WebImageDriver implements ImageDriver {
         return base64;
     }
 
+    splitInt(size: number): number {
+        const rem = size % this.tile ? 0 : 1;
+        return Math.floor(size / this.tile) + rem;
+    }
+
     async initImage(
         blob: Blob,
-        rows: number,
-        cols: number,
         mime: string
     ): Promise<{
             width: number;
@@ -45,31 +49,30 @@ export class WebImageDriver implements ImageDriver {
         image.src = url;
         await new Promise(resolve => image.onload = resolve);
 
-        const tileWidth = image.width / cols;
-        const tileHeight = image.height / rows;
-
         const canvas = document.createElement("canvas");
-        canvas.width = tileWidth;
-        canvas.height = tileHeight;
         const context = canvas.getContext("2d");
         if (!context) throw new Error();
 
+        const tile = 512;
         const tiles: ImageTile[] = [];
 
-        for await (const yi of Array(cols).keys()) {
-            for await (const xi of Array(rows).keys()) {
+        for (let y = 0; y < image.height; y += tile) {
+            const heightRem = image.height - y;
+            const tileHeight = heightRem < tile ? heightRem : tile;
 
-                const x = xi * tileWidth;
-                const y = yi * tileHeight;
+            for (let x = 0; x < image.width; x += tile) {
+                const widthRem = image.width - x;
+                const tileWidth = widthRem < tile ? widthRem : tile;
 
-                context.drawImage(
-                    image,
+                canvas.width = tileWidth;
+                canvas.height = tileHeight;
+
+                context.drawImage(image,
                     x, y, tileWidth, tileHeight,
-                    0, 0, canvas.width, canvas.height
+                    0, 0, tileWidth, tileHeight
                 );
 
                 const base64 = canvas.toDataURL(mime);
-
                 tiles.push({
                     x,
                     y,
@@ -79,6 +82,8 @@ export class WebImageDriver implements ImageDriver {
                 });
             }
         }
+
+        image.remove();
 
         return {
             width: image.width,

@@ -9,8 +9,6 @@ export type ImageTile = {
 export interface ImageDriver {
     initImage(
         blob: Blob,
-        rows: number,
-        cols: number,
         mime: string
     ): Promise<{
         width: number;

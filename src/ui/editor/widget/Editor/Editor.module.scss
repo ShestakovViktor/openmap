@@ -1,54 +1,29 @@
 .Editor {
-    .Interface {
+    position: relative;
+    width: 100%;
+    height: 100%;
 
-        width: 100%;
-        height: 100%;
+    display: grid;
+    grid-template-columns: auto 300px;
+    grid-template-rows: min-content min-content auto;
+    grid-template-areas: 
+        "ViewPort SystemKit"
+        "ViewPort ToolKit"
+        "ViewPort DockArea";
 
-        position: fixed;
-        left: 0;
-        top: 0;
-
-        pointer-events: none;
-
-        > * {
-            pointer-events: all;
-        } 
-
-        display: grid;
-        grid-template-columns: 10px min-content auto min-content 10px;
-        grid-template-rows: 
-            10px 
-            min-content 
-            auto 
-            min-content 
-            10px;
-        grid-template-areas: 
-            ". .         .         .       ."
-            ". SystemBar TitleBar  ToolBar ."
-            ". SystemBar .         ToolBar ."
-            ". SystemBar StatusBar ToolBar ."
-            ". .         .         .       .";
-
-        align-items: center;
-
-        > :nth-child(1) {
-            grid-area: TitleBar;
-        }
-
-        > :nth-child(2) {
-            grid-area: SystemBar;
-            justify-self: flex-start;
-        }
-
-        > :nth-child(3) {
-            grid-area: ToolBar;
-            justify-self: flex-end;
-        }
-
-        > :nth-child(4) {
-            grid-area: StatusBar;
-        }
+    > :nth-child(1) {
+        grid-area: ViewPort;
     }
 
+    > :nth-child(2) {
+        grid-area: SystemKit;
+    }
 
+    > :nth-child(3) {
+        grid-area: ToolKit;
+    }
+
+    > :nth-child(4) {
+        grid-area: DockArea;
+    }
 }

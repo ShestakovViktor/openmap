@@ -1,6 +1,6 @@
 import {Icon} from "@ui/widget";
 import styles from "./Button.module.scss";
-import {JSXElement, Show} from "solid-js";
+import {JSX, Show} from "solid-js";
 
 type Props = {
     class?: string;
@@ -11,7 +11,7 @@ type Props = {
     onClick?: (event?: MouseEvent) => void;
 };
 
-export function Button(props: Props): JSXElement {
+export function Button(props: Props): JSX.Element {
     return (
         <button
             classList={{

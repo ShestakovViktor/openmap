@@ -1,4 +1,4 @@
-import {JSXElement} from "solid-js";
+import {JSX} from "solid-js";
 import styles from "./Icon.module.scss";
 
 type Props = {
@@ -6,7 +6,7 @@ type Props = {
     svg: string;
 };
 
-export function Icon(props: Props): JSXElement {
+export function Icon(props: Props): JSX.Element {
     const template = document.createElement("template");
     if (props.svg) template.innerHTML = props.svg;
     const icon = template.content.children[0] as SVGElement;

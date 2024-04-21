@@ -1,20 +1,18 @@
 import styles from "./Viewer.module.scss";
-import {JSXElement, createEffect, createSignal, on, onMount} from "solid-js";
-
-import {Entity} from "@ui/viewer/widget";
+import {JSX, createEffect, createSignal, on, onMount} from "solid-js";
 
 import {useViewerContext} from "@ui/viewer/context";
 import {Viewport} from "@ui/viewer/utility";
+import {Entity} from "@ui/entity/widget";
 
 export const VIEWER_ID = "viewer";
 
-export function Viewer(): JSXElement {
+export function Viewer(): JSX.Element {
     const viewerCtx = useViewerContext();
     let viewerEl: HTMLDivElement;
 
     const [rootId, setRootId] = createSignal(
-        viewerCtx.store.entity
-            .getByParams({name:"root"})[0].id,
+        viewerCtx.store.entity.getByParams({name:"root"})[0].id,
         {equals: false}
     );
 
@@ -31,11 +29,10 @@ export function Viewer(): JSXElement {
             height: Number(height),
             scale: 1,
         });
-    }));
 
-    createEffect(on(viewerCtx.render, () => {
         const {id: rootId} = viewerCtx.store.entity
             .getByParams({name:"root"})[0];
+
         if (!rootId) throw new Error();
         setRootId(rootId);
     }));

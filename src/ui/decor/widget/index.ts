@@ -1,2 +1,2 @@
-export * from "./DecorCreateDialog";
-export * from "./Decor";
+export * from "./DecorForm";
+export * from "./DecorWidget";

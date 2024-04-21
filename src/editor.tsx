@@ -19,9 +19,10 @@ const core = new Core(store);
 render(() => {
     return (
         <ViewerProvider store={store}>
-            <Viewer/>
             <EditorProvider value={{store, core}}>
-                <Editor/>
+                <Editor>
+                    <Viewer/>
+                </Editor>
             </EditorProvider>
         </ViewerProvider>
     );

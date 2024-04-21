@@ -3,27 +3,22 @@ import en from "./string/en.json";
 
 import i18next from "i18next";
 import {Dialog, Form, Row} from "@ui/widget";
-import {JSXElement} from "solid-js";
+import {JSX} from "solid-js";
 import {useViewerContext} from "@ui/viewer/context";
 import {useEditorContext} from "@ui/editor/context";
 
-i18next.addResourceBundle(
-    "en",
-    "project",
-    {CreateProjectDialog: en},
-    true,
-    true
-);
+i18next
+    .addResourceBundle("en", "project", {CreateProjectDialog: en}, true, true);
 
 type Props = {
     onComplete: () => void;
 };
 
-export function ProjectCreateDialog(props: Props): JSXElement {
+export function ProjectCreateDialog(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
     const viewerCtx = useViewerContext();
 
-    function handleSubmit(event: SubmitEvent): void {
+    function projectCreate(event: SubmitEvent): void {
         event.preventDefault();
 
         const form = event.target as HTMLFormElement;
@@ -61,10 +56,10 @@ export function ProjectCreateDialog(props: Props): JSXElement {
 
     return (
         <Dialog
-            class={styles.CreateProjectSection}
+            class={styles.ProjectCreateDialog}
             onClose={props.onComplete}
         >
-            <Form onSubmit={handleSubmit} class={styles.ResourceForm}>
+            <Form class={styles.ResourceForm} onSubmit={projectCreate}>
                 <Row>
                     <label for="projectName">
                         {i18next.t(
@@ -84,35 +79,6 @@ export function ProjectCreateDialog(props: Props): JSXElement {
                     name="mapFile"
                     accept="image/*"
                 />
-                <Row>
-                    <label for={"horizontalTilesNumber"} >
-                        {i18next.t(
-                            "project:CreateProjectDialog.horizontalTilesNumber",
-                            {postProcess: ["capitalize"]}
-                        )}
-                    </label>
-                    <input
-                        type="text"
-                        id="horizontalTilesNumber"
-                        name="horizontalTilesNumber"
-                        value="5"
-                    />
-                </Row>
-
-                <Row>
-                    <label for="verticalTilesNumber">
-                        {i18next.t(
-                            "project:CreateProjectDialog.verticalTilesNumber",
-                            {postProcess: ["capitalize"]}
-                        )}
-                    </label>
-                    <input
-                        type="text"
-                        id="verticalTilesNumber"
-                        name="verticalTilesNumber"
-                        value="5"
-                    />
-                </Row>
 
                 <input
                     type="submit"

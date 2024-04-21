@@ -1,0 +1,13 @@
+{
+    "dialogTitle": "marker create",
+    "submit": "create",
+    "selectAsset": "select asset",
+    "selectMotion": "select motion",
+    "width": "width",
+    "height": "height",
+    "text": "text",
+    "graphic": "graphic",
+    "createMarker": "create marker",
+    "chooseAsset": "choose asset",
+    "cancel": "cancel"
+}

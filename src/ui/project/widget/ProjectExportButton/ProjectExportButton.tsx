@@ -2,10 +2,10 @@ import FileIconSvg from "@public/icon/file.svg";
 
 import {Button} from "@ui/widget";
 import i18next from "i18next";
-import {JSXElement} from "solid-js";
+import {JSX} from "solid-js";
 import {useEditorContext} from "@ui/editor/context";
 
-export function ProjectExportButton(): JSXElement {
+export function ProjectExportButton(): JSX.Element {
     const editorCtx = useEditorContext();
 
     async function handleProjectExport(): Promise<void> {

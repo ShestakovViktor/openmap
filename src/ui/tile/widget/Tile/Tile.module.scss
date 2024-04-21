@@ -1,4 +1,7 @@
 .Tile {
+    pointer-events: auto;
+
     position: absolute;
     user-select: none;
+    image-rendering: optimizeQuality;
 }

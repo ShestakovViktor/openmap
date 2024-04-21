@@ -43,7 +43,7 @@ export class Store {
                 2: {id: 2, name: EntityType.TILE},
                 3: {id: 3, name: EntityType.MARKER},
                 4: {id: 4, name: EntityType.DECOR},
-                5: {id: 5, name: EntityType.FIELD},
+                5: {id: 5, name: EntityType.AREA},
                 6: {id: 6, name: EntityType.ASSET},
                 7: {id: 7, name: EntityType.MOTION},
             },

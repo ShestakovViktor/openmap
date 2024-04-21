@@ -1,7 +1,11 @@
 .Dialog {
     display: flex;
+    padding: 16px;
     flex-direction: column;
-    position: relative;
+    gap: 16px;
+
+    overflow: auto;
+
     background: var(--white);
 
     border-radius: 8px;
@@ -9,41 +13,26 @@
 
     box-shadow: 0px 4px 8px 0px hsla(0, 0%, 30%, 0.2);
 
-    padding: 8px;
-
-    .Head {
+    .Header {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
 
-        color: var(--grey-60);
-        font-size: 12px;
-        padding: 0px 8px;
-
-        .DialogTitle {
-            font-size: inherit;
-            font-weight: inherit;
+        .Title {
+            grid-area: Title;
+            color: var(--grey-60);
+            font-size: 12px;
+            white-space: nowrap;
         }
 
-
-        .CloseButton {
-
-            padding: 8px 0px;
-            border: none;
-
-            * {
-                width: 16px;
-                height: 16px;
-            }
+        .Control {
+            grid-area: Control;
         }
     }
 
-    .Body {
-        padding: 24px;
-
+    .Section {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        flex-grow: 1;
     }
 }

@@ -3,12 +3,12 @@ import en from "./string/en.json";
 
 import {Button} from "@ui/widget";
 import i18next from "i18next";
-import {JSXElement} from "solid-js";
+import {JSX} from "solid-js";
 import {useEditorContext} from "@ui/editor/context";
 
 i18next.addResourceBundle("en", "layout", {SystemBar: en}, true, true);
 
-export function ProjectCompileButton(): JSXElement {
+export function ProjectCompileButton(): JSX.Element {
     const editorCtx = useEditorContext();
 
     async function handleProjectCompile(): Promise<void> {

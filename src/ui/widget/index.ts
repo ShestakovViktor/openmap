@@ -1,3 +1,5 @@
+export * from "./Toolbar";
+export * from "./Portal";
 export * from "./Modal";
 export * from "./Icon";
 export * from "./Button";
@@ -6,4 +8,4 @@ export * from "./Form";
 export * from "./Panel";
 export * from "./Column";
 export * from "./Row";
-export * from "./TabView";
+export * from "./Tabs";

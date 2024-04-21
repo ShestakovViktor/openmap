@@ -6,11 +6,10 @@ import {ProjectCreateDialog} from "@src/ui/project/widget";
 import {Button, Dialog} from "@ui/widget";
 
 import i18next from "i18next";
-import {JSXElement} from "solid-js";
+import {JSX} from "solid-js";
 import {Modal} from "@ui/widget/Modal";
 import {useViewerContext} from "@ui/viewer/context";
 import {useEditorContext} from "@ui/editor/context";
-import {Data} from "@type";
 
 i18next.addResourceBundle("en", "project", {InitialDialog: en}, true, true);
 
@@ -18,7 +17,7 @@ type Props = {
     onComplete: () => void;
 };
 
-export function InitialDialog(props: Props): JSXElement {
+export function InitialDialog(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
     const viewerCtx = useViewerContext();
 
@@ -56,7 +55,7 @@ export function InitialDialog(props: Props): JSXElement {
         });
     }
 
-    const projectCreateModal = new Modal("#modal");
+    const projectCreateModal = new Modal();
     projectCreateModal.render(
         <ProjectCreateDialog
             onComplete={() => {

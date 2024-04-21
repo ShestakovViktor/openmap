@@ -2,10 +2,10 @@ import DisketteIconSvg from "@public/icon/diskette.svg";
 
 import {Button} from "@ui/widget";
 import i18next from "i18next";
-import {JSXElement} from "solid-js";
+import {JSX} from "solid-js";
 import {useEditorContext} from "@ui/editor/context";
 
-export function ProjectSaveButton(): JSXElement {
+export function ProjectSaveButton(): JSX.Element {
     const editorCtx = useEditorContext();
 
     async function handleProjectSave(): Promise<void> {
@@ -25,7 +25,6 @@ export function ProjectSaveButton(): JSXElement {
             JSON.stringify(editorCtx.store.getData())
         );
         await dataFileWritableStream.close();
-        console.log("saved");
     }
 
     return (

@@ -206,6 +206,8 @@ export class Viewport {
             deltaScale = newScale / mapCtx.scale;
         }
 
+        newScale = Math.floor(512 * newScale) / 512;
+
         const mouseX = clientX - viewCtx.x - mapCtx.x;
         const mouseY = clientY - viewCtx.y - mapCtx.y;
 

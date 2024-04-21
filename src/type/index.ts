@@ -6,7 +6,7 @@ export * from "./Asset";
 export * from "./Motion";
 export * from "./Group";
 export * from "./Marker";
-export * from "./Field";
+export * from "./Area";
 export * from "./Tile";
 export * from "./Decor";
 export * from "./Param";
