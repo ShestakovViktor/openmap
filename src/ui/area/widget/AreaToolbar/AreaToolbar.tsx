@@ -27,6 +27,8 @@ export function AreaToolbar(props: Props): JSX.Element {
         if (!areaId) return;
 
         const area = editorCtx.store.entity.getById<Area>(areaId);
+        if (!area) throw new Error();
+
         popAreaPoint(area);
         editorCtx.store.entity.set(area);
         viewerCtx.reRender();

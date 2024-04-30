@@ -13,13 +13,16 @@ import {EntityType} from "@enum";
 i18next.addResourceBundle("en", "motion", {"MotionSelectDialog": en}, true, true);
 
 type Props = {
+    motionId?: number;
     onSelect?: (assetId: Id) => void;
 };
 
 export function MotionInput(props: Props): JSX.Element {
     const viewerCtx = useViewerContext();
     let inputRef: HTMLInputElement | undefined;
-    const [selected, setSelected] = createSignal<number>();
+    const [selected, setSelected] = createSignal<number | undefined>(
+        props.motionId
+    );
 
     const {id: motionTypeId} = viewerCtx.store.type
         .getByParams({name: EntityType.MOTION})[0];

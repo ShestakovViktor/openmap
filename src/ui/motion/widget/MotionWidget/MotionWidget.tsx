@@ -1,6 +1,6 @@
 import styles from "./Motion.module.scss";
-import {JSX, Show, createSignal} from "solid-js";
-import {Motion, Id} from "@type";
+import {JSX, createResource} from "solid-js";
+import {Motion, Id, Source} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
 import {Portal} from "solid-js/web";
 
@@ -10,15 +10,32 @@ type Props = {
 
 export function MotionWidget(props: Props): JSX.Element {
     const viewerCtx = useViewerContext();
-    const motion = viewerCtx.store.entity
-        .getById<Motion>(props.entityId);
 
-    const source = viewerCtx.store.source
-        .getById(motion.sourceId);
+    const [entity] = createResource(
+        () => viewerCtx.store.entity
+            .getById<Motion>(props.entityId)
+    );
+
+    const href = (): string => {
+        const sourceId = entity()?.sourceId;
+
+        if (!sourceId) {
+            return "";
+        }
+        else {
+            const source = viewerCtx.store.source
+                .getById<Source>(sourceId);
+
+            if (!source) throw new Error();
+
+            return source.path || source.content;
+        }
+
+    };
 
     return (
         <Portal mount={document.querySelector("head")!}>
-            <link href={source.path || source.content} rel="stylesheet"/>
+            <link href={href()} rel="stylesheet"/>
         </Portal>
     );
 }

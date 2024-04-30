@@ -14,7 +14,7 @@ export class AddEntityAction extends Action {
     execute(): void {
         const entityId = this.store.entity.add(this.data);
         const parent = this.store.entity.getById<Group>(this.parentId);
-        parent.childrenIds.push(entityId);
-        this.store.entity.set<Group>(parent);
+        // parent.childrenIds.push(entityId);
+        // this.store.entity.set<Group>(parent);
     }
 }

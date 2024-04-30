@@ -1,117 +1,46 @@
 import styles from "./DecorForm.module.scss";
-import {Row, Tabs, Tab} from "@ui/widget";
+import {Accordion} from "@ui/widget";
 import en from "./string/en.json";
 
 import i18next from "i18next";
-import {AssetInput} from "@ui/asset/widget";
-import {JSX, Signal, createSignal} from "solid-js";
-import {Decor, Id} from "@type";
+import {JSX, Resource, Signal, createEffect, createResource, on} from "solid-js";
+import {Area, Decor, Id} from "@type";
+import {
+    AssetSection,
+    EntityForm,
+    PositionSection,
+    SystemSection,
+    MotionSection,
+} from "@ui/entity/widget";
 import {useEditorContext} from "@ui/editor/context";
-import {EntityForm} from "@ui/entity/widget";
-import {MotionInput} from "@ui/motion/widget";
 
 i18next.addResourceBundle("en", "decor", {DecorForm: en}, true, true);
 
 type Props = {
-    signal?: Signal<number | undefined>;
-    onSubmit?: (event: SubmitEvent) => void;
+    id: Signal<Id | null>;
 };
 
 export function DecorForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
-    const [getId] = props.signal ?? createSignal<Id | undefined>();
+    const [getId] = props.id;
 
-    const entity = (): Decor | undefined => {
-        const markerId = getId();
-        if (!markerId) return undefined;
-        return editorCtx.store.entity.getById<Decor>(markerId);
-    };
+    const [entity, {refetch}] = createResource(() => {
+        const entityId = getId();
+        if (!entityId) return null;
+        return editorCtx.store.entity.getById<Decor>(entityId);
+    });
+
+    createEffect(on(getId, refetch));
 
     return (
         <EntityForm class={styles.DecorForm}>
-            <Tabs>
-                <Tab name={
-                    i18next.t(
-                        "decor:DecorForm.system",
-                        {postProcess: ["capitalize"]}
-                    )
-                }>
-                    <Row>
-                        <label for="id">
-                            {i18next.t(
-                                "decor:DecorForm.id",
-                                {postProcess: ["capitalize"]}
-                            )}
-                        </label>
-                        <input
-                            name="id"
-                            type="number"
-                            value={entity()?.id}
-                            readonly
-                        />
-                    </Row>
-                    <Row>
-                        <label for="typeId">
-                            {i18next.t(
-                                "decor:DecorForm.typeId",
-                                {postProcess: ["capitalize"]}
-                            )}
-                        </label>
-                        <input
-                            name="typeId"
-                            type="number"
-                            value={entity()?.typeId ?? ""}
-                            readonly
-                        />
-                    </Row>
-                </Tab>
-                <Tab name={
-                    i18next.t(
-                        "decor:DecorForm.position",
-                        {postProcess: ["capitalize"]}
-                    )
-                }>
-                    <Row>
-                        <label for="x">
-                            {i18next.t(
-                                "decor:DecorForm.x",
-                                {postProcess: ["capitalize"]}
-                            )}
-                        </label>
-                        <input
-                            name="x"
-                            type="number"
-                            value={entity()?.x}
-                        />
-                    </Row>
-                    <Row>
-                        <label for="y">
-                            {i18next.t(
-                                "decor:DecorForm.y",
-                                {postProcess: ["capitalize"]}
-                            )}
-                        </label>
-                        <input type="text" name="y" value={entity()?.y}/>
-                    </Row>
-                </Tab>
-                <Tab name={
-                    i18next.t(
-                        "decor:DecorForm.asset",
-                        {postProcess: ["capitalize"]}
-                    )
-                }>
-                    <AssetInput/>
-                </Tab>
-                <Tab name={
-                    i18next.t(
-                        "decor:DecorForm.motion",
-                        {postProcess: ["capitalize"]}
-                    )
-                }>
-                    <MotionInput/>
-                </Tab>
-            </Tabs>
+            <Accordion>
+                <SystemSection expand={true} entity={entity}/>
+                <PositionSection expand={true} entity={entity}/>
+                <AssetSection expand={true} entity={entity}/>
+                <MotionSection entity={entity}/>
+            </Accordion>
         </EntityForm>
     );
 }

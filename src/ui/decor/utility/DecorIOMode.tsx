@@ -29,8 +29,8 @@ export class DecorIOMode implements IOMode{
             typeId,
             x,
             y,
-            assetId: undefined,
-            motionId: undefined,
+            assetId: null,
+            motionId: null,
         });
 
         const overlay = this.editorCtx.store.entity

@@ -29,10 +29,9 @@ export class Collection<U extends {id: Id}> {
         delete this.data[id];
     }
 
-    getById<T extends U = U>(id: Id): T {
+    getById<T extends U = U>(id: Id): T | null {
         const entity = this.data[id] as T | undefined;
-        if (!entity) throw new Error(`There is no ${id} in ${JSON.stringify(this.data)}`);
-        return structuredClone(entity);
+        return entity ? structuredClone(entity) : null;
     }
 
     getByParams<T extends U = U>(params: {[key: string]: any}): T[] {

@@ -39,8 +39,12 @@ export function MarkerWidget(props: Props): JSX.Element {
             const asset = viewerCtx.store.entity
                 .getById<Asset>(assetId);
 
+            if (!asset) throw new Error();
+
             const source = viewerCtx.store.source
                 .getById<Source>(asset.sourceId);
+
+            if (!source) throw new Error();
 
             return source.path || source.content;
         }

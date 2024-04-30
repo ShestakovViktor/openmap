@@ -1,17 +1,1 @@
-{
-    "system": "system",
-    "position": "position",
-    "asset": "asset",
-    "data": "data",
-    "id": "id",
-    "typeId": "type id",
-    "x": "x",
-    "y": "y",
-    "width": "width",
-    "height": "height",
-    "text": "text",
-    "graphic": "graphic",
-    "save": "save",
-    "submit": "submit",
-    "cancel": "cancel"
-}
+{}

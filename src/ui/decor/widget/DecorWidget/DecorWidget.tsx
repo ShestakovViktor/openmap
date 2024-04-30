@@ -1,5 +1,5 @@
 import styles from "./DecorWidget.module.scss";
-import {JSX, createEffect, createResource, createSignal, on} from "solid-js";
+import {JSX, createEffect, createResource, on} from "solid-js";
 import {useViewerContext} from "@ui/viewer/context";
 
 import {Decor, Asset, Id, Motion, Source} from "@type";
@@ -39,8 +39,12 @@ export function DecorWidget(props: Props): JSX.Element {
             const asset = viewerCtx.store.entity
                 .getById<Asset>(assetId);
 
+            if (!asset) throw new Error();
+
             const source = viewerCtx.store.source
                 .getById<Source>(asset.sourceId);
+
+            if (!source) throw new Error();
 
             return source.path || source.content;
         }
@@ -55,6 +59,8 @@ export function DecorWidget(props: Props): JSX.Element {
         else {
             const motion = viewerCtx.store.entity
                 .getById<Motion>(motionId);
+
+            if (!motion) throw new Error();
 
             return motion.class;
         }

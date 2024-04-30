@@ -74,6 +74,8 @@ export class AreaIOMode implements IOMode {
         const area = this.editorCtx.store.entity
             .getById<Area>(areaId);
 
+        if (!area) throw new Error();
+
         pushAreaPoint(area, click);
 
         this.editorCtx.store.entity.set(area);

@@ -1,5 +1,3 @@
-import {Portal} from "@ui/widget";
-import {MarkerToolbar} from "@src/ui/marker/widget";
 import {IOMode} from "@ui/editor/utility";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
@@ -31,7 +29,7 @@ export class MarkerIOMode implements IOMode {
             typeId,
             x,
             y,
-            assetId: undefined,
+            assetId: null,
             text: "",
             graphicIds: [],
         });

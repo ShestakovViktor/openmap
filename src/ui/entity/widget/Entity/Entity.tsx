@@ -1,5 +1,5 @@
 import {JSX, createMemo} from "solid-js";
-import {Tile} from "@src/ui/tile/widget";
+import {TileWidget} from "@src/ui/tile/widget";
 import {Group} from "@src/ui/group/widget";
 import {MarkerWidget} from "@src/ui/marker/widget";
 import {useViewerContext} from "@ui/viewer/context";
@@ -18,11 +18,8 @@ type Props = {
 export function Entity(props: Props): JSX.Element {
     const viewerCtx = useViewerContext();
 
-    const entity = createMemo(
-        () => viewerCtx.store.entity.getById(props.entityId),
-        undefined,
-        {equals: false}
-    );
+    const entity = viewerCtx.store.entity.getById(props.entityId);
+    if (!entity) throw new Error();
 
     const {id: groupTypeId} = viewerCtx.store.type
         .getByParams({name: EntityType.GROUP})[0];
@@ -46,7 +43,7 @@ export function Entity(props: Props): JSX.Element {
         [key: string]: (props: {entityId: Id}) => JSX.Element;
     } = {
         [groupTypeId]: Group,
-        [tileTypeId]: Tile,
+        [tileTypeId]: TileWidget,
         [makerTypeId]: MarkerWidget,
         [decorTypeId]: DecorWidget,
         [areaTypeId]: AreaWidget,
@@ -55,7 +52,7 @@ export function Entity(props: Props): JSX.Element {
 
     return (
         <Dynamic
-            component={entities[entity().typeId]}
+            component={entities[entity.typeId]}
             entityId={props.entityId}
             ref={props.ref}
         />
