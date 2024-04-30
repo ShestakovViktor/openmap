@@ -1,3 +1,4 @@
+export * from "./Accordion";
 export * from "./Toolbar";
 export * from "./Portal";
 export * from "./Modal";
