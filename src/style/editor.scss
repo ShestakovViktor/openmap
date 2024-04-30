@@ -1,0 +1,11 @@
+[data-type="marker"] {
+    &.Selected {
+        border: 2px dashed black;
+    }
+}
+
+[data-type="decor"] {
+    &.Selected {
+        border: 2px dashed blue;
+    }
+}

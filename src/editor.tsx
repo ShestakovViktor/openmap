@@ -1,5 +1,6 @@
 import "@src/i18n";
 import "@style/colors.scss";
+import "@style/editor.scss";
 import "@style/global.scss";
 
 import {Core} from "@core";

@@ -21,6 +21,7 @@ label {
     white-space: nowrap;
 }
 
-.Selected {
-    border: 2px dashed black;
+
+input[readonly] {
+    background-color: var(--grey-90);
 }
