@@ -3,10 +3,14 @@ import {Core, Store} from "@core";
 import {IOMode} from "@ui/editor/utility";
 import {FormMode} from "@ui/editor/utility";
 import {ToolbarMode} from "../utility/ToolbarMode";
+import {Id} from "@type";
 
 export type EditorContexType = {
     core: Core;
     store: Store;
+
+    getSelected: Accessor<Id[]>;
+    setSelected: Setter<Id[]>;
 
     getIOMode: Accessor<IOMode>;
     setIOMode: Setter<IOMode>;

@@ -1,15 +1,18 @@
-import {Show, Signal, createSignal} from "solid-js";
+import {Accessor, Setter, Show, Signal, createResource, createSignal} from "solid-js";
 import {LayerName} from "@enum";
 import {MarkerForm} from "@ui/marker/widget";
 import {Dynamic, Portal} from "solid-js/web";
 import {AreaForm} from "@ui/area/widget";
 import {DecorForm} from "@ui/decor/widget";
+import {Id} from "@type";
 
 export class FormMode {
     private forms: {
         name: string;
-        show: Signal<boolean | undefined>;
-        data: Signal<number | undefined>;
+        getId: Accessor<Id | null>;
+        setId: Setter<Id | null>;
+        getVisibility: Accessor<boolean>;
+        setVisibility: Setter<boolean>;
     }[];
 
     private showing: string | undefined;
@@ -21,50 +24,48 @@ export class FormMode {
             {name: "decor", component: DecorForm},
             {name: "area", component: AreaForm},
         ].map(({name, component}) => {
-            const show = createSignal<boolean>();
-            const data = createSignal<number>();
+            const [getId, setId] = createSignal<Id | null>(null);
+            const [getVisibility, setVisibility] = createSignal<boolean>(false);
 
-            <Show when={show[0]()}>
+            <Show when={getVisibility()}>
                 <Portal mount={document.querySelector(dest)!}>
                     <Dynamic
                         component={component}
-                        signal={data}
+                        id={[getId, setId]}
                     />
                 </Portal>
             </Show>;
 
-            return {name, show, data};
+            return {name, getId, setId, getVisibility, setVisibility};
         });
     }
 
-    show(entity: string, id?: number): void {
-        if (this.showing && this.showing != entity) {
+    show(type: string, id?: Id): void {
+        if (this.showing && this.showing != type) {
             const boo = this.forms.find((form) => form.name == this.showing);
             if (!boo) throw new Error();
-            boo.show[1](false);
+            boo.setVisibility(false);
 
-            this.showing = entity;
+            this.showing = type;
 
-            const foo = this.forms.find((form) => form.name == entity);
-            if (foo) {
-                foo.data[1](id);
-                foo.show[1](true);
+            const form = this.forms.find((form) => form.name == type);
+            if (form) {
+                form.setId(id ?? null);
+                form.setVisibility(true);
             }
         }
         else if (!this.showing) {
-            this.showing = entity;
+            this.showing = type;
 
-            const foo = this.forms.find((form) => form.name == entity);
-            if (foo) {
-                foo.data[1](id);
-                foo.show[1](true);
+            const form = this.forms.find((form) => form.name == type);
+            if (form) {
+                form.setId(id ?? null);
+                form.setVisibility(true);
             }
         }
-        else if (this.showing == entity) {
-            const foo = this.forms.find((form) => form.name == entity);
-            if (foo) {
-                foo.data[1](id);
-            }
+        else if (this.showing == type) {
+            const form = this.forms.find((form) => form.name == type);
+            if (form) form.setId(id ?? null);
         }
     }
 }
