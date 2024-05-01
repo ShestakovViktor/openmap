@@ -9,9 +9,9 @@ import {JSX} from "solid-js";
 export function SystemKit(): JSX.Element {
     return (
         <div class={styles.SystemKit}>
+            <ProjectSaveButton/>
             <ProjectExportButton/>
             <ProjectCompileButton/>
-            <ProjectSaveButton/>
         </div>
     );
 }

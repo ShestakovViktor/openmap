@@ -19,7 +19,7 @@ export function ProjectSaveButton(): JSX.Element {
 
         const root = await navigator.storage.getDirectory();
 
-        const dataFileHandle = await root.getFileHandle("data.om");
+        const dataFileHandle = await root.getFileHandle("data.om", {create: true});
         const dataFileWritableStream = await dataFileHandle.createWritable();
         await dataFileWritableStream.write(
             JSON.stringify(editorCtx.store.getData())
