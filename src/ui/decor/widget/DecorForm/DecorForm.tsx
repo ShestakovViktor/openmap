@@ -3,8 +3,8 @@ import {Accordion} from "@ui/widget";
 import en from "./string/en.json";
 
 import i18next from "i18next";
-import {JSX, Resource, Signal, createEffect, createResource, on} from "solid-js";
-import {Area, Decor, Id} from "@type";
+import {JSX, Signal, createEffect, createResource, on} from "solid-js";
+import {Decor, Id} from "@type";
 import {
     AssetSection,
     EntityForm,
@@ -17,13 +17,12 @@ import {useEditorContext} from "@ui/editor/context";
 i18next.addResourceBundle("en", "decor", {DecorForm: en}, true, true);
 
 type Props = {
-    id: Signal<Id | null>;
+    entityId: Signal<Id | null>;
 };
 
 export function DecorForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
-
-    const [getId] = props.id;
+    const [getId] = props.entityId;
 
     const [entity, {refetch}] = createResource(() => {
         const entityId = getId();
@@ -36,9 +35,9 @@ export function DecorForm(props: Props): JSX.Element {
     return (
         <EntityForm class={styles.DecorForm}>
             <Accordion>
-                <SystemSection expand={true} entity={entity}/>
-                <PositionSection expand={true} entity={entity}/>
-                <AssetSection expand={true} entity={entity}/>
+                <SystemSection entity={entity}/>
+                <PositionSection entity={entity}/>
+                <AssetSection entity={entity}/>
                 <MotionSection entity={entity}/>
             </Accordion>
         </EntityForm>

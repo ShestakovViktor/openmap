@@ -10,23 +10,23 @@ import {Id} from "@type";
 i18next.addResourceBundle("en", "entity", {AssetSection: en}, true, true);
 
 type Props = {
+    id?: string;
     entity: Resource<{assetId: Id | null} | null>;
-    expand?: boolean;
 };
 
-export function AssetSection({entity, expand}: Props): JSX.Element {
+export function AssetSection(props: Props): JSX.Element {
     return (
         <Section
+            id={props.id}
             class={styles.AssetSection}
-            name={
+            title={
                 i18next.t(
                     "entity:AssetSection.asset",
                     {postProcess: ["capitalize"]}
                 )
             }
-
         >
-            <AssetInput entity={entity}/>
+            <AssetInput entity={props.entity}/>
         </Section>
     );
 }

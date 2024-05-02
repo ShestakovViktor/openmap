@@ -1,10 +1,10 @@
 import {JSX} from "solid-js";
 
 export type SectionProps = {
-    children: JSX.Element | JSX.Element[];
-    name: string;
+    id?: string;
     class?: string;
-    expand?: boolean;
+    children: JSX.Element | JSX.Element[];
+    title: string;
 };
 
 export function Section(props: SectionProps): JSX.Element {

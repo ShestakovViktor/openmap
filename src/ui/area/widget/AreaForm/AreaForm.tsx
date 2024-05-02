@@ -16,13 +16,13 @@ import {useEditorContext} from "@ui/editor/context";
 i18next.addResourceBundle("en", "area", {AreaForm: en}, true, true);
 
 type Props = {
-    id: Signal<Id | null>;
+    entityId: Signal<Id | null>;
 };
 
 export function AreaForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
-    const [getId] = props.id;
+    const [getId] = props.entityId;
 
     const [entity, {refetch}] = createResource(() => {
         const entityId = getId();

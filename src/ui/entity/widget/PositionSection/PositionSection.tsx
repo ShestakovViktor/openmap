@@ -8,21 +8,20 @@ import {JSX, Resource} from "solid-js";
 i18next.addResourceBundle("en", "entity", {PositionSection: en}, true, true);
 
 type Props = {
+    id?: string;
     entity: Resource<{x: number; y: number} | null>;
-    expand?: boolean;
 };
 
-export function PositionSection({entity, expand}: Props): JSX.Element {
+export function PositionSection(props: Props): JSX.Element {
     return (
         <Section
-            name={
+            title={
                 i18next.t(
                     "entity:PositionSection.position",
                     {postProcess: ["capitalize"]}
                 )
             }
             class={styles.PositionSection}
-            expand={expand}
         >
             <Row>
                 <label for="x">
@@ -31,7 +30,7 @@ export function PositionSection({entity, expand}: Props): JSX.Element {
                         {postProcess: ["capitalize"]}
                     )}
                 </label>
-                <input type="number" name="x" value={entity()?.x ?? ""}/>
+                <input type="number" name="x" value={props.entity()?.x ?? ""}/>
             </Row>
             <Row>
                 <label for="y">
@@ -40,7 +39,7 @@ export function PositionSection({entity, expand}: Props): JSX.Element {
                         {postProcess: ["capitalize"]}
                     )}
                 </label>
-                <input type="number" name="y" value={entity()?.y ?? ""}/>
+                <input type="number" name="y" value={props.entity()?.y ?? ""}/>
             </Row>
         </Section>
     );

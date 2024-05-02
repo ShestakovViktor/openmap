@@ -8,21 +8,21 @@ import {JSX, Resource} from "solid-js";
 i18next.addResourceBundle("en", "entity", {SystemSection: en}, true, true);
 
 type Props = {
+    id?: string;
     entity: Resource<{id: number; typeId: number} | null>;
-    expand?: boolean;
 };
 
-export function SystemSection({entity, expand}: Props): JSX.Element {
+export function SystemSection(props: Props): JSX.Element {
     return (
         <Section
+            id={props.id}
             class={styles.SystemSection}
-            name={
+            title={
                 i18next.t(
                     "entity:SystemSection.system",
                     {postProcess: ["capitalize"]}
                 )
             }
-            expand={expand}
         >
             <Row>
                 <label for="id">
@@ -34,7 +34,7 @@ export function SystemSection({entity, expand}: Props): JSX.Element {
                 <input
                     name="id"
                     type="number"
-                    value={entity()?.id ?? ""}
+                    value={props.entity()?.id ?? ""}
                     readonly
                 />
             </Row>
@@ -48,7 +48,7 @@ export function SystemSection({entity, expand}: Props): JSX.Element {
                 <input
                     name="typeId"
                     type="number"
-                    value={entity()?.typeId ?? ""}
+                    value={props.entity()?.typeId ?? ""}
                     readonly
                 />
             </Row>

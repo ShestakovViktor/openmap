@@ -1,10 +1,11 @@
-import {Accessor, Setter, Show, Signal, createResource, createSignal} from "solid-js";
+import {Accessor, Setter, Show, createEffect, createSignal, on} from "solid-js";
 import {LayerName} from "@enum";
 import {MarkerForm} from "@ui/marker/widget";
 import {Dynamic, Portal} from "solid-js/web";
 import {AreaForm} from "@ui/area/widget";
 import {DecorForm} from "@ui/decor/widget";
 import {Id} from "@type";
+import {NamespaceProvider, useNamespaceContext} from "@ui/app/context";
 
 export class FormMode {
     private forms: {
@@ -29,10 +30,14 @@ export class FormMode {
 
             <Show when={getVisibility()}>
                 <Portal mount={document.querySelector(dest)!}>
-                    <Dynamic
-                        component={component}
-                        id={[getId, setId]}
-                    />
+                    <NamespaceProvider namespace={"FormMode"}>
+                        <NamespaceProvider namespace={component.name}>
+                            <Dynamic
+                                component={component}
+                                entityId={[getId, setId]}
+                            />
+                        </NamespaceProvider>
+                    </NamespaceProvider>
                 </Portal>
             </Show>;
 

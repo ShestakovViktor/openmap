@@ -1,60 +1,64 @@
 import styles from "./Accordion.module.scss";
-import {For, JSX, children, createSignal} from "solid-js";
+import {For, JSX, children} from "solid-js";
 import {SectionProps} from "./Section";
+import {useNamespaceContext} from "@ui/app/context";
+import {createLocalStorageSyncSignal} from "@ui/app/utiliy";
 
 type Props = {
     children: JSX.Element | JSX.Element[];
     class?: string;
-    selected?: number;
 };
 
 export function Accordion(props: Props): JSX.Element {
+    const namespaceCtx = useNamespaceContext();
+
     const childs = children(() => props.children);
     const sections = childs.toArray() as unknown as SectionProps[];
-
-    const [getExpanded, setExpanded] = createSignal<{[key: number]: boolean}>(
-        sections.reduce<{[k: number]: boolean}>((result, section, index) => {
-            result[index] = Boolean(section.expand);
-            return result;
-        }, {}),
-        {equals: false}
-    );
 
     return (
         <div class={styles.Accordion}>
             <For each={sections}>
-                {(child, index) =>
-                    <div
-                        class={styles.Section}
-                        classList={{
-                            [styles.Selected]: getExpanded()[index()],
-                        }}
-                    >
+                {(child) => {
+                    const name = namespaceCtx.namespace
+                        + "."
+                        + child.title
+                        + "Section"
+                        + "."
+                        + "expand";
+
+                    const [getExpand, setExpand]
+                        = createLocalStorageSyncSignal(false, {name});
+
+                    return (
                         <div
-                            class={styles.Header}
-                            onClick={() => {
-                                const expanded = getExpanded();
-                                expanded[index()] = !expanded[index()];
-                                setExpanded(expanded);
-                            }}
-                        >
-                            <div class={styles.Title}>
-                                {child.name}
-                            </div>
-                            <div class={styles.Expand}>
-                                {getExpanded()[index()] ? "-" : "+"}
-                            </div>
-                        </div>
-                        <div
-                            class={styles.Content}
+                            id={child.id}
+                            class={styles.Section}
                             classList={{
-                                [child.class!]: Boolean(child.class),
+                                [styles.Selected]: Boolean(getExpand()),
                             }}
                         >
-                            {child.children}
+                            <div
+                                class={styles.Header}
+                                onClick={() => setExpand(!Boolean(getExpand()))}
+                            >
+                                <div class={styles.Title}>
+                                    {child.title}
+                                </div>
+                                <div class={styles.Expand}>
+                                    {getExpand() ? "-" : "+"}
+                                </div>
+                            </div>
+                            <div
+                                class={styles.Content}
+                                classList={{
+                                    [child.class!]: Boolean(child.class),
+                                }}
+                            >
+                                {child.children}
+                            </div>
                         </div>
-                    </div>
-                }
+                    );
+                }}
             </For>
         </div>
     );

@@ -10,6 +10,7 @@ import {Viewer} from "@src/ui/viewer/widget";
 import {ViewerProvider} from "@ui/viewer/context";
 import {Editor} from "./ui/editor/widget";
 import {EditorProvider} from "@ui/editor/context";
+import {NamespaceProvider} from "@ui/app/context";
 
 const container = document.querySelector("#openmap");
 if (!container) throw new Error("There is no container element");
@@ -21,9 +22,11 @@ render(() => {
     return (
         <ViewerProvider store={store}>
             <EditorProvider value={{store, core}}>
-                <Editor>
-                    <Viewer/>
-                </Editor>
+                <NamespaceProvider namespace={"Editor"}>
+                    <Editor>
+                        <Viewer/>
+                    </Editor>
+                </NamespaceProvider>
             </EditorProvider>
         </ViewerProvider>
     );

@@ -61,6 +61,7 @@ export function EntityForm(props: Props): JSX.Element {
 
     return (
         <form
+            id={props.id}
             class={styles.Form}
             classList={{[props.class ?? ""]: "class" in props}}
             onChange={handleChange}

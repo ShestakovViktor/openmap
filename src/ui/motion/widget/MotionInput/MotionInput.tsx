@@ -3,7 +3,7 @@ import styles from "./MotionInput.module.scss";
 
 import {Button, Dialog} from "@ui/widget";
 import i18next from "i18next";
-import {For, JSX, createEffect, createResource, createSignal, on} from "solid-js";
+import {For, JSX, Resource, createEffect, createResource, createSignal, on} from "solid-js";
 import {Modal} from "@ui/widget/Modal";
 import {useViewerContext} from "@ui/viewer/context";
 import {Id, Motion} from "@type";
@@ -13,15 +13,14 @@ import {EntityType} from "@enum";
 i18next.addResourceBundle("en", "motion", {"MotionSelectDialog": en}, true, true);
 
 type Props = {
-    motionId?: number;
-    onSelect?: (assetId: Id) => void;
+    entity: Resource<{motionId: Id | null} | null>;
 };
 
-export function MotionInput(props: Props): JSX.Element {
+export function MotionInput({entity}: Props): JSX.Element {
     const viewerCtx = useViewerContext();
     let inputRef: HTMLInputElement | undefined;
-    const [selected, setSelected] = createSignal<number | undefined>(
-        props.motionId
+    const [selected, setSelected] = createSignal<Id | null>(
+        entity()?.motionId ?? null
     );
 
     const {id: motionTypeId} = viewerCtx.store.type
@@ -57,7 +56,7 @@ export function MotionInput(props: Props): JSX.Element {
                                 if (!inputRef) throw new Error();
 
                                 if (index() == selected()) {
-                                    setSelected(undefined);
+                                    setSelected(null);
                                     inputRef.value = "";
                                 }
                                 else {

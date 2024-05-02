@@ -3,7 +3,13 @@ import en from "./string/en.json";
 import i18next from "i18next";
 
 import {Id, Marker} from "@type";
-import {JSX, Signal, createEffect, createResource, on} from "solid-js";
+import {
+    JSX,
+    Signal,
+    createEffect,
+    createResource,
+    on,
+} from "solid-js";
 import {useEditorContext} from "@ui/editor/context";
 import {Accordion} from "@ui/widget";
 import {
@@ -16,26 +22,26 @@ import {
 
 i18next.addResourceBundle("en", "marker", {MarkerForm: en}, true, true);
 
-type Props = {id: Signal<Id | null>};
+type Props = {entityId: Signal<Id | null>};
 
 export function MarkerForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
-    const [getId] = props.id;
+    const [getEntityId] = props.entityId;
 
     const [entity, {refetch}] = createResource(() => {
-        const entityId = getId();
+        const entityId = getEntityId();
         if (!entityId) return null;
         return editorCtx.store.entity.getById<Marker>(entityId);
     });
 
-    createEffect(on(getId, refetch));
+    createEffect(on(getEntityId, refetch));
 
     return (
         <EntityForm class={styles.MarkerForm}>
             <Accordion>
-                <SystemSection entity={entity} expand/>
-                <PositionSection entity={entity} expand/>
+                <SystemSection entity={entity}/>
+                <PositionSection entity={entity}/>
                 <AssetSection entity={entity}/>
                 <TextSection entity={entity}/>
                 {/* <Row>

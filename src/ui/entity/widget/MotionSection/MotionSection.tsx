@@ -10,23 +10,23 @@ import {Id} from "@type";
 i18next.addResourceBundle("en", "entity", {MotionSection: en}, true, true);
 
 type Props = {
+    id?: string;
     entity: Resource<{motionId: Id | null} | null>;
-    motionId?: number;
 };
 
 export function MotionSection(props: Props): JSX.Element {
     return (
         <Section
+            id={props.id}
             class={styles.MotionSection}
-            name={
+            title={
                 i18next.t(
                     "entity:MotionSection.motion",
                     {postProcess: ["capitalize"]}
                 )
             }
-
         >
-            <MotionInput motionId={props.motionId}/>
+            <MotionInput entity={props.entity}/>
         </Section>
     );
 }
