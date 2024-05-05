@@ -2,7 +2,7 @@ import styles from "./DecorWidget.module.scss";
 import {JSX, createEffect, createResource, on} from "solid-js";
 import {useViewerContext} from "@ui/viewer/context";
 
-import {Decor, Asset, Id, Motion, Source} from "@type";
+import {Decor, Asset, Id, Motion} from "@type";
 
 type Props = {
     entityId: Id;
@@ -30,23 +30,18 @@ export function DecorWidget(props: Props): JSX.Element {
             : "0px";
     };
     const src = (): string => {
-        const assetId = entity()?.assetId;
+        const propId = entity()?.propId;
 
-        if (!assetId) {
+        if (!propId) {
             return "./icon/decor.svg";
         }
         else {
-            const asset = viewerCtx.store.entity
-                .getById<Asset>(assetId);
+            const asset = viewerCtx.store.asset
+                .getById<Asset>(propId);
 
             if (!asset) throw new Error();
 
-            const source = viewerCtx.store.source
-                .getById<Source>(asset.sourceId);
-
-            if (!source) throw new Error();
-
-            return source.path || source.content;
+            return asset.path || asset.content;
         }
     };
 
@@ -57,7 +52,7 @@ export function DecorWidget(props: Props): JSX.Element {
             return "";
         }
         else {
-            const motion = viewerCtx.store.entity
+            const motion = viewerCtx.store.asset
                 .getById<Motion>(motionId);
 
             if (!motion) throw new Error();

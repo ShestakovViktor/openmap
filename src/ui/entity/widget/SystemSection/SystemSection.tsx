@@ -2,7 +2,7 @@ import styles from "./SystemSection.module.scss";
 import en from "./string/en.json";
 import i18next from "i18next";
 
-import {Row, Section} from "@ui/widget";
+import {Field, Row, Section} from "@ui/widget";
 import {JSX, Resource} from "solid-js";
 
 i18next.addResourceBundle("en", "entity", {SystemSection: en}, true, true);
@@ -24,7 +24,7 @@ export function SystemSection(props: Props): JSX.Element {
                 )
             }
         >
-            <Row>
+            <Field>
                 <label for="id">
                     {i18next.t(
                         "entity:SystemSection.id",
@@ -37,8 +37,8 @@ export function SystemSection(props: Props): JSX.Element {
                     value={props.entity()?.id ?? ""}
                     readonly
                 />
-            </Row>
-            <Row>
+            </Field>
+            <Field>
                 <label for="typeId">
                     {i18next.t(
                         "entity:SystemSection.typeId",
@@ -51,7 +51,7 @@ export function SystemSection(props: Props): JSX.Element {
                     value={props.entity()?.typeId ?? ""}
                     readonly
                 />
-            </Row>
+            </Field>
         </Section>
     );
 }

@@ -6,7 +6,7 @@ import i18next from "i18next";
 import {JSX, Signal, createEffect, createResource, on} from "solid-js";
 import {Decor, Id} from "@type";
 import {
-    AssetSection,
+    PropSection,
     EntityForm,
     PositionSection,
     SystemSection,
@@ -37,7 +37,7 @@ export function DecorForm(props: Props): JSX.Element {
             <Accordion>
                 <SystemSection entity={entity}/>
                 <PositionSection entity={entity}/>
-                <AssetSection entity={entity}/>
+                <PropSection entity={entity}/>
                 <MotionSection entity={entity}/>
             </Accordion>
         </EntityForm>

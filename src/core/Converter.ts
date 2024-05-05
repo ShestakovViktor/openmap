@@ -1,6 +1,6 @@
 import {Media} from "@core";
 import {ArchiveDriver} from "@src/interface";
-import {Data, Id, Source} from "@type";
+import {Asset, Data, Id} from "@type";
 import {Store} from "@core";
 
 type Blobs = {[key: string]: Blob};
@@ -22,8 +22,8 @@ export class Converter {
 
     private exportData(): {[key: string]: Blob} {
         const projectData = this.store.getData();
-        const [source, blobs] = this.splitSourcesToBase64(projectData.source);
-        const data = {...projectData, source};
+        const [asset, blobs] = this.splitAssetToBase64(projectData.asset);
+        const data = {...projectData, asset};
 
         const dataString = JSON.stringify(data, null, 4);
         const dataType = "application/json;charset=utf-8";
@@ -32,23 +32,23 @@ export class Converter {
         return {["data.json"]: dataBlob, ...blobs};
     }
 
-    private splitSourcesToBase64(data: {[key: Id]: Source}): [
-        {[key: Id]: Source},
+    private splitAssetToBase64(assets: {[key: Id]: Asset}): [
+        {[key: Id]: Asset},
         {[key: string]: Blob},
     ] {
-        const sources: {[key: Id]: Source} = {};
+        const records: {[key: Id]: Asset} = {};
         const blobs: Blobs = {};
 
-        for (const sourceId in data) {
-            const source = data[sourceId];
-            const sourceBlob = new Blob([source.content], {type: "text/plain"});
+        for (const id in assets) {
+            const asset = assets[id];
+            const contentBlob = new Blob([asset.content], {type: "text/plain"});
 
-            const path = `source/${sourceId}.b64`;
-            sources[source.id] = {...source, content: "", path};
-            blobs[path] = sourceBlob;
+            const path = `asset/${id}.b64`;
+            records[asset.id] = {...asset, content: "", path};
+            blobs[path] = contentBlob;
         }
 
-        return [sources, blobs];
+        return [records, blobs];
     }
 
     loadProject(data: Data): void {
@@ -65,10 +65,10 @@ export class Converter {
         const dataString = await files["data.json"].text();
         const data = JSON.parse(dataString) as Data;
 
-        for (const sourceId in data.source) {
-            const path = data.source[sourceId].path;
-            data.source[sourceId].path = "";
-            data.source[sourceId].content = await files[path].text();
+        for (const id in data.asset) {
+            const asset = data.asset[id];
+            asset.content = await files[asset.path].text();
+            asset.path = "";
         }
 
         return data;
@@ -81,44 +81,44 @@ export class Converter {
 
     private async exportStatic(store: Store): Promise<Blobs> {
         const data = store.getData();
-        const [source, blobs] = this.splitSourcesToFiles(data.source);
+        const [asset, blobs] = this.splitAssetsToFiles(data.asset);
 
         return {
             ...await this.getTemplateBlob(),
             ...await this.getBundleBlob(),
-            ...this.getDataBlob({...data, source}),
+            ...this.getDataBlob({...data, asset}),
             ...blobs,
         };
     }
 
-    private splitSourcesToFiles(data: {[key: Id]: Source}): [
-        {[key: Id]: Source},
+    private splitAssetsToFiles(input: {[key: Id]: Asset}): [
+        {[key: Id]: Asset},
         {[key: Id]: Blob},
     ] {
         const {value: name} = this.store.config.getByParams({name: "name"})[0];
-        const sources: {[key: Id]: Source} = {};
+        const output: {[key: Id]: Asset} = {};
         const blobs: Blobs = {};
 
-        for (const sourceId in data) {
-            const source = data[sourceId];
-            if (!source.content) throw new Error();
-            const sourceData = source.content.split(/[;:,]/);
-            const base64String = sourceData[3];
-            const sourceBytes = this.base64toBytes(base64String);
-            const extension = this.media.typeToExtension(source.mime);
+        for (const id in input) {
+            const asset = input[id];
+            if (!asset.content) throw new Error();
+            const assetData = asset.content.split(/[;:,]/);
+            const base64String = assetData[3];
+            const assetDataBytes = this.base64toBytes(base64String);
+            const extension = this.media.typeToExtension(asset.mime);
 
-            const path = `${name}/${sourceId}.${extension}`;
-            sources[sourceId] = {
-                id: Number(sourceId),
-                mime: source.mime,
+            const path = `${name}/${id}.${extension}`;
+            output[id] = {
+                ...asset,
+                mime: asset.mime,
                 path,
                 content: "",
             };
 
-            blobs[path] = new Blob([sourceBytes], {type: source.mime});
+            blobs[path] = new Blob([assetDataBytes], {type: asset.mime});
         }
 
-        return [sources, blobs];
+        return [output, blobs];
     }
 
     private base64toBytes(base64String: string): Uint8Array {

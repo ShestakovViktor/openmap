@@ -1,33 +1,41 @@
 import en from "./string/en.json";
-import styles from "./AssetInput.module.scss";
+import styles from "./PropSelect.module.scss";
 
-import {For, JSX, Resource, createEffect, createResource, createSignal, on} from "solid-js";
+import {
+    For,
+    JSX,
+    Resource,
+    createEffect,
+    createResource,
+    createSignal,
+    on,
+} from "solid-js";
 import {Dialog, Modal} from "@ui/widget";
-import {AssetForm} from "@ui/asset/widget/AssetForm";
 import i18next from "i18next";
 import {useViewerContext} from "@ui/viewer/context";
-import {Asset, Id, Source} from "@type";
-import {EntityType} from "@enum";
+import {Asset, Id} from "@type";
+import {AssetType} from "@enum";
+import {PropForm} from "../PropForm";
 
-i18next.addResourceBundle("en", "asset", {"AssetSelectInput": en}, true, true);
+i18next.addResourceBundle("en", "prop", {"PropSelect": en}, true, true);
 
 type Props = {
-    entity: Resource<{assetId: Id | null} | null>;
+    entity: Resource<{propId: Id | null} | null>;
 };
 
-export function AssetInput({entity}: Props): JSX.Element {
+export function PropSelect(props: Props): JSX.Element {
     const viewerCtx = useViewerContext();
     let inputRef: HTMLInputElement | undefined;
     const [selected, setSelected] = createSignal<number | null>(
-        entity()?.assetId ?? null
+        props.entity()?.propId ?? null
     );
 
-    const {id: assetTypeId} = viewerCtx.store.type
-        .getByParams({name: EntityType.ASSET})[0];
+    const {id: propTypeId} = viewerCtx.store.type
+        .getByParams({name: AssetType.PROP})[0];
 
     const [assetsData, {refetch}] = createResource<Asset[]>(() => {
-        return viewerCtx.store.entity
-            .getByParams<Asset>({typeId: assetTypeId});
+        return viewerCtx.store.asset
+            .getByParams<Asset>({typeId: propTypeId});
     });
 
     createEffect(on(viewerCtx.init, refetch));
@@ -37,24 +45,13 @@ export function AssetInput({entity}: Props): JSX.Element {
             {(asset, index) => {
 
                 const src = (): string => {
-                    const {sourceId} = asset;
-                    if (!sourceId){
-                        return "";
-                    }
-                    else {
-                        const source = viewerCtx.store.source
-                            .getById<Source>(asset.sourceId);
-
-                        if (!source) throw new Error();
-
-                        return source.path || source.content;
-                    }
+                    return asset.path || asset.content;
                 };
 
                 return <img
                     class={styles.Preview}
                     classList={{
-                        [styles.Selected]: index() == selected(),
+                        [styles.Selected]: asset.id == selected(),
                     }}
                     src={src()}
                     onClick={() => {
@@ -78,13 +75,13 @@ export function AssetInput({entity}: Props): JSX.Element {
     const assetFormDialog = new Modal();
     assetFormDialog.render(
         <Dialog>
-            <AssetForm onComplete={() => assetFormDialog.hide()}/>
+            <PropForm onComplete={() => assetFormDialog.hide()}/>
         </Dialog>
     );
 
     return (
-        <div class={styles.AssetSelectInput}>
-            <input ref={inputRef} name="assetId" type="hidden"/>
+        <div class={styles.PropSelect}>
+            <input ref={inputRef} name="propId" type="hidden"/>
             <div class={styles.Showcase}>
                 {previews}
                 <button

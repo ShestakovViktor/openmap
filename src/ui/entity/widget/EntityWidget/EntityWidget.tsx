@@ -1,4 +1,4 @@
-import {JSX, createMemo} from "solid-js";
+import {JSX} from "solid-js";
 import {TileWidget} from "@src/ui/tile/widget";
 import {Group} from "@src/ui/group/widget";
 import {MarkerWidget} from "@src/ui/marker/widget";
@@ -6,7 +6,6 @@ import {useViewerContext} from "@ui/viewer/context";
 import {Dynamic} from "solid-js/web";
 import {EntityType} from "@enum";
 import {Id} from "@type";
-import {MotionWidget} from "@ui/motion/widget";
 import {DecorWidget} from "@ui/decor/widget";
 import {AreaWidget} from "@ui/area/widget";
 
@@ -36,9 +35,6 @@ export function Entity(props: Props): JSX.Element {
     const {id: areaTypeId} = viewerCtx.store.type
         .getByParams({name: EntityType.AREA})[0];
 
-    const {id: motionTypeId} = viewerCtx.store.type
-        .getByParams({name: EntityType.MOTION})[0];
-
     const entities: {
         [key: string]: (props: {entityId: Id}) => JSX.Element;
     } = {
@@ -47,7 +43,6 @@ export function Entity(props: Props): JSX.Element {
         [makerTypeId]: MarkerWidget,
         [decorTypeId]: DecorWidget,
         [areaTypeId]: AreaWidget,
-        [motionTypeId]: MotionWidget,
     };
 
     return (

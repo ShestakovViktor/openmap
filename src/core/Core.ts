@@ -1,8 +1,8 @@
 import {Invoker, Converter, Store} from "@core";
 import {WebArchiveDriver, WebImageDriver} from "@core/driver";
 import {ArchiveDriver, ImageDriver} from "@src/interface";
-import {Group, Id, Motion, Source, Tile, Asset} from "@type";
-import {EntityType, LayerName} from "@enum";
+import {Group, Id, Motion, Tile, Asset, Image} from "@type";
+import {AssetType, EntityType, LayerName} from "@enum";
 
 export class Core {
     public invoker = new Invoker();
@@ -39,32 +39,36 @@ export class Core {
         const map = this.store.entity
             .getByParams<Group>({name: LayerName.MAP})[0];
 
-        const {id: typeId} = this.store.type
+        const {id: tileTypeId} = this.store.type
             .getByParams({name: EntityType.TILE})[0];
 
+        const {id: imageTypeId} = this.store.type
+            .getByParams({name: AssetType.IMAGE})[0];
+
         const tileIds = tiles.map((tile) => {
-            const sourceId = this.store.source.add<Source>({
+            const imageId = this.store.asset.add<Image>({
+                typeId: imageTypeId,
                 content: tile.base64,
                 path: "",
                 mime,
             });
 
             const tileId = this.store.entity.add<Tile>({
-                typeId,
+                typeId: tileTypeId,
                 x: tile.x,
                 y: tile.y,
                 width: tile.width,
                 height: tile.height,
-                sourceId,
+                imageId,
             });
 
             return tileId;
         });
 
-        this.store.entity.set<Group>({id: map.id, childrenIds: tileIds});
+        this.store.entity.set<Group>({id: map.id, childIds: tileIds});
     }
 
-    async initAsset({name, file, width, height}: {
+    async initProp({name, file, width, height}: {
         name: string;
         width: number;
         height: number;
@@ -74,16 +78,13 @@ export class Core {
         const base64 = await this.imageDriver
             .fooImage(file, width, height, mime);
 
-        const sourceId = this.store.source
-            .add({content: base64, path: "", mime});
+        const {id: propTypeId} = this.store.type
+            .getByParams({name: AssetType.PROP})[0];
 
-        const {id: typeId} = this.store.type
-            .getByParams({name: EntityType.ASSET})[0];
+        const propId = this.store.asset
+            .add({typeId: propTypeId, content: base64, path: "", mime});
 
-        const assetId = this.store.entity
-            .add<Asset>({typeId, name, sourceId});
-
-        return assetId;
+        return propId;
     }
 
     initMotion(motionData: {
@@ -93,29 +94,17 @@ export class Core {
     }): Id {
         const mime = "text/css";
 
-        const {id: typeId} = this.store.type
-            .getByParams({name: EntityType.MOTION})[0];
+        const {id: motionTypeId} = this.store.type
+            .getByParams({name: AssetType.MOTION})[0];
 
-        const sourceId = this.store.source.add({
+        const motionId = this.store.asset.add<Motion>({
+            typeId: motionTypeId,
             content: motionData.source,
             path: "",
+            class: motionData.class,
+            name: motionData.name,
             mime,
         });
-
-        const motionId = this.store.entity.add<Motion>({
-            name: motionData.name,
-            class: motionData.class,
-            typeId,
-            sourceId,
-        });
-
-        const styleLayer = this.store.entity.getByParams<Group>({
-            name: LayerName.STYLE,
-        })[0];
-
-        styleLayer.childrenIds.push(motionId);
-
-        this.store.entity.set<Group>(styleLayer);
 
         return motionId;
     }

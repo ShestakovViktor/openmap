@@ -1,9 +1,9 @@
-import {Entity} from "@type";
+import {Entity, Id} from "@type";
 
 export type Tile = Entity & {
     x: number;
     y: number;
     width: number;
     height: number;
-    sourceId: number;
+    imageId: Id | null;
 };

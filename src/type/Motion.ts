@@ -1,7 +1,6 @@
-import {Entity, Id} from "@type";
+import {Asset} from "@type";
 
-export type Motion = Entity & {
+export type Motion = Asset & {
     name: string;
     class: string;
-    sourceId: Id;
 };

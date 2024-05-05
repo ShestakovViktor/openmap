@@ -4,6 +4,4 @@ export const EntityType = {
     MARKER: "marker",
     DECOR: "decor",
     AREA: "area",
-    ASSET: "asset",
-    MOTION: "motion",
 };

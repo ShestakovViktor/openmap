@@ -1,5 +1,5 @@
 import en from "./string/en.json";
-import styles from "./MotionInput.module.scss";
+import styles from "./MotionSelect.module.scss";
 
 import {Button, Dialog} from "@ui/widget";
 import i18next from "i18next";
@@ -8,7 +8,7 @@ import {Modal} from "@ui/widget/Modal";
 import {useViewerContext} from "@ui/viewer/context";
 import {Id, Motion} from "@type";
 import {MotionForm} from "../MotionForm";
-import {EntityType} from "@enum";
+import {AssetType, EntityType} from "@enum";
 
 i18next.addResourceBundle("en", "motion", {"MotionSelectDialog": en}, true, true);
 
@@ -16,7 +16,7 @@ type Props = {
     entity: Resource<{motionId: Id | null} | null>;
 };
 
-export function MotionInput({entity}: Props): JSX.Element {
+export function MotionSelect({entity}: Props): JSX.Element {
     const viewerCtx = useViewerContext();
     let inputRef: HTMLInputElement | undefined;
     const [selected, setSelected] = createSignal<Id | null>(
@@ -24,10 +24,10 @@ export function MotionInput({entity}: Props): JSX.Element {
     );
 
     const {id: motionTypeId} = viewerCtx.store.type
-        .getByParams({name: EntityType.MOTION})[0];
+        .getByParams({name: AssetType.MOTION})[0];
 
     const [motions, {refetch}] = createResource(() => {
-        return viewerCtx.store.entity
+        return viewerCtx.store.asset
             .getByParams<Motion>({typeId: motionTypeId});
     });
 

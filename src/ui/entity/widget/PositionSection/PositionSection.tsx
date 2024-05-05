@@ -2,7 +2,7 @@ import styles from "./PositionSection.module.scss";
 import en from "./string/en.json";
 import i18next from "i18next";
 
-import {Row, Section} from "@ui/widget";
+import {Field, Section} from "@ui/widget";
 import {JSX, Resource} from "solid-js";
 
 i18next.addResourceBundle("en", "entity", {PositionSection: en}, true, true);
@@ -23,7 +23,7 @@ export function PositionSection(props: Props): JSX.Element {
             }
             class={styles.PositionSection}
         >
-            <Row>
+            <Field>
                 <label for="x">
                     {i18next.t(
                         "entity:PositionSection.x",
@@ -31,8 +31,8 @@ export function PositionSection(props: Props): JSX.Element {
                     )}
                 </label>
                 <input type="number" name="x" value={props.entity()?.x ?? ""}/>
-            </Row>
-            <Row>
+            </Field>
+            <Field>
                 <label for="y">
                     {i18next.t(
                         "entity:PositionSection.y",
@@ -40,7 +40,7 @@ export function PositionSection(props: Props): JSX.Element {
                     )}
                 </label>
                 <input type="number" name="y" value={props.entity()?.y ?? ""}/>
-            </Row>
+            </Field>
         </Section>
     );
 }

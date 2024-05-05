@@ -1,8 +1,9 @@
 import styles from "./Motion.module.scss";
 import {JSX, createResource} from "solid-js";
-import {Motion, Id, Source} from "@type";
+import {Motion, Id, Asset} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
 import {Portal} from "solid-js/web";
+import {Entity} from "@ui/entity/widget";
 
 type Props = {
     entityId: Id;
@@ -11,26 +12,17 @@ type Props = {
 export function MotionWidget(props: Props): JSX.Element {
     const viewerCtx = useViewerContext();
 
-    const [entity] = createResource(
-        () => viewerCtx.store.entity
+    const [asset] = createResource(
+        () => viewerCtx.store.asset
             .getById<Motion>(props.entityId)
     );
 
     const href = (): string => {
-        const sourceId = entity()?.sourceId;
-
-        if (!sourceId) {
-            return "";
-        }
+        const motion = asset();
+        if (!motion) return "";
         else {
-            const source = viewerCtx.store.source
-                .getById<Source>(sourceId);
-
-            if (!source) throw new Error();
-
-            return source.path || source.content;
+            return motion.path || motion.content;
         }
-
     };
 
     return (

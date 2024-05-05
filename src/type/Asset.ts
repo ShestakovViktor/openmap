@@ -1,6 +1,10 @@
-import {Entity, Id} from "@type";
+import {Id} from "@type";
 
-export type Asset = Entity & {
-    name: string;
-    sourceId: Id;
+export type Asset = {
+    id: Id;
+    typeId: Id | null;
+
+    mime: string;
+    path: string;
+    content: string;
 };

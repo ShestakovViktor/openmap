@@ -1,6 +1,6 @@
 import styles from "./MarkerWidget.module.scss";
 import {JSX, Show, Suspense, createEffect, createResource, createSignal, on} from "solid-js";
-import {Marker, Id, Asset, Source} from "@type";
+import {Marker, Id, Asset, Prop} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
 
 type Props = {
@@ -30,23 +30,18 @@ export function MarkerWidget(props: Props): JSX.Element {
     };
 
     const src = (): string => {
-        const assetId = entity()?.assetId;
+        const propId = entity()?.propId;
 
-        if (!assetId) {
+        if (!propId) {
             return "./icon/marker.svg";
         }
         else {
-            const asset = viewerCtx.store.entity
-                .getById<Asset>(assetId);
+            const prop = viewerCtx.store.asset
+                .getById<Prop>(propId);
 
-            if (!asset) throw new Error();
+            if (!prop) throw new Error();
 
-            const source = viewerCtx.store.source
-                .getById<Source>(asset.sourceId);
-
-            if (!source) throw new Error();
-
-            return source.path || source.content;
+            return prop.path || prop.content;
         }
     };
 

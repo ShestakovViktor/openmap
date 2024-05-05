@@ -29,7 +29,7 @@ export class DecorIOMode implements IOMode{
             typeId,
             x,
             y,
-            assetId: null,
+            propId: null,
             motionId: null,
         });
 

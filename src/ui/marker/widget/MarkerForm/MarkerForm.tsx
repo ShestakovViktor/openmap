@@ -17,7 +17,7 @@ import {
     PositionSection,
     SystemSection,
     TextSection,
-    AssetSection,
+    PropSection,
 } from "@ui/entity/widget";
 
 i18next.addResourceBundle("en", "marker", {MarkerForm: en}, true, true);
@@ -42,7 +42,7 @@ export function MarkerForm(props: Props): JSX.Element {
             <Accordion>
                 <SystemSection entity={entity}/>
                 <PositionSection entity={entity}/>
-                <AssetSection entity={entity}/>
+                <PropSection entity={entity}/>
                 <TextSection entity={entity}/>
                 {/* <Row>
                         <input

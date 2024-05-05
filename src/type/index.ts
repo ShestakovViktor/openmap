@@ -1,5 +1,4 @@
 export * from "./Id";
-export * from "./Source";
 export * from "./Type";
 export * from "./Entity";
 export * from "./Asset";
@@ -11,3 +10,5 @@ export * from "./Tile";
 export * from "./Decor";
 export * from "./Param";
 export * from "./Data";
+export * from "./Image";
+export * from "./Prop";

@@ -1,6 +1,6 @@
-import {Data, Entity, Type, Group, Source, Param} from "@type";
+import {Data, Entity, Type, Group, Asset, Param} from "@type";
 import {Collection} from "@core";
-import {EntityType, LayerName} from "@enum";
+import {AssetType, EntityType, LayerName} from "@enum";
 
 export class Store {
     private data!: Data;
@@ -9,7 +9,7 @@ export class Store {
 
     public type!: Collection<Type>;
 
-    public source!: Collection<Source>;
+    public asset!: Collection<Asset>;
 
     public entity!: Collection<Entity>;
 
@@ -21,7 +21,7 @@ export class Store {
         this.data = this.initData(data);
         this.config = new Collection<Param>(this.data.config);
         this.type = new Collection<Type>(this.data.type);
-        this.source = new Collection<Source>(this.data.source);
+        this.asset = new Collection<Asset>(this.data.asset);
         this.entity = new Collection<Entity>(this.data.entity);
     }
 
@@ -35,8 +35,6 @@ export class Store {
                 1: {id: 1, name: "name", value:  "New project"},
                 2: {id: 2, name: "width", value: 0},
                 3: {id: 3, name: "height", value: 0},
-                4: {id: 4, name: "row", value: 0},
-                5: {id: 5, name: "column", value: 0},
             },
             type: {
                 1: {id: 1, name: EntityType.GROUP},
@@ -44,8 +42,10 @@ export class Store {
                 3: {id: 3, name: EntityType.MARKER},
                 4: {id: 4, name: EntityType.DECOR},
                 5: {id: 5, name: EntityType.AREA},
-                6: {id: 6, name: EntityType.ASSET},
-                7: {id: 7, name: EntityType.MOTION},
+
+                50: {id: 50, name: AssetType.IMAGE},
+                51: {id: 51, name: AssetType.PROP},
+                55: {id: 55, name: AssetType.MOTION},
             },
             entity: {
                 1: {
@@ -73,7 +73,7 @@ export class Store {
                     childrenIds: [],
                 } as Group,
             },
-            source: {},
+            asset: {},
         };
 
         return Object.assign(data, params);

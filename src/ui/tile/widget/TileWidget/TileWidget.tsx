@@ -1,6 +1,6 @@
 import styles from "./TileWidget.module.scss";
 import {JSX, createResource} from "solid-js";
-import {Id, Source, Tile} from "@type";
+import {Asset, Id, Tile} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
 
 type Props = {
@@ -26,18 +26,18 @@ export function TileWidget(props: Props): JSX.Element {
     };
 
     const src = (): string => {
-        const sourceId = entity()?.sourceId;
+        const imageId = entity()?.imageId;
 
-        if (!sourceId) {
+        if (!imageId) {
             return "";
         }
         else {
-            const source = viewerCtx.store.source
-                .getById<Source>(sourceId);
+            const image = viewerCtx.store.asset
+                .getById<Asset>(imageId);
 
-            if (!source) throw new Error();
+            if (!image) throw new Error();
 
-            return source.path || source.content;
+            return image.path || image.content;
         }
 
     };

@@ -29,7 +29,7 @@ export class MarkerIOMode implements IOMode {
             typeId,
             x,
             y,
-            assetId: null,
+            propId: null,
             text: "",
             graphicIds: [],
         });
