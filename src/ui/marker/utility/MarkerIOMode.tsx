@@ -37,7 +37,7 @@ export class MarkerIOMode implements IOMode {
         const overlay = this.editorCtx.store.entity
             .getByParams<Group>({name: LayerName.OVERLAY})[0];
 
-        overlay.childrenIds.push(markerId);
+        overlay.childIds.push(markerId);
 
         this.editorCtx.store.entity.set(overlay);
 

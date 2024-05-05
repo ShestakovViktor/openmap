@@ -36,7 +36,7 @@ export class DecorIOMode implements IOMode{
         const overlay = this.editorCtx.store.entity
             .getByParams<Group>({name: LayerName.OVERLAY})[0];
 
-        overlay.childrenIds.push(decorId);
+        overlay.childIds.push(decorId);
 
         this.editorCtx.store.entity.set(overlay);
 

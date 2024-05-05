@@ -48,9 +48,9 @@ export function EntityForm(props: Props): JSX.Element {
         const overlay = editorCtx.store.entity
             .getByParams<Group>({name: LayerName.OVERLAY})[0];
 
-        const index = overlay.childrenIds.indexOf(id);
+        const index = overlay.childIds.indexOf(id);
         if (index > -1) {
-            overlay.childrenIds.splice(index, 1);
+            overlay.childIds.splice(index, 1);
         }
 
         editorCtx.store.entity.set(overlay);

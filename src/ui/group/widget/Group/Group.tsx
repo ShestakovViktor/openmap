@@ -17,9 +17,9 @@ export function Group(props: Props): JSX.Element {
 
     createEffect(on(viewerCtx.render, refetch));
 
-    const childrenIds = (): number[] => {
+    const childIds = (): number[] => {
         const data = entity();
-        return data ? data.childrenIds : [];
+        return data ? data.childIds : [];
     };
 
     function foo(name: string): JSX.CSSProperties {
@@ -47,7 +47,7 @@ export function Group(props: Props): JSX.Element {
                 style={foo(entity()?.name ?? "")}
                 ref={props.ref}
             >
-                <For each={childrenIds()}>
+                <For each={childIds()}>
                     {id => <Entity entityId={id}/>}
                 </For>
             </div>

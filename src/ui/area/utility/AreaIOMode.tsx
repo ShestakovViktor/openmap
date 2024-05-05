@@ -48,7 +48,7 @@ export class AreaIOMode implements IOMode {
         const overlay = this.editorCtx.store.entity
             .getByParams<Group>({name: LayerName.OVERLAY})[0];
 
-        overlay.childrenIds.push(areaId);
+        overlay.childIds.push(areaId);
 
         this.editorCtx.store.entity.set(overlay);
 

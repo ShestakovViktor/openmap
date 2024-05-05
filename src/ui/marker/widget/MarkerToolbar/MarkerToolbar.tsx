@@ -34,7 +34,7 @@ export function MarkerToolbar(props: Props): JSX.Element {
         const overlay = editorCtx.store.entity
             .getByParams<Group>({name: LayerName.OVERLAY})[0];
 
-        overlay.childrenIds = overlay.childrenIds
+        overlay.childIds = overlay.childIds
             .filter(id => id != markerId);
 
         editorCtx.store.entity.set(overlay);
