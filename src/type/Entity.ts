@@ -1,4 +1,6 @@
+import {Id} from "./Id";
+
 export type Entity = {
-    id: number;
-    typeId: number;
+    id: Id;
+    typeId: Id;
 };
