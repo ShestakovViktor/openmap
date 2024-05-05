@@ -9,3 +9,17 @@
         border: 2px dashed blue;
     }
 }
+
+[data-type="area"] {
+    &.Selected {
+        circle {
+            fill: red;
+        }
+
+        polygon {
+            stroke: red;
+            stroke-dasharray: 8 4;
+            stroke-width: 2px;
+        }
+    }
+}

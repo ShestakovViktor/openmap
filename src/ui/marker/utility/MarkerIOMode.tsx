@@ -58,5 +58,7 @@ export class MarkerIOMode implements IOMode {
 
         this.viewerCtx.reRender();
 
+        this.editorCtx.setSelected([markerId]);
+
     }
 }

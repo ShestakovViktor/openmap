@@ -81,5 +81,7 @@ export class AreaIOMode implements IOMode {
         this.editorCtx.store.entity.set(area);
 
         this.viewerCtx.reRender();
+
+        this.editorCtx.setSelected([areaId]);
     }
 }

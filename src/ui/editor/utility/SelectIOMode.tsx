@@ -39,8 +39,7 @@ export class SelectIOMode implements IOMode {
             }
         }
         else {
-            // this.selected.forEach(el => el.classList.remove("Selected"));
-            // this.selected = [];
+            this.editorCtx.setSelected([]);
         }
     }
 }
