@@ -72,13 +72,17 @@ export class WebImageDriver implements ImageDriver {
                     0, 0, tileWidth, tileHeight
                 );
 
-                const base64 = canvas.toDataURL(mime);
+                const dataUrl = canvas.toDataURL(mime);
+                const data = dataUrl.split(/[;:,]/);
+
                 tiles.push({
                     x,
                     y,
                     width: tileWidth,
                     height: tileHeight,
-                    base64,
+                    media: data[1],
+                    encoding: data[2],
+                    data: data[3],
                 });
             }
         }

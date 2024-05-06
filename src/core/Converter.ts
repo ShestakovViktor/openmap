@@ -41,10 +41,11 @@ export class Converter {
 
         for (const id in assets) {
             const asset = assets[id];
-            const contentBlob = new Blob([asset.content], {type: "text/plain"});
+            if (!asset.data) throw new Error("");
+            const contentBlob = new Blob([asset.data], {type: "text/plain"});
 
-            const path = `asset/${id}.b64`;
-            records[asset.id] = {...asset, content: "", path};
+            const path = `asset/${id}.${asset.encoding}`;
+            records[asset.id] = {...asset, path, data: ""};
             blobs[path] = contentBlob;
         }
 
@@ -67,7 +68,8 @@ export class Converter {
 
         for (const id in data.asset) {
             const asset = data.asset[id];
-            asset.content = await files[asset.path].text();
+            if (!asset.path) throw new Error("");
+            asset.data = await files[asset.path].text();
             asset.path = "";
         }
 
@@ -101,21 +103,18 @@ export class Converter {
 
         for (const id in input) {
             const asset = input[id];
-            if (!asset.content) throw new Error();
-            const assetData = asset.content.split(/[;:,]/);
-            const base64String = assetData[3];
-            const assetDataBytes = this.base64toBytes(base64String);
-            const extension = this.media.typeToExtension(asset.mime);
+            if (!asset.data) throw new Error();
+            const assetDataBytes = this.base64toBytes(asset.data);
+            const extension = this.media.typeToExtension(asset.media);
 
             const path = `${name}/${id}.${extension}`;
             output[id] = {
                 ...asset,
-                mime: asset.mime,
                 path,
-                content: "",
+                data: "",
             };
 
-            blobs[path] = new Blob([assetDataBytes], {type: asset.mime});
+            blobs[path] = new Blob([assetDataBytes], {type: asset.media});
         }
 
         return [output, blobs];

@@ -1,7 +1,7 @@
 import {Invoker, Converter, Store} from "@core";
 import {WebArchiveDriver, WebImageDriver} from "@core/driver";
 import {ArchiveDriver, ImageDriver} from "@src/interface";
-import {Group, Id, Motion, Tile, Asset, Image} from "@type";
+import {Group, Tile, Image} from "@type";
 import {AssetType, EntityType, LayerName} from "@enum";
 
 export class Core {
@@ -48,9 +48,10 @@ export class Core {
         const tileIds = tiles.map((tile) => {
             const imageId = this.store.asset.add<Image>({
                 typeId: imageTypeId,
-                content: tile.base64,
+                data: tile.data,
+                media: tile.media,
+                encoding: tile.encoding,
                 path: "",
-                mime,
             });
 
             const tileId = this.store.entity.add<Tile>({
@@ -66,46 +67,5 @@ export class Core {
         });
 
         this.store.entity.set<Group>({id: map.id, childIds: tileIds});
-    }
-
-    async initProp({name, file, width, height}: {
-        name: string;
-        width: number;
-        height: number;
-        file: File;
-    }): Promise<Id> {
-        const mime = "image/png";
-        const base64 = await this.imageDriver
-            .fooImage(file, width, height, mime);
-
-        const {id: propTypeId} = this.store.type
-            .getByParams({name: AssetType.PROP})[0];
-
-        const propId = this.store.asset
-            .add({typeId: propTypeId, content: base64, path: "", mime});
-
-        return propId;
-    }
-
-    initMotion(motionData: {
-        name: string;
-        class: string;
-        source: string;
-    }): Id {
-        const mime = "text/css";
-
-        const {id: motionTypeId} = this.store.type
-            .getByParams({name: AssetType.MOTION})[0];
-
-        const motionId = this.store.asset.add<Motion>({
-            typeId: motionTypeId,
-            content: motionData.source,
-            path: "",
-            class: motionData.class,
-            name: motionData.name,
-            mime,
-        });
-
-        return motionId;
     }
 }

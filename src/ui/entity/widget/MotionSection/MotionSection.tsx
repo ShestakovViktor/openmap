@@ -10,18 +10,16 @@ import {Id} from "@type";
 i18next.addResourceBundle("en", "entity", {MotionSection: en}, true, true);
 
 type Props = {
-    id?: string;
     entity: Resource<{motionId: Id | null} | null>;
 };
 
 export function MotionSection(props: Props): JSX.Element {
     return (
         <Section
-            id={props.id}
             class={styles.MotionSection}
             title={
                 i18next.t(
-                    "entity:MotionSection.motion",
+                    "entity:MotionSection.title",
                     {postProcess: ["capitalize"]}
                 )
             }

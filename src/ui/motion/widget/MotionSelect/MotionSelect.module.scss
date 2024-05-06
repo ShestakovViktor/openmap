@@ -1,4 +1,4 @@
-.MotionInput {
+.MotionSelect {
     .Showcase {
         display: flex;
         flex-direction: row;
@@ -16,5 +16,8 @@
             }
         }
     }
+}
 
+.MotionDialog {
+    width: 40%;
 }

@@ -1,101 +1,82 @@
 import styles from "./AssetForm.module.scss";
 import en from "./string/en.json";
 
-import i18next from "i18next";
-import {Form, Row} from "@ui/widget";
 import {JSX} from "solid-js";
 import {useEditorContext} from "@ui/editor/context";
-import {Id} from "@type";
+import i18next from "i18next";
+import {Asset, Id} from "@type";
+import {readFile} from "@ui/app/utiliy";
 import {useViewerContext} from "@ui/viewer/context";
 
-i18next.addResourceBundle(
-    "en", "asset", {AssetForm: en}, true, true
-);
+i18next.addResourceBundle("en", "asset", {AssetForm: en}, true, true);
 
 type Props = {
-    onComplete?: (assetId: Id) => void;
-    onClose?: () => void;
+    children?: JSX.Element | JSX.Element[];
+    id?: string;
+    class?: string;
+    data?: {[key: string]: string | number | File};
+    onSubmit?: (assetId: Id) => void;
 };
 
-export function AssetForm(props?: Props): JSX.Element {
-    const editorCtx = useEditorContext();
+export function AssetForm(props: Props): JSX.Element {
     const viewerCtx = useViewerContext();
+    const editorCtx = useEditorContext();
 
-    async function handleSubmit(event: SubmitEvent): Promise<void> {
+    const data: {[key: string]: string | number | File} = props.data ?? {};
+
+    function handleChange(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        const type = input.getAttribute("data-type");
+
+        if (type == "number") {
+            data[input.name] = Number(input.value);
+        }
+        else if (type == "file" && input.files) {
+            data[input.name] = input.files[0];
+        }
+        else {
+            data[input.name] = String(input.value);
+        }
+    }
+
+    function handleSubmit(event: SubmitEvent): void {
         event.preventDefault();
+        if (!data.file) return;
 
-        const form = event.target as HTMLFormElement;
-        const formData = new FormData(form);
-        form.reset();
+        const {file, ...asset} = data;
 
-        const name = String(formData.get("name")) || "Asset";
-        const width = Number(formData.get("width"));
-        const height = Number(formData.get("height"));
-        const file = formData.get("file") as File;
+        readFile(file as File)
+            .then((fileData) => {
+                Object.assign(asset, fileData);
+                const assetId = editorCtx.store.asset
+                    .add(asset as Omit<Asset, "id">);
 
-        const assetId = await editorCtx.core
-            .initAsset({name, file, width, height});
+                editorCtx.reInit();
+                viewerCtx.rePrepare();
 
-        viewerCtx.reInit();
-
-        if (props?.onComplete) props.onComplete(assetId);
+                if (props.onSubmit) props.onSubmit(assetId);
+            })
+            .catch((err) => {
+                throw err;
+            });
     }
 
     return (
-        <Form
-            class={styles.AssetForm}
-            onSubmit={
-                (event) => {
-                    handleSubmit(event).catch((err) => {throw new Error(err);});
-                }
-            }
+        <form
+            id={props.id}
+            class={styles.Form}
+            classList={{[props.class ?? ""]: "class" in props}}
+            onChange={handleChange}
+            onSubmit={handleSubmit}
         >
-            <Row>
-                <label for="name">
-                    {i18next.t(
-                        "asset:AssetForm.name",
-                        {postProcess: ["capitalize"]}
-                    )}
-                </label>
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                />
-            </Row>
-            <Row>
-                <label for="width">
-                    {i18next.t(
-                        "asset:AssetForm.width",
-                        {postProcess: ["capitalize"]}
-                    )}
-                </label>
-                <input id="width" type="text" name="width"/>
-            </Row>
-            <Row>
-                <label for="height">
-                    {i18next.t(
-                        "asset:AssetForm.height",
-                        {postProcess: ["capitalize"]}
-                    )}
-                </label>
-                <input id="height" type="text" name="height"/>
-            </Row>
-            <Row>
-                <label for="file">
-                    {i18next.t(
-                        "asset:AssetForm.file",
-                        {postProcess: ["capitalize"]}
-                    )}
-                </label>
-                <input
-                    type="file"
-                    name="file"
-                    accept="image/*"
-                />
-            </Row>
-
-            <input type="submit"/>
-        </Form>
+            {props.children}
+            <input
+                type="submit"
+                value={i18next.t(
+                    "asset:AssetForm.submit",
+                    {postProcess: ["capitalize"]}
+                )}
+            />
+        </form>
     );
 }

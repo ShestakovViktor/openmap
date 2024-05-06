@@ -7,15 +7,15 @@ import {
     Resource,
     createEffect,
     createResource,
-    createSignal,
     on,
 } from "solid-js";
 import {Dialog, Modal} from "@ui/widget";
 import i18next from "i18next";
-import {useViewerContext} from "@ui/viewer/context";
 import {Asset, Id} from "@type";
 import {AssetType} from "@enum";
 import {PropForm} from "../PropForm";
+import {assetToSrc} from "@ui/app/utiliy";
+import {useEditorContext} from "@ui/editor/context";
 
 i18next.addResourceBundle("en", "prop", {"PropSelect": en}, true, true);
 
@@ -24,28 +24,31 @@ type Props = {
 };
 
 export function PropSelect(props: Props): JSX.Element {
-    const viewerCtx = useViewerContext();
+    const editorCtx = useEditorContext();
     let inputRef: HTMLInputElement | undefined;
-    const [selected, setSelected] = createSignal<number | null>(
-        props.entity()?.propId ?? null
-    );
 
-    const {id: propTypeId} = viewerCtx.store.type
+    const [selected, {mutate: setSelected, refetch: getSelected}]
+        = createResource<number | undefined>(
+            () => props.entity()?.propId ?? undefined
+        );
+
+    createEffect(on(props.entity, getSelected));
+
+    const {id: propTypeId} = editorCtx.store.type
         .getByParams({name: AssetType.PROP})[0];
 
     const [assetsData, {refetch}] = createResource<Asset[]>(() => {
-        return viewerCtx.store.asset
+        return editorCtx.store.asset
             .getByParams<Asset>({typeId: propTypeId});
     });
 
-    createEffect(on(viewerCtx.init, refetch));
+    createEffect(on(editorCtx.init, refetch));
 
     const previews = (
         <For each={assetsData()}>
-            {(asset, index) => {
-
+            {(asset) => {
                 const src = (): string => {
-                    return asset.path || asset.content;
+                    return asset.path || assetToSrc(asset);
                 };
 
                 return <img
@@ -55,17 +58,16 @@ export function PropSelect(props: Props): JSX.Element {
                     }}
                     src={src()}
                     onClick={() => {
-                        if (!inputRef) throw new Error();
-
-                        if (index() == selected()) {
-                            setSelected(null);
-                            inputRef.value = "";
+                        if (asset.id == selected()) {
+                            setSelected();
                         }
                         else {
-                            setSelected(index());
-                            inputRef.value = String(asset.id);
+                            setSelected(asset.id);
                         }
-                        inputRef.dispatchEvent(new Event("change", {bubbles: true}));
+                        if (!inputRef) throw new Error();
+                        inputRef.dispatchEvent(
+                            new Event("change", {bubbles: true})
+                        );
                     }}
                 />;
             }}
@@ -74,14 +76,23 @@ export function PropSelect(props: Props): JSX.Element {
 
     const assetFormDialog = new Modal();
     assetFormDialog.render(
-        <Dialog>
-            <PropForm onComplete={() => assetFormDialog.hide()}/>
+        <Dialog
+            class={styles.PropDialog}
+            onClose={() => assetFormDialog.hide()}
+        >
+            <PropForm onSubmit={() => assetFormDialog.hide()}/>
         </Dialog>
     );
 
     return (
         <div class={styles.PropSelect}>
-            <input ref={inputRef} name="propId" type="hidden"/>
+            <input
+                ref={inputRef}
+                name="propId"
+                type="hidden"
+                value={selected()}
+                data-type="id"
+            />
             <div class={styles.Showcase}>
                 {previews}
                 <button

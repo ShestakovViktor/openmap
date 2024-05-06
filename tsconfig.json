@@ -13,6 +13,7 @@
         "lib": [
             "es6",
             "dom",
+            "dom.iterable",
         ],
         "downlevelIteration": true,
         "moduleResolution": "node",

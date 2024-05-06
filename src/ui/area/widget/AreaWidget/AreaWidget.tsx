@@ -24,7 +24,7 @@ export function AreaWidget(props: Props): JSX.Element {
 
     createEffect(on(viewerCtx.render, refetch));
 
-    const f = 4;
+    const factor = (): number => 5 / viewerCtx.mapCtx.scale;
 
     const x = (): string => {
         const data = area();
@@ -56,13 +56,14 @@ export function AreaWidget(props: Props): JSX.Element {
 
     const viewBox = (): string => {
         const data = area();
+
         if (data) {
             const x = -data.width / 2;
             const y = -data.height / 2;
             const width = data.width;
             const height = data.height;
 
-            return `${x - f} ${y - f} ${width + f * 2} ${height + f * 2}`;
+            return `${x - factor()} ${y - factor()} ${width + factor() * 2} ${height + factor() * 2}`;
         }
         else {
             return "0 0 0 0";
@@ -96,7 +97,7 @@ export function AreaWidget(props: Props): JSX.Element {
                 <circle
                     cx={point.x}
                     cy={point.y}
-                    r={f}
+                    r={factor()}
                     fill="#000f"
                 />
             )

@@ -1,6 +1,7 @@
 .DockArea {
     flex-direction: column;
     padding: 16px;
+    overflow-y: auto;
 
     > div {
         width: 100%;

@@ -19,7 +19,7 @@ export function PropSection(props: Props): JSX.Element {
             class={styles.PropSection}
             title={
                 i18next.t(
-                    "entity:PropSection.prop",
+                    "entity:PropSection.title",
                     {postProcess: ["capitalize"]}
                 )
             }

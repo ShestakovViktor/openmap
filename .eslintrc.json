@@ -72,17 +72,8 @@
         "@typescript-eslint/ban-ts-comment": "error",
         "@typescript-eslint/ban-tslint-comment": "error",
         "@typescript-eslint/ban-types": "error",
-        "@typescript-eslint/brace-style": [
-            "error",
-            "stroustrup",
-            {
-                "allowSingleLine": true
-            }
-        ],
         "@typescript-eslint/class-literal-property-style": "error",
-        "@typescript-eslint/comma-spacing": [
-            "error"
-        ],
+        "@typescript-eslint/comma-spacing": "error",
         "@typescript-eslint/consistent-indexed-object-style": [
             "error",
             "index-signature"
@@ -93,7 +84,12 @@
                 "prefer": "no-type-imports"
             }
         ],
-        "@typescript-eslint/dot-notation": "error",
+        "@typescript-eslint/dot-notation": [
+            "error",
+            {
+                "allowIndexSignaturePropertyAccess": true
+            }
+        ],
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/func-call-spacing": "error",
@@ -222,6 +218,13 @@
         "@stylistic/indent": [
             "error",
             4
+        ],
+        "@stylistic/brace-style": [
+            "error",
+            "stroustrup",
+            {
+                "allowSingleLine": true
+            }
         ],
         "@stylistic/keyword-spacing": [
             "error",

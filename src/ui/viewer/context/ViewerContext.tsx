@@ -6,6 +6,9 @@ import {MapContext} from "@ui/viewer/context";
 export type ViewerContextType = {
     store: Store;
 
+    prepare: Accessor<undefined>;
+    rePrepare: Setter<undefined>;
+
     init: Accessor<undefined>;
     reInit: Setter<undefined>;
 

@@ -9,6 +9,9 @@ export type EditorContexType = {
     core: Core;
     store: Store;
 
+    init: Accessor<undefined>;
+    reInit: Setter<undefined>;
+
     getSelected: Accessor<Id[]>;
     setSelected: Setter<Id[]>;
 

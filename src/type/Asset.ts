@@ -4,7 +4,8 @@ export type Asset = {
     id: Id;
     typeId: Id | null;
 
-    mime: string;
     path: string;
-    content: string;
+    data: string;
+    media: string;
+    encoding: string;
 };

@@ -1,8 +1,8 @@
-import {JSX, createEffect, createResource, createSignal, on} from "solid-js";
+import {JSX, createEffect, createSignal, on} from "solid-js";
 import {EditorContext} from "@ui/editor/context";
 import {Core, Store} from "@core";
 import {IOMode} from "@ui/editor/utility";
-import {Entity, Id} from "@type";
+import {Id} from "@type";
 
 type Props = {
     value: {
@@ -13,6 +13,7 @@ type Props = {
 };
 
 export function EditorProvider(props: Props): JSX.Element {
+    const [init, reInit] = createSignal(undefined, {equals: false});
     const [getIOMode, setIOMode] = createSignal(new IOMode());
     const [getSelected, setSelected] = createSignal<Id[]>([], {equals: false});
 
@@ -31,6 +32,8 @@ export function EditorProvider(props: Props): JSX.Element {
 
     const value = {
         ...props.value,
+        init,
+        reInit,
         getIOMode,
         setIOMode,
         getSelected,

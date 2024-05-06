@@ -27,7 +27,8 @@ export function DecorForm(props: Props): JSX.Element {
     const [entity, {refetch}] = createResource(() => {
         const entityId = getId();
         if (!entityId) return null;
-        return editorCtx.store.entity.getById<Decor>(entityId);
+        const entity = editorCtx.store.entity.getById<Decor>(entityId);
+        return entity;
     });
 
     createEffect(on(getId, refetch));

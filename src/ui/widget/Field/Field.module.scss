@@ -1,21 +1,28 @@
 .Field {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
+    &.row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
 
-    width: 100%;
-    gap: 16px;
+        width: 100%;
+        gap: 16px;
 
-    > *:nth-child(1) {
-        text-align: right;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        width: 30%;
+        > *:nth-child(1) {
+            text-align: right;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 30%;
+        }
+
+        > *:nth-child(2) {
+            flex: 1 1 auto;
+            width: 0;
+        }
     }
 
-    > *:nth-child(2) {
-        flex: 1 1 auto;
-        width: 0;
+    &.column {
+        flex-direction: column;
+        gap: 16px;
     }
 }

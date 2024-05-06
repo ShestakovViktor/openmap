@@ -1,9 +1,12 @@
 import styles from "./Viewer.module.scss";
-import {JSX, createEffect, createSignal, on, onMount} from "solid-js";
+import {For, JSX, createEffect, createResource, createSignal, on, onMount} from "solid-js";
 
 import {useViewerContext} from "@ui/viewer/context";
 import {Viewport} from "@ui/viewer/utility";
 import {Entity} from "@ui/entity/widget";
+import {AssetType} from "@enum";
+import {Portal} from "solid-js/web";
+import {assetToSrc} from "@ui/app/utiliy";
 
 export const VIEWER_ID = "viewer";
 
@@ -15,6 +18,18 @@ export function Viewer(): JSX.Element {
         viewerCtx.store.entity.getByParams({name:"root"})[0].id,
         {equals: false}
     );
+
+    const [motions, {refetch}] = createResource(() => {
+        const {id: motionTypeId} = viewerCtx.store.type
+            .getByParams({name: AssetType.MOTION})[0];
+
+        const motions = viewerCtx.store.asset
+            .getByParams({typeId: motionTypeId});
+
+        return motions;
+    });
+
+    createEffect(on(viewerCtx.prepare, refetch));
 
     createEffect(on(viewerCtx.init, () => {
         const {value: width} = viewerCtx.store.config
@@ -67,6 +82,13 @@ export function Viewer(): JSX.Element {
 
     return (
         <div id={VIEWER_ID} class={styles.Viewer} ref={viewerEl!}>
+            <For each={motions()}>
+                {(motion) =>
+                    <Portal mount={document.querySelector("head")!}>
+                        <link href={assetToSrc(motion)} rel="stylesheet"/>
+                    </Portal>
+                }
+            </For>
             <Entity entityId={rootId()} ref={(el) => viewerCtx.setRoot(el)} />
         </div>
     );

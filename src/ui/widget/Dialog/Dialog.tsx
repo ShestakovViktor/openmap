@@ -9,7 +9,6 @@ type Props = {
     id?: string;
     class?: string;
     title?: string;
-    control?: boolean;
     onClose?: () => void;
 };
 
@@ -22,20 +21,16 @@ export function Dialog(props: Props): JSX.Element {
             }}
         >
             <header class={styles.Header}>
-                <Show when={props.title}>
-                    <div class={styles.Title}>
-                        {props.title}
-                    </div>
-                </Show>
-                <Show when={props.control != false}>
-                    <div class={styles.Control}>
-                        <Button
-                            class={styles.CloseButton}
-                            icon={SaltireIconSvg}
-                            onClick={props.onClose}
-                        />
-                    </div>
-                </Show>
+                <div class={styles.Title}>
+                    {props.title}
+                </div>
+                <div class={styles.Control}>
+                    <Button
+                        class={styles.CloseButton}
+                        icon={SaltireIconSvg}
+                        onClick={props.onClose}
+                    />
+                </div>
             </header>
             <section class={styles.Section}>
                 {props.children}

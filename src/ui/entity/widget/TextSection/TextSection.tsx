@@ -3,13 +3,13 @@ import en from "./string/en.json";
 import i18next from "i18next";
 
 import {Column, Section} from "@ui/widget";
-import {JSX, Resource, Signal} from "solid-js";
+import {JSX, Resource} from "solid-js";
+import {TextField} from "../TextField";
 
 i18next.addResourceBundle("en", "entity", {TextSection: en}, true, true);
 
 type Props = {
     entity: Resource<{text: string} | null>;
-    expand?: Signal<boolean>;
 };
 
 export function TextSection(props: Props): JSX.Element {
@@ -18,18 +18,12 @@ export function TextSection(props: Props): JSX.Element {
             class={styles.TextSection}
             title={
                 i18next.t(
-                    "entity:TextSection.text",
+                    "entity:TextSection.title",
                     {postProcess: ["capitalize"]}
                 )
             }
         >
-            <Column>
-                <textarea
-                    id="text"
-                    name="text"
-                    value={props.entity()?.text ?? ""}
-                />
-            </Column>
+            <TextField entity={props.entity}/>
         </Section>
     );
 }

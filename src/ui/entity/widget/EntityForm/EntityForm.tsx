@@ -21,16 +21,30 @@ export function EntityForm(props: Props): JSX.Element {
     const viewerCtx = useViewerContext();
 
     function handleChange(event: Event): void {
-        const {type, name, value} = event.target as HTMLInputElement;
-
         const form = event.currentTarget as HTMLFormElement;
+        const input = event.target as HTMLInputElement;
+        const type = input.getAttribute("data-type");
 
         const idInput = form.querySelector("input[name=\"id\"]") as HTMLInputElement;
         const id = Number(idInput.value);
         if (!id) return;
 
-        const data: {id: Id} & Partial<Entity> = {id, [name]:value};
+        let data: {id: Id} & Partial<Entity>;
+
+        if (type == "id") {
+            data = {id, [input.name]: Number(input.value) || null};
+        }
+        else if (type == "number") {
+            data = {id, [input.name]: Number(input.value)};
+        }
+        else {
+            data = {id, [input.name]: String(input.value)};
+        }
+
         editorCtx.store.entity.set<Entity>(data);
+        const a = editorCtx.store.entity.getById<Entity>(id);
+        console.log(a);
+
         viewerCtx.reRender();
     }
 
@@ -62,7 +76,7 @@ export function EntityForm(props: Props): JSX.Element {
     return (
         <form
             id={props.id}
-            class={styles.Form}
+            class={styles.EntityForm}
             classList={{[props.class ?? ""]: "class" in props}}
             onChange={handleChange}
             onSubmit={handleDelete}

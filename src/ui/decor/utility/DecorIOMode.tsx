@@ -56,5 +56,7 @@ export class DecorIOMode implements IOMode{
         this.editorCtx.formMode?.show("decor", entityId);
 
         this.viewerCtx.reRender();
+
+        this.editorCtx.setSelected([entityId]);
     }
 }

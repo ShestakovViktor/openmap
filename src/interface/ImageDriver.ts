@@ -3,7 +3,9 @@ export type ImageTile = {
     y: number;
     width: number;
     height: number;
-    base64: string;
+    media: string;
+    encoding: string;
+    data: string;
 };
 
 export interface ImageDriver {

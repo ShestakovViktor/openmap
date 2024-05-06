@@ -3,6 +3,7 @@ import {JSX, createEffect, createResource, on} from "solid-js";
 import {useViewerContext} from "@ui/viewer/context";
 
 import {Decor, Asset, Id, Motion} from "@type";
+import {assetToSrc} from "@ui/app/utiliy";
 
 type Props = {
     entityId: Id;
@@ -41,7 +42,7 @@ export function DecorWidget(props: Props): JSX.Element {
 
             if (!asset) throw new Error();
 
-            return asset.path || asset.content;
+            return assetToSrc(asset);
         }
     };
 

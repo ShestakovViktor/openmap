@@ -30,6 +30,7 @@ export function InitialDialog(props: Props): JSX.Element {
 
         editorCtx.core.converter.loadProject(data);
 
+        viewerCtx.rePrepare();
         viewerCtx.reInit();
         viewerCtx.reRender();
 

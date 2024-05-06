@@ -9,6 +9,7 @@ type Props = {
 };
 
 export function ViewerProvider(props: Props): JSX.Element {
+    const [prepare, rePrepare] = createSignal(undefined, {equals: false});
     const [init, reInit] = createSignal(undefined, {equals: false});
     const [render, reRender] = createSignal(undefined, {equals: false});
     const [root, setRoot] = createSignal<HTMLElement | undefined>();
@@ -25,6 +26,8 @@ export function ViewerProvider(props: Props): JSX.Element {
         store: props.store,
         mapCtx,
         setMapCtx,
+        prepare,
+        rePrepare,
         init,
         reInit,
         render,
