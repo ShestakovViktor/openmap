@@ -1,11 +1,11 @@
-import {IOMode} from "@ui/editor/utility";
+import {IOMode} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {createEffect, on} from "solid-js";
-import {Group, Id, Marker} from "@type";
 import {EntityType, LayerName} from "@enum";
+import {Decor, Group} from "@type";
 
-export class MarkerIOMode implements IOMode {
+export class DecorIOMode implements IOMode{
     private viewerCtx: ViewerContextType;
 
     private editorCtx: EditorContexType;
@@ -15,33 +15,32 @@ export class MarkerIOMode implements IOMode {
         this.editorCtx = useEditorContext();
 
         createEffect(on(this.editorCtx.getIOMode, (mode) => {
-            if (mode instanceof MarkerIOMode) {
-                this.editorCtx.formMode?.show("marker");
+            if (mode instanceof DecorIOMode) {
+                this.editorCtx.formMode?.show("decor");
             }
         }));
     }
 
-    initMarker({x, y}: {x: number; y: number}): Id {
+    initEntity({x, y}: {x: number; y: number}): number {
         const {id: typeId} = this.editorCtx.store.type
-            .getByParams({name: EntityType.MARKER})[0];
+            .getByParams({name: EntityType.DECOR})[0];
 
-        const markerId = this.editorCtx.store.entity.add<Marker>({
+        const decorId = this.editorCtx.store.entity.add<Decor>({
             typeId,
             x,
             y,
             propId: null,
-            text: "",
-            graphicIds: [],
+            motionId: null,
         });
 
         const overlay = this.editorCtx.store.entity
             .getByParams<Group>({name: LayerName.OVERLAY})[0];
 
-        overlay.childIds.push(markerId);
+        overlay.childIds.push(decorId);
 
         this.editorCtx.store.entity.set(overlay);
 
-        return markerId;
+        return decorId;
     }
 
     onMouseClick(event: MouseEvent): void {
@@ -52,13 +51,12 @@ export class MarkerIOMode implements IOMode {
                 / this.viewerCtx.mapCtx.scale,
         };
 
-        const markerId = this.initMarker(click);
+        const entityId = this.initEntity(click);
 
-        this.editorCtx.formMode?.show("marker", markerId);
+        this.editorCtx.formMode?.show("decor", entityId);
 
         this.viewerCtx.reRender();
 
-        this.editorCtx.setSelected([markerId]);
-
+        this.editorCtx.setSelected([entityId]);
     }
 }

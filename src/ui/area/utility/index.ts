@@ -1,2 +1,2 @@
-export * from "./AreaIOMode";
 export * from "./pushAreaPoint";
+export * from "./popAreaPoint";

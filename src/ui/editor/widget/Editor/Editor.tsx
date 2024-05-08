@@ -12,8 +12,7 @@ import {InitialDialog} from "@ui/project/widget";
 import {Modal} from "@ui/widget/Modal";
 import {useEditorContext} from "@ui/editor/context";
 import {VIEWER_ID} from "@ui/viewer/widget";
-import {FormMode} from "@ui/editor/utility";
-import {ToolbarMode} from "@ui/editor/utility/ToolbarMode";
+import {FormMode, ToolbarMode} from "@ui/editor/mode";
 
 type Props = {
     children: JSX.Element;

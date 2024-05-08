@@ -1,4 +1,4 @@
-import {IOMode} from "@ui/editor/utility";
+import {IOMode} from "@ui/editor/mode";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 
 export class SelectIOMode implements IOMode {

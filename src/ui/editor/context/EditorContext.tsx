@@ -1,8 +1,7 @@
 import {Accessor, Setter, createContext, useContext} from "solid-js";
 import {Core, Store} from "@core";
-import {IOMode} from "@ui/editor/utility";
-import {FormMode} from "@ui/editor/utility";
-import {ToolbarMode} from "../utility/ToolbarMode";
+import {IOMode} from "@ui/editor/mode";
+import {FormMode, ToolbarMode} from "@ui/editor/mode";
 import {Id} from "@type";
 
 export type EditorContexType = {

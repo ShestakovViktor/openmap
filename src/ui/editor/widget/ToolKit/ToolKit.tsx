@@ -6,11 +6,11 @@ import PolygonIconSvg from "@public/icon/polygon.svg";
 
 import {Button} from "@ui/widget";
 import {For, JSX, createSignal, onMount} from "solid-js";
-import {MarkerIOMode} from "@ui/marker/utility";
-import {SelectIOMode} from "@ui/editor/utility";
+import {MarkerIOMode} from "@ui/marker/mode";
+import {SelectIOMode} from "@ui/editor/mode";
 import {useEditorContext} from "@ui/editor/context";
-import {DecorIOMode} from "@ui/decor/utility";
-import {AreaIOMode} from "@ui/area/utility";
+import {DecorIOMode} from "@ui/decor/mode";
+import {AreaIOMode} from "@ui/area/mode";
 
 export function ToolKit(): JSX.Element {
     const editorCtx = useEditorContext();

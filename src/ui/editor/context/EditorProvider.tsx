@@ -1,7 +1,7 @@
 import {JSX, createEffect, createSignal, on} from "solid-js";
 import {EditorContext} from "@ui/editor/context";
 import {Core, Store} from "@core";
-import {IOMode} from "@ui/editor/utility";
+import {IOMode} from "@ui/editor/mode";
 import {Id} from "@type";
 
 type Props = {

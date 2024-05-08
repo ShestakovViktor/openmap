@@ -9,7 +9,7 @@ import {JSX, Signal, createSignal} from "solid-js";
 import {Area, Id} from "@type";
 import {useEditorContext} from "@ui/editor/context";
 import {useViewerContext} from "@ui/viewer/context";
-import {popAreaPoint} from "@ui/area/utility/popAreaPoint";
+import {popAreaPoint} from "@ui/area/utility";
 
 i18next.addResourceBundle("en", "area", {AreaToolbar: en}, true, true);
 

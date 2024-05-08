@@ -1,10 +1,10 @@
 import {Area, Group, Id} from "@type";
-import {IOMode} from "@ui/editor/utility";
+import {IOMode} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {EntityType, LayerName} from "@enum";
 import {Accessor, Setter, createEffect, createSignal, on} from "solid-js";
-import {pushAreaPoint} from "./pushAreaPoint";
+import {pushAreaPoint} from "@ui/area/utility/pushAreaPoint";
 
 export class AreaIOMode implements IOMode {
     private getEntityId: Accessor<Id | undefined>;
