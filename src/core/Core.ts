@@ -21,16 +21,16 @@ export class Core {
     }
 
     async initProject(params: {
-        projectName: string;
-        mapFile: File;
+        name: string;
+        map: File;
     }): Promise<void> {
         const mime = "image/jpeg";
         const {width, height, tiles} = await this.imageDriver
-            .initImage(params.mapFile, mime);
+            .initImage(params.map, mime);
 
         this.store.setData({
             config: {
-                1: {id: 1, name: "name", value: params.projectName},
+                1: {id: 1, name: "name", value: params.name},
                 2: {id: 2, name: "width", value: width},
                 3: {id: 3, name: "height", value: height},
             },

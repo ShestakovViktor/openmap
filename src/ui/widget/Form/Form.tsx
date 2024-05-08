@@ -3,7 +3,6 @@ import styles from "./Form.module.scss";
 
 type Props = {
     children?: JSX.Element | JSX.Element[];
-    id?: string;
     class?: string;
     onSubmit?: (event: SubmitEvent) => void;
     onChange?: (event: Event) => void;
@@ -12,7 +11,10 @@ type Props = {
 export function Form(props: Props): JSX.Element {
     return (
         <form
-            class={`${styles.Form} ${props.class ?? ""}`}
+            class={styles.Form}
+            classList={{
+                [props.class ?? ""]: Boolean(props.class),
+            }}
             onSubmit={props.onSubmit}
             onChange={props.onChange}
         >

@@ -35,7 +35,9 @@ export function Editor(props: Props): JSX.Element {
 
         const initialDialogModal = new Modal({background: true});
         initialDialogModal.render(
-            <InitialDialog onComplete={() => initialDialogModal.hide()}/>
+            <InitialDialog
+                onComplete={() => initialDialogModal.hide()}
+            />
         );
         initialDialogModal.show();
     });
