@@ -1,3 +1,4 @@
+export * from "./EntityToolbar";
 export * from "./IdField";
 export * from "./TypeIdField";
 export * from "./XField";

@@ -7,7 +7,7 @@ import {For, JSX, Resource, createEffect, createResource, createSignal, on} from
 import {Modal} from "@ui/widget/Modal";
 import {Id, Motion} from "@type";
 import {MotionForm} from "../MotionForm";
-import {AssetType} from "@enum";
+import {ASSET} from "@enum";
 import {useEditorContext} from "@ui/editor/context";
 import {Entity} from "@ui/entity/widget";
 
@@ -27,7 +27,7 @@ export function MotionSelect({entity}: Props): JSX.Element {
     createEffect(on(entity, refetchSelected));
 
     const {id: motionTypeId} = editorCtx.store.type
-        .getByParams({name: AssetType.MOTION})[0];
+        .getByParams({name: ASSET.MOTION})[0];
 
     const [motions, {refetch}] = createResource(() => {
         return editorCtx.store.asset

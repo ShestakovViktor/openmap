@@ -2,7 +2,7 @@ import {Invoker, Converter, Store} from "@core";
 import {WebArchiveDriver, WebImageDriver} from "@core/driver";
 import {ArchiveDriver, ImageDriver} from "@src/interface";
 import {Group, Tile, Image} from "@type";
-import {AssetType, EntityType, LayerName} from "@enum";
+import {ASSET, ENTITY, LAYER} from "@enum";
 
 export class Core {
     public invoker = new Invoker();
@@ -37,13 +37,13 @@ export class Core {
         });
 
         const map = this.store.entity
-            .getByParams<Group>({name: LayerName.MAP})[0];
+            .getByParams<Group>({name: LAYER.MAP})[0];
 
         const {id: tileTypeId} = this.store.type
-            .getByParams({name: EntityType.TILE})[0];
+            .getByParams({name: ENTITY.TILE})[0];
 
         const {id: imageTypeId} = this.store.type
-            .getByParams({name: AssetType.IMAGE})[0];
+            .getByParams({name: ASSET.IMAGE})[0];
 
         const tileIds = tiles.map((tile) => {
             const imageId = this.store.asset.add<Image>({

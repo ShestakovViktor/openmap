@@ -4,7 +4,7 @@ import {Group} from "@src/ui/group/widget";
 import {MarkerWidget} from "@src/ui/marker/widget";
 import {useViewerContext} from "@ui/viewer/context";
 import {Dynamic} from "solid-js/web";
-import {EntityType} from "@enum";
+import {ENTITY} from "@enum";
 import {Id} from "@type";
 import {DecorWidget} from "@ui/decor/widget";
 import {AreaWidget} from "@ui/area/widget";
@@ -21,19 +21,19 @@ export function Entity(props: Props): JSX.Element {
     if (!entity) throw new Error();
 
     const {id: groupTypeId} = viewerCtx.store.type
-        .getByParams({name: EntityType.GROUP})[0];
+        .getByParams({name: ENTITY.GROUP})[0];
 
     const {id: tileTypeId} = viewerCtx.store.type
-        .getByParams({name: EntityType.TILE})[0];
+        .getByParams({name: ENTITY.TILE})[0];
 
     const {id: makerTypeId} = viewerCtx.store.type
-        .getByParams({name: EntityType.MARKER})[0];
+        .getByParams({name: ENTITY.MARKER})[0];
 
     const {id: decorTypeId} = viewerCtx.store.type
-        .getByParams({name: EntityType.DECOR})[0];
+        .getByParams({name: ENTITY.DECOR})[0];
 
     const {id: areaTypeId} = viewerCtx.store.type
-        .getByParams({name: EntityType.AREA})[0];
+        .getByParams({name: ENTITY.AREA})[0];
 
     const entities: {
         [key: string]: (props: {entityId: Id}) => JSX.Element;

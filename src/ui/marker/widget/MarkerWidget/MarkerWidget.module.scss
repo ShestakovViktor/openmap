@@ -8,6 +8,9 @@
         cursor: pointer;
         user-select: none;
 
+        position: absolute;
+        transform: translate(-50%, -50%);
+
         width: 64px;
         height: 64px;
     }

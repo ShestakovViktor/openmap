@@ -13,34 +13,29 @@ import {popAreaPoint} from "@ui/area/utility";
 
 i18next.addResourceBundle("en", "area", {AreaToolbar: en}, true, true);
 
-type Props = {signal?: Signal<number | undefined>};
+export function AreaToolbar(): JSX.Element {
+    // const editorCtx = useEditorContext();
+    // const viewerCtx = useViewerContext();
 
-export function AreaToolbar(props: Props): JSX.Element {
-    const editorCtx = useEditorContext();
-    const viewerCtx = useViewerContext();
+    // const [getAreaId] = props.entityId
+    //     ?? createSignal<Id | null>();
 
-    const [getAreaId] = props.signal
-        ?? createSignal<Id | undefined>();
+    // function deleteLastPoint(): void {
+    //     const areaId = getAreaId();
+    //     if (!areaId) return;
 
-    function deleteLastPoint(): void {
-        const areaId = getAreaId();
-        if (!areaId) return;
+    //     const area = editorCtx.store.entity.getById<Area>(areaId);
+    //     if (!area) throw new Error();
 
-        const area = editorCtx.store.entity.getById<Area>(areaId);
-        if (!area) throw new Error();
-
-        popAreaPoint(area);
-        editorCtx.store.entity.set(area);
-        viewerCtx.reRender();
-    }
+    //     popAreaPoint(area);
+    //     editorCtx.store.entity.set(area);
+    //     viewerCtx.reRender();
+    // }
 
     return (
         <Toolbar>
             <Button
                 icon={BackIconSvg}
-                onClick={() => {
-                    deleteLastPoint();
-                }}
             />
         </Toolbar>
     );

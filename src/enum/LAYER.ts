@@ -1,4 +1,4 @@
-export const LayerName = {
+export const LAYER = {
     ROOT: "root",
     MAP: "map",
     OVERLAY: "overlay",

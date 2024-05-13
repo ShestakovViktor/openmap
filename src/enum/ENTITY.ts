@@ -1,4 +1,5 @@
-export const EntityType = {
+export const ENTITY = {
+    ENTITY: "entity",
     GROUP: "group",
     TILE: "tile",
     MARKER: "marker",

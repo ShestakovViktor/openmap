@@ -18,16 +18,12 @@ export function MarkerWidget(props: Props): JSX.Element {
 
     const x = (): string => {
         const data = entity();
-        return data
-            ? `calc(${data.x * viewerCtx.mapCtx.scale}px - 50%)`
-            : "0px";
+        return (data ? data.x * viewerCtx.mapCtx.scale : 0) + "px";
     };
 
     const y = (): string => {
         const data = entity();
-        return data
-            ? `calc(${data.y * viewerCtx.mapCtx.scale}px - 50%)`
-            : "0px";
+        return (data ? data.y * viewerCtx.mapCtx.scale : 0) + "px";
     };
 
     const src = (): string => {
@@ -57,10 +53,12 @@ export function MarkerWidget(props: Props): JSX.Element {
                 data-id={entity()?.id}
                 data-type={"marker"}
                 style={{transform: `translate3d(${x()}, ${y()}, 0)`}}
+                draggable={false}
             >
                 <img
                     class={styles.Mark}
                     src={src()}
+                    draggable={false}
                     onclick={(event) => {
                         setShowInfo(true);
 

@@ -1,12 +1,12 @@
 import {Area, Group, Id} from "@type";
-import {IOMode} from "@ui/editor/mode";
+import {Input} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
-import {EntityType, LayerName} from "@enum";
-import {Accessor, Setter, createEffect, createSignal, on} from "solid-js";
+import {ENTITY, LAYER} from "@enum";
+import {Accessor, Setter, createSignal} from "solid-js";
 import {pushAreaPoint} from "@ui/area/utility/pushAreaPoint";
 
-export class AreaIOMode implements IOMode {
+export class AreaMode extends Input {
     private getEntityId: Accessor<Id | undefined>;
 
     private setEntityId: Setter<Id | undefined>;
@@ -16,23 +16,17 @@ export class AreaIOMode implements IOMode {
     private editorCtx: EditorContexType;
 
     constructor() {
+        super();
         this.viewerCtx = useViewerContext();
         this.editorCtx = useEditorContext();
 
         const signal = createSignal<number>();
         [this.getEntityId, this.setEntityId] = signal;
-
-        createEffect(on(this.editorCtx.getIOMode, (mode) => {
-            if (mode instanceof AreaIOMode) {
-                this.editorCtx.formMode?.show("area");
-                this.editorCtx.toolbarMode?.show("area");
-            }
-        }));
     }
 
     initArea(): Id {
         const {id: typeId} = this.editorCtx.store.type
-            .getByParams({name: EntityType.AREA})[0];
+            .getByParams({name: ENTITY.AREA})[0];
 
         const areaId = this.editorCtx.store.entity.add<Area>({
             typeId,
@@ -46,7 +40,7 @@ export class AreaIOMode implements IOMode {
         });
 
         const overlay = this.editorCtx.store.entity
-            .getByParams<Group>({name: LayerName.OVERLAY})[0];
+            .getByParams<Group>({name: LAYER.OVERLAY})[0];
 
         overlay.childIds.push(areaId);
 
@@ -57,7 +51,7 @@ export class AreaIOMode implements IOMode {
         return areaId;
     }
 
-    onMouseClick(event: MouseEvent): void {
+    onPointerDown(event: MouseEvent): void {
         const click = {
             x: (event.x - this.viewerCtx.mapCtx.x)
                 / this.viewerCtx.mapCtx.scale,
@@ -69,7 +63,7 @@ export class AreaIOMode implements IOMode {
 
         if (!areaId) areaId = this.initArea();
 
-        this.editorCtx.formMode?.show("area", areaId);
+        this.editorCtx.formMode?.set("area", areaId);
 
         const area = this.editorCtx.store.entity
             .getById<Area>(areaId);
@@ -78,10 +72,10 @@ export class AreaIOMode implements IOMode {
 
         pushAreaPoint(area, click);
 
-        this.editorCtx.store.entity.set(area);
-
         this.viewerCtx.reRender();
 
-        this.editorCtx.setSelected([areaId]);
+        this.editorCtx.store.entity.set(area);
+
+        this.editorCtx.focusMode?.set(areaId);
     }
 }

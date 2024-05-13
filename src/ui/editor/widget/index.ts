@@ -1,3 +1,4 @@
+export * from "../../entity/widget/EntityToolbar";
 export * from "./WorkSpace";
 export * from "./ModalLayer";
 export * from "./DockArea";

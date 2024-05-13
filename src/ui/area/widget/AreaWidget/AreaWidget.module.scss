@@ -4,23 +4,11 @@
     width: fit-content;
     height: fit-content;
 
-    .Scaffolds {
+    > svg {
         position: absolute;
-        left: 0;
-        top: 0;
-        width: fit-content;
-        height: fit-content;
-
-        .Helper {
-            position: absolute;
-            left: 0;
-            top: 0;
-            background: #000;
-            //border: 2px solid #000;
-            border-radius: 25%;
-            cursor: pointer;
-        }
+        transform: translate(-50%, -50%);
     }
+
 
     .Info {
         position: absolute;

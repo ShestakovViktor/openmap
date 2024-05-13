@@ -12,7 +12,14 @@ import {InitialDialog} from "@ui/project/widget";
 import {Modal} from "@ui/widget/Modal";
 import {useEditorContext} from "@ui/editor/context";
 import {VIEWER_ID} from "@ui/viewer/widget";
-import {FormMode, ToolbarMode} from "@ui/editor/mode";
+import {
+    InputMode,
+    FocusMode,
+} from "@ui/editor/mode";
+import {EntityMode} from "@ui/entity/mode";
+import {MarkerMode} from "@ui/marker/mode";
+import {DecorMode} from "@ui/decor/mode";
+import {AreaMode} from "@ui/area/mode";
 
 type Props = {
     children: JSX.Element;
@@ -21,22 +28,33 @@ type Props = {
 export function Editor(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
-    editorCtx.formMode = new FormMode();
-    editorCtx.toolbarMode = new ToolbarMode();
+    editorCtx.inputMode = new InputMode();
+    editorCtx.inputMode.add("entity", new EntityMode());
+    editorCtx.inputMode.add("marker", new MarkerMode());
+    editorCtx.inputMode.add("decor", new DecorMode());
+    editorCtx.inputMode.add("area", new AreaMode());
+
+    editorCtx.focusMode = new FocusMode();
 
     onMount(() => {
-        const viewer = document.querySelector("#" + VIEWER_ID);
+        const viewer = document.querySelector<HTMLDivElement>("#" + VIEWER_ID);
         if (!viewer) throw new Error();
-        viewer.addEventListener("click", (e) => {
-            console.log("click");
-            editorCtx.getIOMode().onMouseClick(e as MouseEvent);
+
+        viewer.addEventListener("pointerdown", (event: PointerEvent) => {
+            editorCtx.inputMode?.get().onPointerDown(event);
+        });
+
+        viewer.addEventListener("pointermove", (event: PointerEvent) => {
+            editorCtx.inputMode?.get().onPointerMove(event);
+        });
+
+        viewer.addEventListener("pointerup", (event: PointerEvent) => {
+            editorCtx.inputMode?.get().onPointerUp(event);
         });
 
         const initialDialogModal = new Modal({background: true});
         initialDialogModal.render(
-            <InitialDialog
-                onComplete={() => initialDialogModal.hide()}
-            />
+            <InitialDialog onComplete={() => initialDialogModal.hide()}/>
         );
         initialDialogModal.show();
     });

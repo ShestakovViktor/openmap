@@ -1,1 +1,1 @@
-export * from "./AreaIOMode";
+export * from "./AreaMode";

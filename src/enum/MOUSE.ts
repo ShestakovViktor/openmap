@@ -1,4 +1,4 @@
-export const MouseButton = {
+export const MOUSE = {
     LEFT: 0,
     RIGHT: 0,
 };

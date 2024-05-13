@@ -28,30 +28,22 @@ export function AreaWidget(props: Props): JSX.Element {
 
     const x = (): string => {
         const data = area();
-        return data
-            ? `calc(${data.x * viewerCtx.mapCtx.scale}px - 50%)`
-            : "0px";
+        return (data ? data.x * viewerCtx.mapCtx.scale : 0) + "px";
     };
 
     const y = (): string => {
         const data = area();
-        return data
-            ? `calc(${data.y * viewerCtx.mapCtx.scale}px - 50%)`
-            : "0px";
+        return (data ? data.y * viewerCtx.mapCtx.scale : 0) + "px";
     };
 
     const width = (): string => {
         const data = area();
-        return data
-            ? data.width * viewerCtx.mapCtx.scale + "px"
-            : "0px";
+        return (data ? data.width * viewerCtx.mapCtx.scale : 0) + "px";
     };
 
     const height = (): string => {
         const data = area();
-        return data
-            ? data.height * viewerCtx.mapCtx.scale + "px"
-            : "0px";
+        return (data ? data.height * viewerCtx.mapCtx.scale : 0) + "px";
     };
 
     const viewBox = (): string => {

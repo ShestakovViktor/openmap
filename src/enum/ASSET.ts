@@ -1,4 +1,4 @@
-export const AssetType = {
+export const ASSET = {
     IMAGE: "image",
     PROP: "prop",
     MOTION: "motion",

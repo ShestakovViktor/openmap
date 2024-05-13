@@ -6,7 +6,7 @@ import {JSX} from "solid-js";
 import {Id} from "@type";
 import {AssetForm, ClassField, FileField, NameField} from "@ui/asset/widget";
 import {useEditorContext} from "@ui/editor/context";
-import {AssetType} from "@enum";
+import {ASSET} from "@enum";
 
 i18next.addResourceBundle(
     "en", "motion", {MotionCreateDialog: en}, true, true
@@ -21,7 +21,7 @@ export function MotionForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
     const {id: typeId} = editorCtx.store.type
-        .getByParams({name: AssetType.MOTION})[0];
+        .getByParams({name: ASSET.MOTION})[0];
 
     const data = {typeId};
 

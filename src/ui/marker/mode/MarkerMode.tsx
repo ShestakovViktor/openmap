@@ -1,29 +1,23 @@
-import {IOMode} from "@ui/editor/mode";
+import {Input} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
-import {createEffect, on} from "solid-js";
 import {Group, Id, Marker} from "@type";
-import {EntityType, LayerName} from "@enum";
+import {ENTITY, LAYER} from "@enum";
 
-export class MarkerIOMode implements IOMode {
+export class MarkerMode extends Input {
     private viewerCtx: ViewerContextType;
 
     private editorCtx: EditorContexType;
 
     constructor() {
+        super();
         this.viewerCtx = useViewerContext();
         this.editorCtx = useEditorContext();
-
-        createEffect(on(this.editorCtx.getIOMode, (mode) => {
-            if (mode instanceof MarkerIOMode) {
-                this.editorCtx.formMode?.show("marker");
-            }
-        }));
     }
 
     initMarker({x, y}: {x: number; y: number}): Id {
         const {id: typeId} = this.editorCtx.store.type
-            .getByParams({name: EntityType.MARKER})[0];
+            .getByParams({name: ENTITY.MARKER})[0];
 
         const markerId = this.editorCtx.store.entity.add<Marker>({
             typeId,
@@ -35,7 +29,7 @@ export class MarkerIOMode implements IOMode {
         });
 
         const overlay = this.editorCtx.store.entity
-            .getByParams<Group>({name: LayerName.OVERLAY})[0];
+            .getByParams<Group>({name: LAYER.OVERLAY})[0];
 
         overlay.childIds.push(markerId);
 
@@ -44,7 +38,7 @@ export class MarkerIOMode implements IOMode {
         return markerId;
     }
 
-    onMouseClick(event: MouseEvent): void {
+    onPointerDown(event: MouseEvent): void {
         const click = {
             x: (event.x - this.viewerCtx.mapCtx.x)
                 / this.viewerCtx.mapCtx.scale,
@@ -54,11 +48,10 @@ export class MarkerIOMode implements IOMode {
 
         const markerId = this.initMarker(click);
 
-        this.editorCtx.formMode?.show("marker", markerId);
-
         this.viewerCtx.reRender();
 
-        this.editorCtx.setSelected([markerId]);
+        this.editorCtx.formMode?.set("marker", markerId);
 
+        this.editorCtx.focusMode?.set(markerId);
     }
 }

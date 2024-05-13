@@ -9,7 +9,7 @@ import i18next from "i18next";
 import {Accessor, JSX, Setter, createSignal} from "solid-js";
 import {Group, Id} from "@type";
 import {useEditorContext} from "@ui/editor/context";
-import {LayerName} from "@enum";
+import {LAYER} from "@enum";
 import {useViewerContext} from "@ui/viewer/context";
 
 i18next.addResourceBundle("en", "area", {MarkerToolbar: en}, true, true);
@@ -32,7 +32,7 @@ export function MarkerToolbar(props: Props): JSX.Element {
         if (markerId) editorCtx.store.entity.del(markerId);
 
         const overlay = editorCtx.store.entity
-            .getByParams<Group>({name: LayerName.OVERLAY})[0];
+            .getByParams<Group>({name: LAYER.OVERLAY})[0];
 
         overlay.childIds = overlay.childIds
             .filter(id => id != markerId);

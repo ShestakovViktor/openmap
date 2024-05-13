@@ -19,17 +19,14 @@ export function DecorWidget(props: Props): JSX.Element {
 
     const x = (): string => {
         const data = entity();
-        return data
-            ? `calc(${data.x * viewerCtx.mapCtx.scale}px - 50%)`
-            : "0px";
+        return (data ? data.x * viewerCtx.mapCtx.scale : 0) + "px";
     };
 
     const y = (): string => {
         const data = entity();
-        return data
-            ? `calc(${data.y * viewerCtx.mapCtx.scale}px - 50%)`
-            : "0px";
+        return (data ? data.y * viewerCtx.mapCtx.scale : 0) + "px";
     };
+
     const src = (): string => {
         const propId = entity()?.propId;
 
@@ -46,7 +43,7 @@ export function DecorWidget(props: Props): JSX.Element {
         }
     };
 
-    const style = (): string => {
+    const motionStyle = (): string => {
         const motionId = entity()?.motionId;
 
         if (!motionId) {
@@ -69,13 +66,17 @@ export function DecorWidget(props: Props): JSX.Element {
             data-type={"decor"}
             style={{transform: `translate3d(${x()}, ${y()}, 0)`}}
         >
-            <img
+            <div
                 class={styles.Mark}
-                classList={{
-                    [style()]: Boolean(style()),
-                }}
-                src={src()}
-            />
+            >
+                <img
+                    classList={{
+                        [motionStyle()]: Boolean(motionStyle()),
+                    }}
+                    src={src()}
+                    draggable={false}
+                />
+            </div>
         </div>
     );
 }

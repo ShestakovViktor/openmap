@@ -1,6 +1,6 @@
 import {Data, Entity, Type, Group, Asset, Param} from "@type";
 import {Collection} from "@core";
-import {AssetType, EntityType, LayerName} from "@enum";
+import {ASSET, ENTITY, LAYER} from "@enum";
 
 export class Store {
     private data!: Data;
@@ -37,38 +37,38 @@ export class Store {
                 3: {id: 3, name: "height", value: 0},
             },
             type: {
-                1: {id: 1, name: EntityType.GROUP},
-                2: {id: 2, name: EntityType.TILE},
-                3: {id: 3, name: EntityType.MARKER},
-                4: {id: 4, name: EntityType.DECOR},
-                5: {id: 5, name: EntityType.AREA},
+                1: {id: 1, name: ENTITY.GROUP},
+                2: {id: 2, name: ENTITY.TILE},
+                3: {id: 3, name: ENTITY.MARKER},
+                4: {id: 4, name: ENTITY.DECOR},
+                5: {id: 5, name: ENTITY.AREA},
 
-                50: {id: 50, name: AssetType.IMAGE},
-                51: {id: 51, name: AssetType.PROP},
-                55: {id: 55, name: AssetType.MOTION},
+                50: {id: 50, name: ASSET.IMAGE},
+                51: {id: 51, name: ASSET.PROP},
+                55: {id: 55, name: ASSET.MOTION},
             },
             entity: {
                 1: {
                     id: 1,
                     typeId: 1,
-                    name: LayerName.ROOT,
+                    name: LAYER.ROOT,
                     childIds: [2, 3, 4],
                 } as Group,
                 2: {
                     id: 2,
-                    name: LayerName.MAP,
+                    name: LAYER.MAP,
                     typeId: 1,
                     childIds: [],
                 } as Group,
                 3: {
                     id: 3,
-                    name: LayerName.OVERLAY,
+                    name: LAYER.OVERLAY,
                     typeId: 1,
                     childIds: [],
                 } as Group,
                 4: {
                     id: 4,
-                    name: LayerName.STYLE,
+                    name: LAYER.STYLE,
                     typeId: 1,
                     childIds: [],
                 } as Group,

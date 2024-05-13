@@ -6,7 +6,7 @@ import {useEditorContext} from "@ui/editor/context";
 import {useViewerContext} from "@ui/viewer/context";
 import {Entity, Group, Id} from "@type";
 import i18next from "i18next";
-import {LayerName} from "@enum";
+import {LAYER} from "@enum";
 
 i18next.addResourceBundle("en", "entity", {EntityForm: en}, true, true);
 
@@ -60,7 +60,7 @@ export function EntityForm(props: Props): JSX.Element {
         editorCtx.store.entity.del(id);
 
         const overlay = editorCtx.store.entity
-            .getByParams<Group>({name: LayerName.OVERLAY})[0];
+            .getByParams<Group>({name: LAYER.OVERLAY})[0];
 
         const index = overlay.childIds.indexOf(id);
         if (index > -1) {

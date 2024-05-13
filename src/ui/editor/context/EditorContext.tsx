@@ -1,24 +1,19 @@
 import {Accessor, Setter, createContext, useContext} from "solid-js";
 import {Core, Store} from "@core";
-import {IOMode} from "@ui/editor/mode";
-import {FormMode, ToolbarMode} from "@ui/editor/mode";
-import {Id} from "@type";
+import {InputMode, FocusMode} from "@ui/editor/mode";
+import {FormMode, ToolbarMode} from "@src/interface";
 
 export type EditorContexType = {
     core: Core;
     store: Store;
 
-    init: Accessor<undefined>;
-    reInit: Setter<undefined>;
-
-    getSelected: Accessor<Id[]>;
-    setSelected: Setter<Id[]>;
-
-    getIOMode: Accessor<IOMode>;
-    setIOMode: Setter<IOMode>;
-
+    inputMode?: InputMode;
     formMode?: FormMode;
     toolbarMode?: ToolbarMode;
+    focusMode?: FocusMode;
+
+    init: Accessor<undefined>;
+    reInit: Setter<undefined>;
 };
 
 export const EditorContext = createContext<EditorContexType | undefined>();

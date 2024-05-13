@@ -12,7 +12,7 @@ import {
 import {Dialog, Modal} from "@ui/widget";
 import i18next from "i18next";
 import {Asset, Id} from "@type";
-import {AssetType} from "@enum";
+import {ASSET} from "@enum";
 import {PropForm} from "../PropForm";
 import {assetToSrc} from "@ui/app/utiliy";
 import {useEditorContext} from "@ui/editor/context";
@@ -35,7 +35,7 @@ export function PropSelect(props: Props): JSX.Element {
     createEffect(on(props.entity, getSelected));
 
     const {id: propTypeId} = editorCtx.store.type
-        .getByParams({name: AssetType.PROP})[0];
+        .getByParams({name: ASSET.PROP})[0];
 
     const [assetsData, {refetch}] = createResource<Asset[]>(() => {
         return editorCtx.store.asset

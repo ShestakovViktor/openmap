@@ -1,12 +1,14 @@
 [data-type="marker"] {
-    &.Selected {
-        border: 2px dashed black;
+    &.Selected > *:nth-child(1) {
+        box-sizing: content-box;
+        border: 3px dashed green;
     }
 }
 
 [data-type="decor"] {
-    &.Selected {
-        border: 2px dashed blue;
+    &.Selected > *:nth-child(1) {
+        box-sizing: content-box;
+        border: 3px dashed blue;
     }
 }
 

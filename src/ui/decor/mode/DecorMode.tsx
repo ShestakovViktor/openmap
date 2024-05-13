@@ -1,29 +1,23 @@
-import {IOMode} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
-import {createEffect, on} from "solid-js";
-import {EntityType, LayerName} from "@enum";
+import {ENTITY, LAYER} from "@enum";
 import {Decor, Group} from "@type";
+import {Input} from "@ui/editor/mode";
 
-export class DecorIOMode implements IOMode{
+export class DecorMode extends Input{
     private viewerCtx: ViewerContextType;
 
     private editorCtx: EditorContexType;
 
     constructor() {
+        super();
         this.viewerCtx = useViewerContext();
         this.editorCtx = useEditorContext();
-
-        createEffect(on(this.editorCtx.getIOMode, (mode) => {
-            if (mode instanceof DecorIOMode) {
-                this.editorCtx.formMode?.show("decor");
-            }
-        }));
     }
 
     initEntity({x, y}: {x: number; y: number}): number {
         const {id: typeId} = this.editorCtx.store.type
-            .getByParams({name: EntityType.DECOR})[0];
+            .getByParams({name: ENTITY.DECOR})[0];
 
         const decorId = this.editorCtx.store.entity.add<Decor>({
             typeId,
@@ -34,7 +28,7 @@ export class DecorIOMode implements IOMode{
         });
 
         const overlay = this.editorCtx.store.entity
-            .getByParams<Group>({name: LayerName.OVERLAY})[0];
+            .getByParams<Group>({name: LAYER.OVERLAY})[0];
 
         overlay.childIds.push(decorId);
 
@@ -43,7 +37,7 @@ export class DecorIOMode implements IOMode{
         return decorId;
     }
 
-    onMouseClick(event: MouseEvent): void {
+    onPointerDown(event: MouseEvent): void {
         const click = {
             x: (event.x - this.viewerCtx.mapCtx.x)
                 / this.viewerCtx.mapCtx.scale,
@@ -53,10 +47,10 @@ export class DecorIOMode implements IOMode{
 
         const entityId = this.initEntity(click);
 
-        this.editorCtx.formMode?.show("decor", entityId);
-
         this.viewerCtx.reRender();
 
-        this.editorCtx.setSelected([entityId]);
+        this.editorCtx.formMode?.set("decor", entityId);
+
+        this.editorCtx.focusMode?.set(entityId);
     }
 }

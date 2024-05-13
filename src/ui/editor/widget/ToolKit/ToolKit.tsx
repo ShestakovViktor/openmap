@@ -6,11 +6,8 @@ import PolygonIconSvg from "@public/icon/polygon.svg";
 
 import {Button} from "@ui/widget";
 import {For, JSX, createSignal, onMount} from "solid-js";
-import {MarkerIOMode} from "@ui/marker/mode";
-import {SelectIOMode} from "@ui/editor/mode";
 import {useEditorContext} from "@ui/editor/context";
-import {DecorIOMode} from "@ui/decor/mode";
-import {AreaIOMode} from "@ui/area/mode";
+import {ENTITY} from "@enum";
 
 export function ToolKit(): JSX.Element {
     const editorCtx = useEditorContext();
@@ -18,25 +15,41 @@ export function ToolKit(): JSX.Element {
 
     const buttons = [
         {
-            mode: new SelectIOMode(),
             icon: CursorIconSvg,
+            onClick: (): void => {
+                editorCtx.inputMode?.set(ENTITY.ENTITY);
+                editorCtx.toolbarMode?.set(ENTITY.ENTITY);
+            },
         },
         {
-            mode: new MarkerIOMode(),
             icon: MarkerIconSvg,
+            onClick: (): void => {
+                editorCtx.inputMode?.set(ENTITY.MARKER);
+                editorCtx.formMode?.set(ENTITY.MARKER);
+                editorCtx.toolbarMode?.set();
+            },
+
         },
         {
-            mode: new DecorIOMode(),
             icon: DecorIconSvg,
+            onClick: (): void => {
+                editorCtx.inputMode?.set(ENTITY.DECOR);
+                editorCtx.formMode?.set(ENTITY.DECOR);
+                editorCtx.toolbarMode?.set();
+            },
         },
         {
-            mode: new AreaIOMode(),
             icon: PolygonIconSvg,
+            onClick: (): void => {
+                editorCtx.inputMode?.set(ENTITY.AREA);
+                editorCtx.formMode?.set(ENTITY.AREA);
+                editorCtx.toolbarMode?.set();
+            },
         },
     ];
 
     onMount(() => {
-        editorCtx.setIOMode(buttons[0].mode);
+        buttons[0].onClick();
         setSelected(0);
     });
 
@@ -48,7 +61,7 @@ export function ToolKit(): JSX.Element {
                         icon={item.icon}
                         pressed={index() == selected()}
                         onClick={() => {
-                            editorCtx.setIOMode(item.mode);
+                            item.onClick();
                             setSelected(index());
                         }}
                     />

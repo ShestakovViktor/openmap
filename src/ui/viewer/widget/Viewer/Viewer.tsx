@@ -4,7 +4,7 @@ import {For, JSX, createEffect, createResource, createSignal, on, onMount} from 
 import {useViewerContext} from "@ui/viewer/context";
 import {Viewport} from "@ui/viewer/utility";
 import {Entity} from "@ui/entity/widget";
-import {AssetType} from "@enum";
+import {ASSET} from "@enum";
 import {Portal} from "solid-js/web";
 import {assetToSrc} from "@ui/app/utiliy";
 
@@ -21,7 +21,7 @@ export function Viewer(): JSX.Element {
 
     const [motions, {refetch}] = createResource(() => {
         const {id: motionTypeId} = viewerCtx.store.type
-            .getByParams({name: AssetType.MOTION})[0];
+            .getByParams({name: ASSET.MOTION})[0];
 
         const motions = viewerCtx.store.asset
             .getByParams({typeId: motionTypeId});
