@@ -6,17 +6,20 @@ import {render} from "solid-js/web";
 import {ViewerProvider} from "@ui/viewer/context";
 import {Viewer} from "@src/ui/viewer/widget";
 import {Store} from "@core";
+import {Data} from "@type";
 
-const container = document.querySelector("#openmap");
-if (!container) throw new Error("There is no container element");
+export default async function show(
+    path: string,
+    container: HTMLElement
+): Promise<void> {
+    const response = await fetch(path + "/data.json");
+    const data = await response.json();
 
-const data = JSON.parse(OPEN_MAP_DATA);
-const store = new Store(data);
-
-render(() => {
-    return (
-        <ViewerProvider store={store}>
-            <Viewer/>
-        </ViewerProvider>
-    );
-}, container);
+    render(() => {
+        return (
+            <ViewerProvider store={new Store(data)}>
+                <Viewer/>
+            </ViewerProvider>
+        );
+    }, container);
+}

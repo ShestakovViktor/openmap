@@ -9,8 +9,17 @@ export default merge<Configuration>(common, {
     entry: {
         viewer: "./src/viewer.tsx",
     },
+    experiments: {
+        outputModule: true,
+    },
     output: {
         filename: "[name].js",
         path: path.resolve(__dirname, "./build"),
+        library: {
+            type: "module",
+        },
+    },
+    optimization: {
+        minimize: false,
     },
 });

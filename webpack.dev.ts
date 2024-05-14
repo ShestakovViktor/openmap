@@ -23,7 +23,7 @@ export default merge<Configuration>(common, {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./public/template.html",
+            template: "./public/editor.html",
             minify: false,
         }),
     ],

@@ -136,19 +136,14 @@ export class Converter {
     private async getTemplateBlob(): Promise<Blobs> {
         const {value: name} = this.store.config.getByParams({name: "name"})[0];
 
-        const fileName = "template.html";
+        const fileName = "viewer.html";
         const response = await fetch(fileName);
         const template = await response.text();
 
-        const inject = ""
-            + `<script defer src="${name}/data.js"></script>`
-            + "\n    "
-            + "<script defer src=\"openmap.js\"></script>";
-
-        const website = template.replace("<!--foo-->", inject);
+        const website = template.replace("./project", "./" + String(name));
         const blob = new Blob([website], {type: "text/html"});
 
-        return {["OpenMap.html"]: blob};
+        return {[name + ".html"]: blob};
     }
 
     private async getBundleBlob(): Promise<Blobs> {
@@ -156,16 +151,17 @@ export class Converter {
         const response = await fetch(fileName);
         const viewerBundle = await response.blob();
 
-        return {["openmap.js"]: viewerBundle};
+        return {["viewer.js"]: viewerBundle};
     }
 
     private getDataBlob(data: Data): Blobs {
         const dataString = JSON.stringify(data, null, 4);
-        const dataTemplate = `const OPEN_MAP_DATA = \`${dataString}\`;`;
-        const dataBlob = new Blob([dataTemplate], {type: "text/javascript"});
+        //const dataTemplate = `const OPEN_MAP_DATA = String.raw\`${dataString}\`;`;
+
+        const dataBlob = new Blob([dataString], {type: "application/json"});
 
         const {value: name} = this.store.config.getByParams({name: "name"})[0];
 
-        return {[`${name}/data.js`]: dataBlob};
+        return {[`${name}/data.json`]: dataBlob};
     }
 }
