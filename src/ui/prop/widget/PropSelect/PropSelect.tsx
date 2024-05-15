@@ -79,6 +79,7 @@ export function PropSelect(props: Props): JSX.Element {
         <Dialog
             class={styles.PropDialog}
             onClose={() => assetFormDialog.hide()}
+            close
         >
             <PropForm onSubmit={() => assetFormDialog.hide()}/>
         </Dialog>
