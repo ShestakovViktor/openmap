@@ -23,6 +23,8 @@ export class MarkerMode extends Input {
             typeId,
             x,
             y,
+            width: 64,
+            height: 64,
             propId: null,
             text: "",
             graphicIds: [],
@@ -40,10 +42,10 @@ export class MarkerMode extends Input {
 
     onPointerDown(event: MouseEvent): void {
         const click = {
-            x: (event.x - this.viewerCtx.mapCtx.x)
-                / this.viewerCtx.mapCtx.scale,
-            y: (event.y - this.viewerCtx.mapCtx.y)
-                / this.viewerCtx.mapCtx.scale,
+            x: (event.x - this.viewerCtx.layout.x)
+                / this.viewerCtx.layout.scale,
+            y: (event.y - this.viewerCtx.layout.y)
+                / this.viewerCtx.layout.scale,
         };
 
         const markerId = this.initMarker(click);

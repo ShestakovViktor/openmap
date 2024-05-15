@@ -18,11 +18,14 @@ i18next.addResourceBundle("en", "decor", {DecorForm: en}, true, true);
 
 type Props = {
     entityId: Signal<Id | null>;
+    update: Signal<undefined>;
 };
 
 export function DecorForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
+
     const [getId] = props.entityId;
+    const [update] = props.update;
 
     const [entity, {refetch}] = createResource(() => {
         const entityId = getId();
@@ -32,6 +35,7 @@ export function DecorForm(props: Props): JSX.Element {
     });
 
     createEffect(on(getId, refetch));
+    createEffect(on(update, refetch));
 
     return (
         <EntityForm class={styles.DecorForm}>

@@ -4,6 +4,7 @@ import i18next from "i18next";
 
 import {Id, Marker} from "@type";
 import {
+    Accessor,
     JSX,
     Signal,
     createEffect,
@@ -18,16 +19,21 @@ import {
     SystemSection,
     TextSection,
     PropSection,
+    SizeSection,
 } from "@ui/entity/widget";
 
 i18next.addResourceBundle("en", "marker", {MarkerForm: en}, true, true);
 
-type Props = {entityId: Signal<Id | null>};
+type Props = {
+    entityId: Signal<Id | null>;
+    update: Signal<undefined>;
+};
 
 export function MarkerForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
     const [getEntityId] = props.entityId;
+    const [update] = props.update;
 
     const [entity, {refetch}] = createResource(() => {
         const entityId = getEntityId();
@@ -36,12 +42,14 @@ export function MarkerForm(props: Props): JSX.Element {
     });
 
     createEffect(on(getEntityId, refetch));
+    createEffect(on(update, refetch));
 
     return (
         <EntityForm class={styles.MarkerForm}>
             <Accordion>
                 <SystemSection entity={entity}/>
                 <PositionSection entity={entity}/>
+                <SizeSection entity={entity}/>
                 <PropSection entity={entity}/>
                 <TextSection entity={entity}/>
                 {/* <Row>

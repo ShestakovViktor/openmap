@@ -24,26 +24,26 @@ export function AreaWidget(props: Props): JSX.Element {
 
     createEffect(on(viewerCtx.render, refetch));
 
-    const factor = (): number => 5 / viewerCtx.mapCtx.scale;
+    const factor = (): number => 5 / viewerCtx.layout.scale;
 
     const x = (): string => {
         const data = area();
-        return (data ? data.x * viewerCtx.mapCtx.scale : 0) + "px";
+        return (data ? data.x * viewerCtx.layout.scale : 0) + "px";
     };
 
     const y = (): string => {
         const data = area();
-        return (data ? data.y * viewerCtx.mapCtx.scale : 0) + "px";
+        return (data ? data.y * viewerCtx.layout.scale : 0) + "px";
     };
 
     const width = (): string => {
         const data = area();
-        return (data ? data.width * viewerCtx.mapCtx.scale : 0) + "px";
+        return (data ? data.width * viewerCtx.layout.scale : 0) + "px";
     };
 
     const height = (): string => {
         const data = area();
-        return (data ? data.height * viewerCtx.mapCtx.scale : 0) + "px";
+        return (data ? data.height * viewerCtx.layout.scale : 0) + "px";
     };
 
     const viewBox = (): string => {

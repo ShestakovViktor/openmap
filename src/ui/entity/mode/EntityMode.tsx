@@ -1,3 +1,4 @@
+import {MOUSE} from "@enum";
 import {Marker} from "@type";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {Input} from "@ui/editor/mode";
@@ -18,11 +19,11 @@ export class EntityMode extends Input {
     }
 
     private move(event: PointerEvent): void {
-        const x = (event.x - this.viewerCtx.mapCtx.x) / this.viewerCtx.mapCtx.scale + "px";
-        const y = (event.y - this.viewerCtx.mapCtx.y) / this.viewerCtx.mapCtx.scale + "px";
+        const x = event.x - this.viewerCtx.layout.x;
+        const y = event.y - this.viewerCtx.layout.y;
 
         if (this.selected) {
-            this.selected.style.transform = `translate3d(${x}, ${y}, 0)`;
+            this.selected.style.transform = `translate3d(${x}px, ${y}px, 0)`;
         }
     }
 
@@ -38,22 +39,26 @@ export class EntityMode extends Input {
 
             if (!entity) throw new Error();
 
-            const x = (event.x - this.viewerCtx.mapCtx.x)
-                / this.viewerCtx.mapCtx.scale;
-            const y = (event.y - this.viewerCtx.mapCtx.y)
-                / this.viewerCtx.mapCtx.scale;
+            const x = (event.x - this.viewerCtx.layout.x)
+                / this.viewerCtx.layout.scale;
+            const y = (event.y - this.viewerCtx.layout.y)
+                / this.viewerCtx.layout.scale;
 
-            entity.x = x;
-            entity.y = y;
+            entity.x = Math.floor(x);
+            entity.y = Math.floor(y);
 
             this.editorCtx.store.entity.set(entity);
+            this.editorCtx.formMode?.upd();
+            this.viewerCtx.reRender();
         }
 
         this.selected = null;
     }
 
     onPointerDown(event: MouseEvent): void {
+        if (event.buttons != MOUSE.LEFT) return;
         const selected = getEntity(event.target as HTMLElement);
+
         if (!selected) {
             this.editorCtx.focusMode?.clear();
         }

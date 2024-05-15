@@ -39,10 +39,10 @@ export class DecorMode extends Input{
 
     onPointerDown(event: MouseEvent): void {
         const click = {
-            x: (event.x - this.viewerCtx.mapCtx.x)
-                / this.viewerCtx.mapCtx.scale,
-            y: (event.y - this.viewerCtx.mapCtx.y)
-                / this.viewerCtx.mapCtx.scale,
+            x: (event.x - this.viewerCtx.layout.x)
+                / this.viewerCtx.layout.scale,
+            y: (event.y - this.viewerCtx.layout.y)
+                / this.viewerCtx.layout.scale,
         };
 
         const entityId = this.initEntity(click);

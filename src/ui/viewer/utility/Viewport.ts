@@ -49,8 +49,8 @@ export class Viewport {
         const pointerMoveEvents = Object.values(this.pointerMoveEvents);
         this.pointerDownState = {
             map: {
-                x: this.viewerCtx.mapCtx.x,
-                y: this.viewerCtx.mapCtx.y,
+                x: this.viewerCtx.layout.x,
+                y: this.viewerCtx.layout.y,
             },
             centroid: this.getCentroid(pointerMoveEvents),
             perimeter: this.getPerimeter(pointerMoveEvents),
@@ -79,8 +79,8 @@ export class Viewport {
             const pointerEvents = Object.values(this.pointerMoveEvents);
             this.pointerDownState = {
                 map: {
-                    x: this.viewerCtx.mapCtx.x,
-                    y: this.viewerCtx.mapCtx.y,
+                    x: this.viewerCtx.layout.x,
+                    y: this.viewerCtx.layout.y,
                 },
                 centroid: this.getCentroid(pointerEvents),
                 perimeter: this.getPerimeter(pointerEvents),
@@ -100,8 +100,8 @@ export class Viewport {
             const pointerEvents = Object.values(this.pointerMoveEvents);
             this.pointerDownState = {
                 map: {
-                    x: this.viewerCtx.mapCtx.x,
-                    y: this.viewerCtx.mapCtx.y,
+                    x: this.viewerCtx.layout.x,
+                    y: this.viewerCtx.layout.y,
                 },
                 centroid: this.getCentroid(pointerEvents),
                 perimeter: this.getPerimeter(pointerEvents),
@@ -138,7 +138,7 @@ export class Viewport {
         };
 
         const viewer = this.viewer.getBoundingClientRect();
-        const {mapCtx: map} = this.viewerCtx;
+        const {layout: map} = this.viewerCtx;
 
         const widthGap = -Math.abs(viewer.width - map.width * map.scale);
         const heightGap = -Math.abs(viewer.height - map.height * map.scale);
@@ -192,7 +192,7 @@ export class Viewport {
 
     zoom(delta: number, clientX: number, clientY: number): void {
         const viewCtx = this.viewer.getBoundingClientRect();
-        const {mapCtx, setMapCtx} = this.viewerCtx;
+        const {layout: mapCtx, setLayout: setMapCtx} = this.viewerCtx;
         let deltaScale = Math.exp(delta);
 
         let newScale = mapCtx.scale * deltaScale;
@@ -228,7 +228,7 @@ export class Viewport {
     }
 
     move(shiftX: number, shiftY: number): void {
-        this.viewerCtx.setMapCtx({x: shiftX, y: shiftY});
+        this.viewerCtx.setLayout({x: shiftX, y: shiftY});
     }
 
     foo(coord: number, shift: number, gap: number): number {
@@ -276,9 +276,9 @@ export class Viewport {
 
     correct(): void {
         const viewer = this.viewer.getBoundingClientRect();
-        const {mapCtx: map, setMapCtx} = this.viewerCtx;
+        const {layout: map, setLayout: setMapCtx} = this.viewerCtx;
 
-        if (map.x > 0) this.viewerCtx.setMapCtx({x: 0});
+        if (map.x > 0) this.viewerCtx.setLayout({x: 0});
         else if (map.x + map.width * map.scale < viewer.width) {
             setMapCtx({x: Math.round(viewer.width - map.width * map.scale)});
         }

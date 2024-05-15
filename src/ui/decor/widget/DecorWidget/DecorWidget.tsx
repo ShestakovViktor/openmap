@@ -19,12 +19,12 @@ export function DecorWidget(props: Props): JSX.Element {
 
     const x = (): string => {
         const data = entity();
-        return (data ? data.x * viewerCtx.mapCtx.scale : 0) + "px";
+        return (data ? data.x * viewerCtx.layout.scale : 0) + "px";
     };
 
     const y = (): string => {
         const data = entity();
-        return (data ? data.y * viewerCtx.mapCtx.scale : 0) + "px";
+        return (data ? data.y * viewerCtx.layout.scale : 0) + "px";
     };
 
     const src = (): string => {

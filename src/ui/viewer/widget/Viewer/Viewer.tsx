@@ -37,7 +37,7 @@ export function Viewer(): JSX.Element {
         const {value: height} = viewerCtx.store.config
             .getByParams({name: "height"})[0];
 
-        viewerCtx.setMapCtx({
+        viewerCtx.setLayout({
             x: 0,
             y: 0,
             width: Number(width),

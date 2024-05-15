@@ -1,4 +1,5 @@
 export const MOUSE = {
-    LEFT: 0,
-    RIGHT: 0,
+    LEFT: 1,
+    RIGHT: 2,
+    MIDDLE: 4,
 };

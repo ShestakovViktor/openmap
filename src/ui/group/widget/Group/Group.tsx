@@ -25,12 +25,12 @@ export function Group(props: Props): JSX.Element {
     function foo(name: string): JSX.CSSProperties {
         if (name == "root") {
             return {
-                transform: `translate3d(${viewerCtx.mapCtx.x + "px"}, ${viewerCtx.mapCtx.y + "px"}, 0)`,
+                transform: `translate3d(${viewerCtx.layout.x + "px"}, ${viewerCtx.layout.y + "px"}, 0)`,
             };
         }
         else if (name == "map") {
             return {
-                transform: `scale(${viewerCtx.mapCtx.scale})`,
+                transform: `scale(${viewerCtx.layout.scale})`,
             };
         }
         else {

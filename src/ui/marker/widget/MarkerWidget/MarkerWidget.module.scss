@@ -1,25 +1,26 @@
 .MarkerWidget {
     pointer-events: auto;
-    width: fit-content;
-    height: fit-content;
     position: absolute;
+    width: 0px;
+    height: 0px;
 
-    .Mark {
-        cursor: pointer;
-        user-select: none;
 
-        position: absolute;
-        transform: translate(-50%, -50%);
+    .Marker {
+        .Prop{
+            cursor: pointer;
+            user-select: none;
 
-        width: 64px;
-        height: 64px;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
     }
 
     .Info {
         position: absolute;
         left: 50%;
-        bottom: 100%;
-        transform: translate(-50%, -25%);
+        top: 50%;
+        transform: translate(-50%, -100%);
 
         background: var(--white);
 

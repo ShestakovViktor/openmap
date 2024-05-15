@@ -1,4 +1,4 @@
-export type MapContext = {
+export type Layout = {
     x: number;
     y: number;
     width: number;

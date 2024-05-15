@@ -32,8 +32,6 @@ export function PropForm(props: Props): JSX.Element {
     return (
         <AssetForm onSubmit={props.onSubmit} data={data}>
             <NameField/>
-            <WidthField/>
-            <HeightField/>
             <FileField accept="image/*"/>
         </AssetForm>
     );

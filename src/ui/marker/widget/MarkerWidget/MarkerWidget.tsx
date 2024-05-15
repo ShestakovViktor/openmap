@@ -16,14 +16,30 @@ export function MarkerWidget(props: Props): JSX.Element {
 
     createEffect(on(viewerCtx.render, refetch));
 
-    const x = (): string => {
+    const transform = (): string => {
         const data = entity();
-        return (data ? data.x * viewerCtx.mapCtx.scale : 0) + "px";
+        if (!data) {
+            return "translate(0px, 0px, 0)";
+        }
+        else {
+            const x = data.x * viewerCtx.layout.scale;
+            const y = data.y * viewerCtx.layout.scale;
+            return `translate3d(${x}px, ${y}px, 0px)`;
+        }
     };
 
-    const y = (): string => {
+    const style = (): JSX.CSSProperties => {
         const data = entity();
-        return (data ? data.y * viewerCtx.mapCtx.scale : 0) + "px";
+        if (!data) {
+            return {};
+        }
+        else {
+            return {
+                transform: "translate3d(-50%, -50%, 0)",
+                width: data.width + "px",
+                height: data.height + "px",
+            };
+        }
     };
 
     const src = (): string => {
@@ -52,25 +68,30 @@ export function MarkerWidget(props: Props): JSX.Element {
                 class={styles.MarkerWidget}
                 data-id={entity()?.id}
                 data-type={"marker"}
-                style={{transform: `translate3d(${x()}, ${y()}, 0)`}}
+                style={{transform: transform()}}
                 draggable={false}
             >
-                <img
-                    class={styles.Mark}
-                    src={src()}
-                    draggable={false}
-                    onclick={(event) => {
-                        setShowInfo(true);
+                <div
+                    class={styles.Marker}
+                    style={style()}
+                >
+                    <img
+                        class={styles.Prop}
+                        src={src()}
+                        draggable={false}
+                        onclick={(event) => {
+                            setShowInfo(true);
 
-                        window.addEventListener("pointerdown", (event) => {
-                            if (!info.contains(event.target as HTMLElement)) {
-                                setShowInfo(false);
-                            }
-                        });
+                            window.addEventListener("pointerdown", (event) => {
+                                if (!info.contains(event.target as HTMLElement)) {
+                                    setShowInfo(false);
+                                }
+                            });
 
-                        event.stopPropagation();
-                    }}
-                />
+                            event.stopPropagation();
+                        }}
+                    />
+                </div>
 
                 <Show when={showInfo()}>
                     <div class={styles.Info} ref={info!}>
