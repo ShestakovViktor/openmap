@@ -13,6 +13,7 @@ import {
     MotionSection,
 } from "@ui/entity/widget";
 import {useEditorContext} from "@ui/editor/context";
+import {NamespaceProvider} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "decor", {DecorForm: en}, true, true);
 
@@ -38,13 +39,15 @@ export function DecorForm(props: Props): JSX.Element {
     createEffect(on(update, refetch));
 
     return (
-        <EntityForm class={styles.DecorForm}>
-            <Accordion>
-                <SystemSection entity={entity}/>
-                <PositionSection entity={entity}/>
-                <PropSection entity={entity}/>
-                <MotionSection entity={entity}/>
-            </Accordion>
-        </EntityForm>
+        <NamespaceProvider namespace={"DecorForm"}>
+            <EntityForm class={styles.DecorForm}>
+                <Accordion>
+                    <SystemSection entity={entity}/>
+                    <PositionSection entity={entity}/>
+                    <PropSection entity={entity}/>
+                    <MotionSection entity={entity}/>
+                </Accordion>
+            </EntityForm>
+        </NamespaceProvider>
     );
 }

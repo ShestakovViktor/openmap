@@ -12,6 +12,7 @@ import {
     TextSection,
 } from "@ui/entity/widget";
 import {useEditorContext} from "@ui/editor/context";
+import {NamespaceProvider} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "area", {AreaForm: en}, true, true);
 
@@ -36,12 +37,14 @@ export function AreaForm(props: Props): JSX.Element {
     createEffect(on(update, refetch));
 
     return (
-        <EntityForm class={styles.AreaForm}>
-            <Accordion>
-                <SystemSection entity={entity}/>
-                <PositionSection entity={entity}/>
-                <TextSection entity={entity}/>
-            </Accordion>
-        </EntityForm>
+        <NamespaceProvider namespace={"AreaForm"}>
+            <EntityForm class={styles.AreaForm}>
+                <Accordion>
+                    <SystemSection entity={entity}/>
+                    <PositionSection entity={entity}/>
+                    <TextSection entity={entity}/>
+                </Accordion>
+            </EntityForm>
+        </NamespaceProvider>
     );
 }

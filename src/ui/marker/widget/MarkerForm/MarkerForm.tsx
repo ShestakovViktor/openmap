@@ -21,6 +21,7 @@ import {
     PropSection,
     SizeSection,
 } from "@ui/entity/widget";
+import {NamespaceProvider} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "marker", {MarkerForm: en}, true, true);
 
@@ -45,14 +46,15 @@ export function MarkerForm(props: Props): JSX.Element {
     createEffect(on(update, refetch));
 
     return (
-        <EntityForm class={styles.MarkerForm}>
-            <Accordion>
-                <SystemSection entity={entity}/>
-                <PositionSection entity={entity}/>
-                <SizeSection entity={entity}/>
-                <PropSection entity={entity}/>
-                <TextSection entity={entity}/>
-                {/* <Row>
+        <NamespaceProvider namespace={"MarkerForm"}>
+            <EntityForm class={styles.MarkerForm}>
+                <Accordion>
+                    <SystemSection entity={entity}/>
+                    <PositionSection entity={entity}/>
+                    <SizeSection entity={entity}/>
+                    <PropSection entity={entity}/>
+                    <TextSection entity={entity}/>
+                    {/* <Row>
                         <input
                             type="file"
                             name="graphic"
@@ -60,7 +62,8 @@ export function MarkerForm(props: Props): JSX.Element {
                             multiple
                         />
                     </Row> */}
-            </Accordion>
-        </EntityForm>
+                </Accordion>
+            </EntityForm>
+        </NamespaceProvider>
     );
 }

@@ -22,14 +22,12 @@ export function DockArea(): JSX.Element {
 
     return (
         <div id={LAYER.DOCKAREA} class={styles.DockArea}>
-            <NamespaceProvider namespace={"FormMode"}>
-                <NamespaceProvider namespace={formMode.getCurrent()?.name ?? ""}>
-                    <Dynamic
-                        component={formMode.getCurrent()?.component}
-                        entityId={formMode.getCurrent()?.id}
-                        update={formMode.getCurrent()?.update}
-                    />
-                </NamespaceProvider>
+            <NamespaceProvider namespace={"DockArea"}>
+                <Dynamic
+                    component={formMode.getCurrent()?.component}
+                    entityId={formMode.getCurrent()?.id}
+                    update={formMode.getCurrent()?.update}
+                />
             </NamespaceProvider>
         </div>
     );
