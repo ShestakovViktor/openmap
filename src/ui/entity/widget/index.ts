@@ -1,6 +1,6 @@
 export * from "./EntityToolbar";
 export * from "./IdField";
-export * from "./TypeIdField";
+export * from "./EntityTypeIdField";
 export * from "./XField";
 export * from "./YField";
 export * from "./WidthField";

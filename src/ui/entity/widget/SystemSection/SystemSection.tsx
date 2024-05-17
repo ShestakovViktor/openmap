@@ -4,7 +4,7 @@ import i18next from "i18next";
 
 import {Section} from "@ui/widget";
 import {JSX, Resource} from "solid-js";
-import {IdField, TypeIdField} from "@ui/entity/widget";
+import {IdField, EntityTypeIdField} from "@ui/entity/widget";
 
 i18next.addResourceBundle("en", "entity", {SystemSection: en}, true, true);
 
@@ -24,7 +24,7 @@ export function SystemSection(props: Props): JSX.Element {
             }
         >
             <IdField entity={props.entity}/>
-            <TypeIdField entity={props.entity}/>
+            <EntityTypeIdField entity={props.entity}/>
         </Section>
     );
 }
