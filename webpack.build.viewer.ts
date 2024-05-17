@@ -19,7 +19,4 @@ export default merge<Configuration>(common, {
             type: "module",
         },
     },
-    optimization: {
-        minimize: false,
-    },
 });
