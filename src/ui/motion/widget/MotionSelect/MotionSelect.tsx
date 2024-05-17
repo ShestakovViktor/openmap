@@ -9,7 +9,6 @@ import {Id, Motion} from "@type";
 import {MotionForm} from "../MotionForm";
 import {ASSET} from "@enum";
 import {useEditorContext} from "@ui/editor/context";
-import {Entity} from "@ui/entity/widget";
 
 i18next.addResourceBundle("en", "motion", {"MotionSelectDialog": en}, true, true);
 
@@ -26,12 +25,9 @@ export function MotionSelect({entity}: Props): JSX.Element {
 
     createEffect(on(entity, refetchSelected));
 
-    const {id: motionTypeId} = editorCtx.store.type
-        .getByParams({name: ASSET.MOTION})[0];
-
     const [motions, {refetch}] = createResource(() => {
         return editorCtx.store.asset
-            .getByParams<Motion>({typeId: motionTypeId});
+            .getByParams<Motion>({assetTypeId: ASSET.MOTION.id});
     });
 
     createEffect(on(editorCtx.init, refetch));

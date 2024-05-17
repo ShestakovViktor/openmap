@@ -25,11 +25,8 @@ export class AreaMode extends Input {
     }
 
     initArea(): Id {
-        const {id: typeId} = this.editorCtx.store.type
-            .getByParams({name: ENTITY.AREA})[0];
-
         const areaId = this.editorCtx.store.entity.add<Area>({
-            typeId,
+            entityTypeId: ENTITY.AREA.id,
             x: 0,
             y: 0,
             width: 0,
@@ -63,7 +60,7 @@ export class AreaMode extends Input {
 
         if (!areaId) areaId = this.initArea();
 
-        this.editorCtx.formMode?.set("area", areaId);
+        this.editorCtx.formMode?.set(ENTITY.AREA.name, areaId);
 
         const area = this.editorCtx.store.entity
             .getById<Area>(areaId);

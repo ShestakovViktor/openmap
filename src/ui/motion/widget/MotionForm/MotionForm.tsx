@@ -18,12 +18,7 @@ type Props = {
 };
 
 export function MotionForm(props: Props): JSX.Element {
-    const editorCtx = useEditorContext();
-
-    const {id: typeId} = editorCtx.store.type
-        .getByParams({name: ASSET.MOTION})[0];
-
-    const data = {typeId};
+    const data = {assetTypeId: ASSET.MOTION.id};
 
     return (
         <AssetForm

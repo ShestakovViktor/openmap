@@ -39,15 +39,9 @@ export class Core {
         const map = this.store.entity
             .getByParams<Group>({name: LAYER.MAP})[0];
 
-        const {id: tileTypeId} = this.store.type
-            .getByParams({name: ENTITY.TILE})[0];
-
-        const {id: imageTypeId} = this.store.type
-            .getByParams({name: ASSET.IMAGE})[0];
-
         const tileIds = tiles.map((tile) => {
             const imageId = this.store.asset.add<Image>({
-                typeId: imageTypeId,
+                assetTypeId: ASSET.IMAGE.id,
                 data: tile.data,
                 media: tile.media,
                 encoding: tile.encoding,
@@ -55,7 +49,7 @@ export class Core {
             });
 
             const tileId = this.store.entity.add<Tile>({
-                typeId: tileTypeId,
+                entityTypeId: ENTITY.TILE.id,
                 x: tile.x,
                 y: tile.y,
                 width: tile.width,

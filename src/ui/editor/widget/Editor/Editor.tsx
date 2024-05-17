@@ -20,6 +20,7 @@ import {EntityMode} from "@ui/entity/mode";
 import {MarkerMode} from "@ui/marker/mode";
 import {DecorMode} from "@ui/decor/mode";
 import {AreaMode} from "@ui/area/mode";
+import {ENTITY} from "@enum";
 
 type Props = {
     children: JSX.Element;
@@ -29,10 +30,10 @@ export function Editor(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
     editorCtx.inputMode = new InputMode();
-    editorCtx.inputMode.add("entity", new EntityMode());
-    editorCtx.inputMode.add("marker", new MarkerMode());
-    editorCtx.inputMode.add("decor", new DecorMode());
-    editorCtx.inputMode.add("area", new AreaMode());
+    editorCtx.inputMode.add(ENTITY.ENTITY.name, new EntityMode());
+    editorCtx.inputMode.add(ENTITY.MARKER.name, new MarkerMode());
+    editorCtx.inputMode.add(ENTITY.DECOR.name, new DecorMode());
+    editorCtx.inputMode.add(ENTITY.AREA.name, new AreaMode());
 
     editorCtx.focusMode = new FocusMode();
 

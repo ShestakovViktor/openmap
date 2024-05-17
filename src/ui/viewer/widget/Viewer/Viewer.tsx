@@ -20,11 +20,8 @@ export function Viewer(): JSX.Element {
     );
 
     const [motions, {refetch}] = createResource(() => {
-        const {id: motionTypeId} = viewerCtx.store.type
-            .getByParams({name: ASSET.MOTION})[0];
-
         const motions = viewerCtx.store.asset
-            .getByParams({typeId: motionTypeId});
+            .getByParams({assetTypeId: ASSET.MOTION.id});
 
         return motions;
     });

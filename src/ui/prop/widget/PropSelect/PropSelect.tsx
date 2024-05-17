@@ -34,12 +34,9 @@ export function PropSelect(props: Props): JSX.Element {
 
     createEffect(on(props.entity, getSelected));
 
-    const {id: propTypeId} = editorCtx.store.type
-        .getByParams({name: ASSET.PROP})[0];
-
     const [assetsData, {refetch}] = createResource<Asset[]>(() => {
         return editorCtx.store.asset
-            .getByParams<Asset>({typeId: propTypeId});
+            .getByParams<Asset>({assetTypeId: ASSET.PROP.id});
     });
 
     createEffect(on(editorCtx.init, refetch));

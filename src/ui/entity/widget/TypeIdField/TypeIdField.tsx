@@ -7,21 +7,21 @@ import {JSX, Resource} from "solid-js";
 i18next.addResourceBundle("en", "entity", {TypeIdField: en}, true, true);
 
 type Props = {
-    entity: Resource<{typeId: number} | null>;
+    entity: Resource<{entityTypeId: number} | null>;
 };
 
 export function TypeIdField(props: Props): JSX.Element {
     return (
         <Field>
-            <label for="typeId">
+            <label for="entityTypeId">
                 {i18next.t(
                     "entity:TypeIdField.label",
                     {postProcess: ["capitalize"]}
                 )}
             </label>
             <input
-                name="typeId"
-                value={props.entity()?.typeId ?? ""}
+                name="entityTypeId"
+                value={props.entity()?.entityTypeId ?? ""}
                 data-type="number"
                 readonly
             />

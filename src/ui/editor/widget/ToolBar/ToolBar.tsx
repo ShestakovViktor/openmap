@@ -26,7 +26,7 @@ export function ToolBar(): JSX.Element {
     const editorCtx = useEditorContext();
 
     const forms: Toolbar[] = [
-        {name: ENTITY.ENTITY, component: EntityToolbar},
+        {name: ENTITY.ENTITY.name, component: EntityToolbar},
     ].map((form) => {
         const id = createSignal<Id | null>(null);
         return {...form, id, getId: id[0], setId: id[1]};

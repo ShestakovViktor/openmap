@@ -1,4 +1,4 @@
-import {JSX} from "solid-js";
+import {JSX, ValidComponent} from "solid-js";
 import {TileWidget} from "@src/ui/tile/widget";
 import {Group} from "@src/ui/group/widget";
 import {MarkerWidget} from "@src/ui/marker/widget";
@@ -20,34 +20,17 @@ export function Entity(props: Props): JSX.Element {
     const entity = viewerCtx.store.entity.getById(props.entityId);
     if (!entity) throw new Error();
 
-    const {id: groupTypeId} = viewerCtx.store.type
-        .getByParams({name: ENTITY.GROUP})[0];
-
-    const {id: tileTypeId} = viewerCtx.store.type
-        .getByParams({name: ENTITY.TILE})[0];
-
-    const {id: makerTypeId} = viewerCtx.store.type
-        .getByParams({name: ENTITY.MARKER})[0];
-
-    const {id: decorTypeId} = viewerCtx.store.type
-        .getByParams({name: ENTITY.DECOR})[0];
-
-    const {id: areaTypeId} = viewerCtx.store.type
-        .getByParams({name: ENTITY.AREA})[0];
-
-    const entities: {
-        [key: string]: (props: {entityId: Id}) => JSX.Element;
-    } = {
-        [groupTypeId]: Group,
-        [tileTypeId]: TileWidget,
-        [makerTypeId]: MarkerWidget,
-        [decorTypeId]: DecorWidget,
-        [areaTypeId]: AreaWidget,
+    const entities: {[key: string]: ValidComponent} = {
+        [ENTITY.GROUP.id]: Group,
+        [ENTITY.TILE.id]: TileWidget,
+        [ENTITY.MARKER.id]: MarkerWidget,
+        [ENTITY.DECOR.id]: DecorWidget,
+        [ENTITY.AREA.id]: AreaWidget,
     };
 
     return (
         <Dynamic
-            component={entities[entity.typeId]}
+            component={entities[entity.entityTypeId]}
             entityId={props.entityId}
             ref={props.ref}
         />

@@ -16,11 +16,8 @@ export class MarkerMode extends Input {
     }
 
     initMarker({x, y}: {x: number; y: number}): Id {
-        const {id: typeId} = this.editorCtx.store.type
-            .getByParams({name: ENTITY.MARKER})[0];
-
         const markerId = this.editorCtx.store.entity.add<Marker>({
-            typeId,
+            entityTypeId: ENTITY.MARKER.id,
             x,
             y,
             width: 64,
@@ -52,7 +49,7 @@ export class MarkerMode extends Input {
 
         this.viewerCtx.reRender();
 
-        this.editorCtx.formMode?.set("marker", markerId);
+        this.editorCtx.formMode?.set(ENTITY.MARKER.name, markerId);
 
         this.editorCtx.focusMode?.set(markerId);
     }

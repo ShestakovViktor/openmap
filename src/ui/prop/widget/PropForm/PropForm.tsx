@@ -11,7 +11,6 @@ import {
     NameField,
     WidthField,
 } from "@ui/asset/widget";
-import {useEditorContext} from "@ui/editor/context";
 import {ASSET} from "@enum";
 
 i18next.addResourceBundle("en", "prop", {PropForm: en}, true, true);
@@ -22,12 +21,7 @@ type Props = {
 };
 
 export function PropForm(props: Props): JSX.Element {
-    const editorCtx = useEditorContext();
-
-    const {id: typeId} = editorCtx.store.type
-        .getByParams({name: ASSET.PROP})[0];
-
-    const data = {typeId};
+    const data = {assetTypeId: ASSET.PROP.id};
 
     return (
         <AssetForm onSubmit={props.onSubmit} data={data}>

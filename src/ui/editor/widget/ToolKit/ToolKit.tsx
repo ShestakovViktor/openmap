@@ -17,15 +17,15 @@ export function ToolKit(): JSX.Element {
         {
             icon: CursorIconSvg,
             onClick: (): void => {
-                editorCtx.inputMode?.set(ENTITY.ENTITY);
-                editorCtx.toolbarMode?.set(ENTITY.ENTITY);
+                editorCtx.inputMode?.set(ENTITY.ENTITY.name);
+                editorCtx.toolbarMode?.set(ENTITY.ENTITY.name);
             },
         },
         {
             icon: MarkerIconSvg,
             onClick: (): void => {
-                editorCtx.inputMode?.set(ENTITY.MARKER);
-                editorCtx.formMode?.set(ENTITY.MARKER);
+                editorCtx.inputMode?.set(ENTITY.MARKER.name);
+                editorCtx.formMode?.set(ENTITY.MARKER.name);
                 editorCtx.toolbarMode?.set();
             },
 
@@ -33,16 +33,16 @@ export function ToolKit(): JSX.Element {
         {
             icon: DecorIconSvg,
             onClick: (): void => {
-                editorCtx.inputMode?.set(ENTITY.DECOR);
-                editorCtx.formMode?.set(ENTITY.DECOR);
+                editorCtx.inputMode?.set(ENTITY.DECOR.name);
+                editorCtx.formMode?.set(ENTITY.DECOR.name);
                 editorCtx.toolbarMode?.set();
             },
         },
         {
             icon: PolygonIconSvg,
             onClick: (): void => {
-                editorCtx.inputMode?.set(ENTITY.AREA);
-                editorCtx.formMode?.set(ENTITY.AREA);
+                editorCtx.inputMode?.set(ENTITY.AREA.name);
+                editorCtx.formMode?.set(ENTITY.AREA.name);
                 editorCtx.toolbarMode?.set();
             },
         },

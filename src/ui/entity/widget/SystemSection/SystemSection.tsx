@@ -9,7 +9,7 @@ import {IdField, TypeIdField} from "@ui/entity/widget";
 i18next.addResourceBundle("en", "entity", {SystemSection: en}, true, true);
 
 type Props = {
-    entity: Resource<{id: number; typeId: number} | null>;
+    entity: Resource<{id: number; entityTypeId: number} | null>;
 };
 
 export function SystemSection(props: Props): JSX.Element {

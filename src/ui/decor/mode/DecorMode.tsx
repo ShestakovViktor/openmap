@@ -16,11 +16,8 @@ export class DecorMode extends Input{
     }
 
     initEntity({x, y}: {x: number; y: number}): number {
-        const {id: typeId} = this.editorCtx.store.type
-            .getByParams({name: ENTITY.DECOR})[0];
-
         const decorId = this.editorCtx.store.entity.add<Decor>({
-            typeId,
+            entityTypeId: ENTITY.DECOR.id,
             x,
             y,
             propId: null,
@@ -49,7 +46,7 @@ export class DecorMode extends Input{
 
         this.viewerCtx.reRender();
 
-        this.editorCtx.formMode?.set("decor", entityId);
+        this.editorCtx.formMode?.set(ENTITY.DECOR.name, entityId);
 
         this.editorCtx.focusMode?.set(entityId);
     }
