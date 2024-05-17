@@ -20,6 +20,8 @@ export class DecorMode extends Input{
             entityTypeId: ENTITY.DECOR.id,
             x,
             y,
+            width: 64,
+            height: 64,
             propId: null,
             motionId: null,
         });

@@ -11,6 +11,7 @@ import {
     PositionSection,
     SystemSection,
     MotionSection,
+    SizeSection,
 } from "@ui/entity/widget";
 import {useEditorContext} from "@ui/editor/context";
 import {NamespaceProvider} from "@ui/app/context";
@@ -44,6 +45,7 @@ export function DecorForm(props: Props): JSX.Element {
                 <Accordion>
                     <SystemSection entity={entity}/>
                     <PositionSection entity={entity}/>
+                    <SizeSection entity={entity}/>
                     <PropSection entity={entity}/>
                     <MotionSection entity={entity}/>
                 </Accordion>

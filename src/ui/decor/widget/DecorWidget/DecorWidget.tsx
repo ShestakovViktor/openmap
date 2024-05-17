@@ -22,6 +22,8 @@ export function DecorWidget(props: Props): JSX.Element {
     const equals = (prev: Decor, next: Decor): boolean => {
         return prev.x == next.x
             && prev.y == next.y
+            && prev.width == next.width
+            && prev.height == next.height
             && prev.propId == next.propId
             && prev.motionId == next.motionId;
     };
