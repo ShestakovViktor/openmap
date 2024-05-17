@@ -1,32 +1,3 @@
-[data-type="marker"] {
-    &.Selected > *:nth-child(1) {
-        box-sizing: content-box;
-        border: 3px dashed green;
-    }
-}
-
-[data-type="decor"] {
-    &.Selected > *:nth-child(1) {
-        box-sizing: content-box;
-        border: 3px dashed blue;
-    }
-}
-
-[data-type="area"] {
-    &.Selected {
-        circle {
-            fill: red;
-        }
-
-        polygon {
-            stroke: red;
-            stroke-dasharray: 8 4;
-            stroke-width: 2px;
-        }
-    }
-}
-
-
 input, textarea {
     padding: 8px;
     border-radius: 8px;

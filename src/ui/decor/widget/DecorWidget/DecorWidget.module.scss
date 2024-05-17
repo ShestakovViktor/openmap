@@ -2,7 +2,7 @@
     position: absolute;
     pointer-events: auto;
 
-    .Mark {
+    .Decor {
         cursor: pointer;
         user-select: none;
 
@@ -17,5 +17,11 @@
             height: 100%;
         }
     }
+
+    &:global(.Selected) > .Decor {
+        box-sizing: content-box;
+        border: 3px dashed blue;
+    }
+    
 
 }

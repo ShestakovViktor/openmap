@@ -67,7 +67,7 @@ export function DecorWidget(props: Props): JSX.Element {
             style={{transform: `translate3d(${x()}, ${y()}, 0)`}}
         >
             <div
-                class={styles.Mark}
+                class={styles.Decor}
             >
                 <img
                     classList={{

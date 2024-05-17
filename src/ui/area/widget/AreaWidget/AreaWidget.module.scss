@@ -9,6 +9,17 @@
         transform: translate(-50%, -50%);
     }
 
+    &:global(.Selected) {
+        circle {
+            fill: red;
+        }
+
+        polygon {
+            stroke: red;
+            stroke-dasharray: 8 4;
+            stroke-width: 2px;
+        }
+    }
 
     .Info {
         position: absolute;
