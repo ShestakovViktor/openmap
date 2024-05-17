@@ -28,8 +28,12 @@ export function Viewer(): JSX.Element {
         () => viewerCtx.store.entity.getByParams<Entity>({name:"root"})[0]
     );
 
-    const [motions, {refetch}] = createResource(() => viewerCtx.store.asset
-        .getByParams({assetTypeId: ASSET.MOTION.id}));
+    const [motions, {refetch}] = createResource(
+        () => viewerCtx.store.asset.getByParams({assetTypeId: ASSET.MOTION.id}),
+        {initialValue: []}
+    );
+
+    createEffect(on(viewerCtx.prepare, refetch, {defer: true}));
 
     createEffect(on(viewerCtx.init, refetchRoot, {defer: true}));
 
