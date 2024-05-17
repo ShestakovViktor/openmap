@@ -1,4 +1,4 @@
-import {Data, Entity, Type, Group, Asset, Param} from "@type";
+import {Data, Entity, Type, Layer, Asset, Param} from "@type";
 import {Collection} from "@core";
 import {ASSET, ENTITY, LAYER} from "@enum";
 
@@ -36,7 +36,7 @@ export class Store {
         const data: Data = {
             entityType: {
                 [ENTITY.ENTITY.id]: ENTITY.ENTITY,
-                [ENTITY.GROUP.id]: ENTITY.GROUP,
+                [ENTITY.LAYER.id]: ENTITY.LAYER,
                 [ENTITY.TILE.id]: ENTITY.TILE,
                 [ENTITY.MARKER.id]: ENTITY.MARKER,
                 [ENTITY.DECOR.id]: ENTITY.DECOR,
@@ -57,28 +57,28 @@ export class Store {
             entity: {
                 1: {
                     id: 1,
-                    entityTypeId: ENTITY.GROUP.id,
+                    entityTypeId: ENTITY.LAYER.id,
                     name: LAYER.ROOT,
                     childIds: [2, 3, 4],
-                } as Group,
+                } as Layer,
                 2: {
                     id: 2,
-                    entityTypeId: ENTITY.GROUP.id,
+                    entityTypeId: ENTITY.LAYER.id,
                     name: LAYER.MAP,
                     childIds: [],
-                } as Group,
+                } as Layer,
                 3: {
                     id: 3,
-                    entityTypeId: ENTITY.GROUP.id,
+                    entityTypeId: ENTITY.LAYER.id,
                     name: LAYER.OVERLAY,
                     childIds: [],
-                } as Group,
+                } as Layer,
                 4: {
                     id: 4,
-                    entityTypeId: ENTITY.GROUP.id,
+                    entityTypeId: ENTITY.LAYER.id,
                     name: LAYER.STYLE,
                     childIds: [],
-                } as Group,
+                } as Layer,
             },
             asset: {},
         };

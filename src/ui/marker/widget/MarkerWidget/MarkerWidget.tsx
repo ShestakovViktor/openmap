@@ -1,49 +1,53 @@
 import styles from "./MarkerWidget.module.scss";
-import {JSX, Show, Suspense, createEffect, createResource, createSignal, on} from "solid-js";
-import {Marker, Id, Prop} from "@type";
+import {JSX, Show, Suspense, createEffect, createMemo, createSignal, on} from "solid-js";
+import {Marker, Prop} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
 import {assetToSrc} from "@ui/app/utiliy";
+import {ENTITY} from "@enum";
+import {updateEffect} from "@ui/viewer/utility";
 
 type Props = {
-    entityId: Id;
+    entity: Marker;
 };
 
 export function MarkerWidget(props: Props): JSX.Element {
     const viewerCtx = useViewerContext();
 
-    const [entity, {refetch}] = createResource(() => viewerCtx.store.entity
-        .getById<Marker>(props.entityId));
-
-    createEffect(on(viewerCtx.render, refetch));
-
-    const transform = (): string => {
-        const data = entity();
-        if (!data) {
-            return "translate(0px, 0px, 0)";
-        }
-        else {
-            const x = data.x * viewerCtx.layout.scale;
-            const y = data.y * viewerCtx.layout.scale;
-            return `translate3d(${x}px, ${y}px, 0px)`;
-        }
+    const fetchEntity = (): Marker => {
+        const entity = viewerCtx.store.entity.getById<Marker>(props.entity.id);
+        if (!entity) throw new Error(String(props.entity.id));
+        return entity;
     };
 
-    const style = (): JSX.CSSProperties => {
-        const data = entity();
-        if (!data) {
-            return {};
-        }
-        else {
-            return {
-                transform: "translate3d(-50%, -50%, 0)",
-                width: data.width + "px",
-                height: data.height + "px",
-            };
-        }
+    const equals = (prev: Marker, next: Marker): boolean => {
+        return prev.x == next.x
+            && prev.y == next.y
+            && prev.width == next.width
+            && prev.height == next.height
+            && prev.propId == next.propId
+            && prev.text == next.text;
     };
 
-    const src = (): string => {
-        const propId = entity()?.propId;
+    const [entity, setEntity] = createSignal<Marker>(props.entity, {equals});
+
+    updateEffect(viewerCtx.render, fetchEntity, setEntity, props.entity.id);
+
+    const transform = createMemo((): string => {
+        const x = entity().x * viewerCtx.layout.scale;
+        const y = entity().y * viewerCtx.layout.scale;
+        return `translate3d(${x}px, ${y}px, 0px)`;
+    });
+
+    const style = createMemo((): JSX.CSSProperties => {
+        return {
+            transform: "translate3d(-50%, -50%, 0)",
+            width: entity().width + "px",
+            height: entity().height + "px",
+        };
+    });
+
+    const src = createMemo((): string => {
+        const propId = entity().propId;
 
         if (!propId) {
             return "./icon/marker.svg";
@@ -56,7 +60,7 @@ export function MarkerWidget(props: Props): JSX.Element {
 
             return asset.path || assetToSrc(asset);
         }
-    };
+    });
 
     const [showInfo, setShowInfo] = createSignal(false);
 
@@ -66,8 +70,7 @@ export function MarkerWidget(props: Props): JSX.Element {
         <Suspense>
             <div
                 class={styles.MarkerWidget}
-                data-id={entity()?.id}
-                data-type={"marker"}
+                data-id={entity().id}
                 style={{transform: transform()}}
                 draggable={false}
             >
@@ -95,7 +98,7 @@ export function MarkerWidget(props: Props): JSX.Element {
 
                 <Show when={showInfo()}>
                     <div class={styles.Info} ref={info!}>
-                        <p class={styles.Text}>{entity()?.text}</p>
+                        <p class={styles.Text}>{entity().text}</p>
                         {/* <Show when={data()?.graphicIds.length}>
                             <img
                                 class={styles.Graphic}

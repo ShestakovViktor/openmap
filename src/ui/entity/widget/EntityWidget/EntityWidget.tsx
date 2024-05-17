@@ -1,6 +1,6 @@
-import {JSX, ValidComponent} from "solid-js";
+import {JSX, ValidComponent, createResource} from "solid-js";
 import {TileWidget} from "@src/ui/tile/widget";
-import {Group} from "@src/ui/group/widget";
+import {LayerWidget} from "@src/ui/layer/widget";
 import {MarkerWidget} from "@src/ui/marker/widget";
 import {useViewerContext} from "@ui/viewer/context";
 import {Dynamic} from "solid-js/web";
@@ -14,14 +14,21 @@ type Props = {
     ref?: HTMLDivElement | ((el: HTMLElement) => void);
 };
 
-export function Entity(props: Props): JSX.Element {
+export function EntityWidget(props: Props): JSX.Element {
     const viewerCtx = useViewerContext();
 
-    const entity = viewerCtx.store.entity.getById(props.entityId);
-    if (!entity) throw new Error();
+    const [entity] = createResource(
+        () => {
+            const entity = viewerCtx.store.entity.getById(props.entityId);
+            if (!entity) {
+                throw new Error(`There is no entity with id ${props.entityId}`);
+            }
+            return entity;
+        }
+    );
 
     const entities: {[key: string]: ValidComponent} = {
-        [ENTITY.GROUP.id]: Group,
+        [ENTITY.LAYER.id]: LayerWidget,
         [ENTITY.TILE.id]: TileWidget,
         [ENTITY.MARKER.id]: MarkerWidget,
         [ENTITY.DECOR.id]: DecorWidget,
@@ -30,9 +37,8 @@ export function Entity(props: Props): JSX.Element {
 
     return (
         <Dynamic
-            component={entities[entity.entityTypeId]}
-            entityId={props.entityId}
-            ref={props.ref}
+            component={entities[entity()!.entityTypeId]}
+            entity={entity()}
         />
     );
 }

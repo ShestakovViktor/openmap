@@ -1,6 +1,6 @@
 import {Entity} from "./Entity";
 
-export type Group = Entity & {
+export type Layer = Entity & {
     name: string;
     childIds: number[];
 };

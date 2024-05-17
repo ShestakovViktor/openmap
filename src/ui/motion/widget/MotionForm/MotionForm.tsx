@@ -4,13 +4,15 @@ import en from "./string/en.json";
 import i18next from "i18next";
 import {JSX} from "solid-js";
 import {Id} from "@type";
-import {AssetForm, ClassField, FileField, NameField} from "@ui/asset/widget";
-import {useEditorContext} from "@ui/editor/context";
+import {
+    AssetForm,
+    ClassField,
+    FileField,
+    NameField,
+} from "@ui/asset/widget";
 import {ASSET} from "@enum";
 
-i18next.addResourceBundle(
-    "en", "motion", {MotionCreateDialog: en}, true, true
-);
+i18next.addResourceBundle("en", "motion", {MotionCreateDialog: en}, true, true);
 
 type Props = {
     onSubmit?: (assetId: Id) => void;

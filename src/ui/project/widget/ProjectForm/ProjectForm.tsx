@@ -33,7 +33,9 @@ export function ProjectForm(props: Props): JSX.Element {
         editorCtx.core.initProject({name, map})
             .then(() => viewerCtx.reInit())
             .then(() => viewerCtx.reRender())
-            .catch(error => {throw new Error(error);});
+            .catch(error => {
+                throw new Error(error);
+            });
 
         props.onComplete();
     }

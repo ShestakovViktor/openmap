@@ -4,7 +4,7 @@ import en from "./string/en.json";
 import {JSX} from "solid-js";
 import {useEditorContext} from "@ui/editor/context";
 import {useViewerContext} from "@ui/viewer/context";
-import {Entity, Group, Id} from "@type";
+import {Entity, Layer, Id} from "@type";
 import i18next from "i18next";
 import {LAYER} from "@enum";
 
@@ -60,7 +60,7 @@ export function EntityForm(props: Props): JSX.Element {
         editorCtx.store.entity.del(id);
 
         const overlay = editorCtx.store.entity
-            .getByParams<Group>({name: LAYER.OVERLAY})[0];
+            .getByParams<Layer>({name: LAYER.OVERLAY})[0];
 
         const index = overlay.childIds.indexOf(id);
         if (index > -1) {

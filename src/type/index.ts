@@ -3,7 +3,7 @@ export * from "./Type";
 export * from "./Entity";
 export * from "./Asset";
 export * from "./Motion";
-export * from "./Group";
+export * from "./Layer";
 export * from "./Marker";
 export * from "./Area";
 export * from "./Tile";

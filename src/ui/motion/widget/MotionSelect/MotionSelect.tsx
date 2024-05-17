@@ -3,7 +3,7 @@ import styles from "./MotionSelect.module.scss";
 
 import {Dialog} from "@ui/widget";
 import i18next from "i18next";
-import {For, JSX, Resource, createEffect, createResource, createSignal, on} from "solid-js";
+import {For, JSX, Resource, createEffect, createResource, on} from "solid-js";
 import {Modal} from "@ui/widget/Modal";
 import {Id, Motion} from "@type";
 import {MotionForm} from "../MotionForm";

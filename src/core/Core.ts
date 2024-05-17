@@ -1,7 +1,7 @@
 import {Invoker, Converter, Store} from "@core";
 import {WebArchiveDriver, WebImageDriver} from "@core/driver";
 import {ArchiveDriver, ImageDriver} from "@src/interface";
-import {Group, Tile, Image} from "@type";
+import {Layer, Tile, Image} from "@type";
 import {ASSET, ENTITY, LAYER} from "@enum";
 
 export class Core {
@@ -37,7 +37,7 @@ export class Core {
         });
 
         const map = this.store.entity
-            .getByParams<Group>({name: LAYER.MAP})[0];
+            .getByParams<Layer>({name: LAYER.MAP})[0];
 
         const tileIds = tiles.map((tile) => {
             const imageId = this.store.asset.add<Image>({
@@ -60,6 +60,6 @@ export class Core {
             return tileId;
         });
 
-        this.store.entity.set<Group>({id: map.id, childIds: tileIds});
+        this.store.entity.set<Layer>({id: map.id, childIds: tileIds});
     }
 }

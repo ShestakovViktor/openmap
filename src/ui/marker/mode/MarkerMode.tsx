@@ -1,7 +1,7 @@
 import {Input} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
-import {Group, Id, Marker} from "@type";
+import {Layer, Id, Marker} from "@type";
 import {ENTITY, LAYER} from "@enum";
 
 export class MarkerMode extends Input {
@@ -28,7 +28,7 @@ export class MarkerMode extends Input {
         });
 
         const overlay = this.editorCtx.store.entity
-            .getByParams<Group>({name: LAYER.OVERLAY})[0];
+            .getByParams<Layer>({name: LAYER.OVERLAY})[0];
 
         overlay.childIds.push(markerId);
 

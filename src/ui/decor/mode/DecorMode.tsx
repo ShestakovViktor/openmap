@@ -1,7 +1,7 @@
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {ENTITY, LAYER} from "@enum";
-import {Decor, Group} from "@type";
+import {Decor, Layer} from "@type";
 import {Input} from "@ui/editor/mode";
 
 export class DecorMode extends Input{
@@ -25,7 +25,7 @@ export class DecorMode extends Input{
         });
 
         const overlay = this.editorCtx.store.entity
-            .getByParams<Group>({name: LAYER.OVERLAY})[0];
+            .getByParams<Layer>({name: LAYER.OVERLAY})[0];
 
         overlay.childIds.push(decorId);
 

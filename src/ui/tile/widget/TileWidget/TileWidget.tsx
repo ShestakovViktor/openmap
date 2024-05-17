@@ -1,33 +1,41 @@
 import styles from "./TileWidget.module.scss";
-import {JSX, createResource} from "solid-js";
+import {JSX, createEffect, createMemo, createSignal, on} from "solid-js";
 import {Asset, Id, Tile} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
 import {assetToSrc} from "@ui/app/utiliy";
+import {updateEffect} from "@ui/viewer/utility";
 
 type Props = {
-    entityId: Id;
+    entity: Tile;
 };
 
 export function TileWidget(props: Props): JSX.Element {
     const viewerCtx = useViewerContext();
 
-    const [entity] = createResource(
-        () => viewerCtx.store.entity
-            .getById<Tile>(props.entityId)
-    );
-
-    const x = (): string => {
-        const data = entity();
-        return data ? `${data.x}px` : "0px";
+    const fetchEntity = (): Tile => {
+        const tile = viewerCtx.store.entity.getById<Tile>(props.entity.id);
+        if (!tile) throw new Error(`There is no tile with id ${props.entity.id}`);
+        return tile;
     };
 
-    const y = (): string => {
-        const data = entity();
-        return data ? `${data.y}px` : "0px";
+    const equals = (prev: Tile, next: Tile): boolean => {
+        return prev.imageId == next.imageId;
     };
 
-    const src = (): string => {
-        const imageId = entity()?.imageId;
+    const [entity, setEntity] = createSignal<Tile>(props.entity, {equals});
+
+    updateEffect(viewerCtx.render, fetchEntity, setEntity, props.entity.id);
+
+    const style = createMemo((): JSX.CSSProperties => {
+        const x = entity().x;
+        const y = entity().y;
+        return {
+            transform: `translate3d(${x}px, ${y}px, 0)`,
+        };
+    });
+
+    const src = createMemo((): string => {
+        const imageId = entity().imageId;
 
         if (!imageId) {
             return "";
@@ -40,16 +48,14 @@ export function TileWidget(props: Props): JSX.Element {
 
             return asset.path || assetToSrc(asset);
         }
-    };
+    });
 
     return (
         <img
             class={styles.Tile}
             src={src()}
+            style={style()}
             draggable={false}
-            style={{
-                transform: `translate3d(${x()}, ${y()}, 0)`,
-            }}
         />
     );
 }

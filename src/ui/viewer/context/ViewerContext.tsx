@@ -1,7 +1,7 @@
 import {Accessor, Setter, createContext, useContext} from "solid-js";
 import {Store} from "@core";
 import {SetStoreFunction} from "solid-js/store";
-import {Layout} from "@type";
+import {Id, Layout} from "@type";
 
 export type ViewerContextType = {
     store: Store;
@@ -12,11 +12,8 @@ export type ViewerContextType = {
     init: Accessor<undefined>;
     reInit: Setter<undefined>;
 
-    render: Accessor<undefined>;
-    reRender: Setter<undefined>;
-
-    root: Accessor<HTMLElement | undefined>;
-    setRoot: Setter<HTMLElement | undefined>;
+    render: Accessor<Id | undefined>;
+    reRender: Setter<Id | undefined>;
 
     layout: Layout;
     setLayout: SetStoreFunction<Layout>;

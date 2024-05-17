@@ -12,8 +12,10 @@ type Props = {
 export function ViewerProvider(props: Props): JSX.Element {
     const [prepare, rePrepare] = createSignal(undefined, {equals: false});
     const [init, reInit] = createSignal(undefined, {equals: false});
-    const [render, reRender] = createSignal(undefined, {equals: false});
-    const [root, setRoot] = createSignal<HTMLElement | undefined>();
+    const [render, reRender] = createSignal<number | undefined>(
+        undefined,
+        {equals: false}
+    );
 
     const [layout, setLayout] = createStore<Layout>({
         x: 0,
@@ -33,8 +35,6 @@ export function ViewerProvider(props: Props): JSX.Element {
         reInit,
         render,
         reRender,
-        root,
-        setRoot,
     };
 
     return (

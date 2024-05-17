@@ -1,4 +1,4 @@
-import {Area, Group, Id} from "@type";
+import {Area, Layer, Id} from "@type";
 import {Input} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
@@ -37,7 +37,7 @@ export class AreaMode extends Input {
         });
 
         const overlay = this.editorCtx.store.entity
-            .getByParams<Group>({name: LAYER.OVERLAY})[0];
+            .getByParams<Layer>({name: LAYER.OVERLAY})[0];
 
         overlay.childIds.push(areaId);
 
