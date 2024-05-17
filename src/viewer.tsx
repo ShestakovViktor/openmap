@@ -6,7 +6,6 @@ import {render} from "solid-js/web";
 import {ViewerProvider} from "@ui/viewer/context";
 import {Viewer} from "@src/ui/viewer/widget";
 import {Store} from "@core";
-import {Data} from "@type";
 
 export default async function show(
     path: string,

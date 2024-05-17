@@ -1,4 +1,3 @@
-import styles from "./PropSection.module.scss";
 import en from "./string/en.json";
 import i18next from "i18next";
 
@@ -16,7 +15,6 @@ type Props = {
 export function PropSection(props: Props): JSX.Element {
     return (
         <Section
-            class={styles.PropSection}
             title={
                 i18next.t(
                     "entity:PropSection.title",

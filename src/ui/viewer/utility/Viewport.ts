@@ -1,3 +1,4 @@
+import {MOUSE} from "@enum";
 import {useViewerContext} from "@ui/viewer/context";
 
 const LMB = 1;
@@ -22,7 +23,7 @@ function throttleRAF(): (...args: any) => void {
 type Vector = {x: number; y: number};
 
 type PointerDownState = {
-    map: Vector;
+    layout: Vector;
     centroid: Vector;
     perimeter: number;
 };
@@ -48,7 +49,7 @@ export class Viewport {
 
         const pointerMoveEvents = Object.values(this.pointerMoveEvents);
         this.pointerDownState = {
-            map: {
+            layout: {
                 x: this.viewerCtx.layout.x,
                 y: this.viewerCtx.layout.y,
             },
@@ -58,7 +59,7 @@ export class Viewport {
     }
 
     onPointerMove(event: PointerEvent): void {
-        if (event.pointerType == "mouse" && event.buttons != LMB) return;
+        if (event.pointerType == "mouse" && event.buttons != MOUSE.LEFT) return;
 
         this.pointerMoveEvents[event.pointerId] = event;
 
@@ -78,7 +79,7 @@ export class Viewport {
         else if (this.pointerDownState) {
             const pointerEvents = Object.values(this.pointerMoveEvents);
             this.pointerDownState = {
-                map: {
+                layout: {
                     x: this.viewerCtx.layout.x,
                     y: this.viewerCtx.layout.y,
                 },
@@ -99,7 +100,7 @@ export class Viewport {
         else if (this.pointerDownState) {
             const pointerEvents = Object.values(this.pointerMoveEvents);
             this.pointerDownState = {
-                map: {
+                layout: {
                     x: this.viewerCtx.layout.x,
                     y: this.viewerCtx.layout.y,
                 },
@@ -143,8 +144,8 @@ export class Viewport {
         const widthGap = -Math.abs(viewer.width - map.width * map.scale);
         const heightGap = -Math.abs(viewer.height - map.height * map.scale);
 
-        const newMapX = this.foo(pointerDownState.map.x, shift.x, widthGap);
-        const newMapY = this.foo(pointerDownState.map.y, shift.y, heightGap);
+        const newMapX = this.foo(pointerDownState.layout.x, shift.x, widthGap);
+        const newMapY = this.foo(pointerDownState.layout.y, shift.y, heightGap);
 
         this.move(Math.round(newMapX), Math.round(newMapY));
     }
@@ -157,7 +158,9 @@ export class Viewport {
         );
 
         const delta = (this.pointerDownState.perimeter - perimeter) / -1000;
-        const centroid = this.getCentroid(Object.values(this.pointerMoveEvents));
+        const centroid = this.getCentroid(
+            Object.values(this.pointerMoveEvents)
+        );
 
         if (delta) this.zoom(delta, centroid.x, centroid.y);
 
@@ -212,9 +215,9 @@ export class Viewport {
         const mouseY = clientY - viewCtx.y - mapCtx.y;
 
         if (this.pointerDownState) {
-            this.pointerDownState.map = {
-                x: this.pointerDownState.map.x - mouseX * (deltaScale - 1),
-                y: this.pointerDownState.map.y - mouseY * (deltaScale - 1),
+            this.pointerDownState.layout = {
+                x: this.pointerDownState.layout.x - mouseX * (deltaScale - 1),
+                y: this.pointerDownState.layout.y - mouseY * (deltaScale - 1),
             };
         }
 

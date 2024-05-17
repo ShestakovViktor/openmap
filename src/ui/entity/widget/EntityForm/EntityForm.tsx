@@ -42,10 +42,7 @@ export function EntityForm(props: Props): JSX.Element {
         }
 
         editorCtx.store.entity.set<Entity>(data);
-        const a = editorCtx.store.entity.getById<Entity>(id);
-        console.log(a);
-
-        viewerCtx.reRender();
+        viewerCtx.reRender(id);
     }
 
     function handleDelete(event: SubmitEvent): void {
