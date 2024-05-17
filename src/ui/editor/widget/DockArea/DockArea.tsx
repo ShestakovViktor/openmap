@@ -13,9 +13,9 @@ export function DockArea(): JSX.Element {
     const editorCtx = useEditorContext();
 
     const formMode = new FormMode([
-        {name: ENTITY.MARKER.name, component: MarkerForm},
-        {name: ENTITY.DECOR.name, component: DecorForm},
-        {name: ENTITY.AREA.name, component: AreaForm},
+        {...ENTITY.MARKER, component: MarkerForm},
+        {...ENTITY.DECOR, component: DecorForm},
+        {...ENTITY.AREA, component: AreaForm},
     ]);
 
     editorCtx.formMode = formMode;

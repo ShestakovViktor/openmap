@@ -30,10 +30,10 @@ export function Editor(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
     editorCtx.inputMode = new InputMode();
-    editorCtx.inputMode.add(ENTITY.ENTITY.name, new EntityMode());
-    editorCtx.inputMode.add(ENTITY.MARKER.name, new MarkerMode());
-    editorCtx.inputMode.add(ENTITY.DECOR.name, new DecorMode());
-    editorCtx.inputMode.add(ENTITY.AREA.name, new AreaMode());
+    editorCtx.inputMode.add(ENTITY.ENTITY.id, new EntityMode());
+    editorCtx.inputMode.add(ENTITY.MARKER.id, new MarkerMode());
+    editorCtx.inputMode.add(ENTITY.DECOR.id, new DecorMode());
+    editorCtx.inputMode.add(ENTITY.AREA.id, new AreaMode());
 
     editorCtx.focusMode = new FocusMode();
 

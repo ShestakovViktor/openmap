@@ -48,7 +48,7 @@ export class DecorMode extends Input{
 
         this.viewerCtx.reRender();
 
-        this.editorCtx.formMode?.set(ENTITY.DECOR.name, entityId);
+        this.editorCtx.formMode?.set(ENTITY.DECOR.id, entityId);
 
         this.editorCtx.focusMode?.set(entityId);
     }

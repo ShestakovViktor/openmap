@@ -70,7 +70,8 @@ export class EntityMode extends Input {
             else {
                 this.editorCtx.focusMode?.set(id);
             }
-            //this.editorCtx.formMode?.set(entity.entityTypeId, id);
+
+            this.editorCtx.formMode?.set(entity.entityTypeId, id);
         }
     }
 }

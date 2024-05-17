@@ -1,34 +1,29 @@
 import {Id} from "@type";
 import {ValidComponent, Signal, Accessor, Setter, createSignal} from "solid-js";
 
-type Form = {
+type Toolbar = {
     name: string;
     component: ValidComponent;
     id: Signal<Id | null>;
     getId: Accessor<Id | null>;
     setId: Setter<Id | null>;
-
-    update: Signal<undefined>;
-    fetch: Accessor<undefined>;
-    refetch: Setter<undefined>;
 };
 
-export class FormMode {
-    private forms: {[key: Id]: Form} = {};
+export class ToolbarMode {
+    private forms: {[key: Id]: Toolbar} = {};
 
-    getCurrent: Accessor<Form | null>;
+    getCurrent: Accessor<Toolbar | null>;
 
-    setCurrent: Setter<Form | null>;
+    setCurrent: Setter<Toolbar | null>;
 
-    constructor(forms: {id: Id; name: string; component: ValidComponent}[]) {
-        const [getCurrent, setCurrent] = createSignal<Form | null>(null);
+    constructor(toolbar: {id: Id; name: string; component: ValidComponent}[]) {
+        const [getCurrent, setCurrent] = createSignal<Toolbar | null>(null);
         this.getCurrent = getCurrent;
         this.setCurrent = setCurrent;
 
-        forms.forEach((form) => {
-            const {id, name, component} = form;
+        toolbar.forEach((toolbar) => {
+            const {id, name, component} = toolbar;
             const [getId, setId] = createSignal<Id | null>(null);
-            const [fetch, refetch] = createSignal(undefined, {equals: false});
 
             this.forms[id] = {
                 name,
@@ -36,9 +31,6 @@ export class FormMode {
                 id: [getId, setId],
                 getId,
                 setId,
-                update: [fetch, refetch],
-                fetch,
-                refetch,
             };
         });
     }
@@ -48,11 +40,7 @@ export class FormMode {
         this.getCurrent()?.setId(id ?? null);
     }
 
-    get(): Form | null {
+    get(): Toolbar | null {
         return this.getCurrent();
-    }
-
-    upd(): void {
-        this.getCurrent()?.refetch();
     }
 }

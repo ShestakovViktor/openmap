@@ -1,7 +1,8 @@
+import {Id} from "@type";
 import {Input} from "@ui/editor/mode";
 
 export class InputMode {
-    private inputs: {[key: string]: Input} = {};
+    private inputs: {[key: Id]: Input} = {};
 
     private current: Input;
 
@@ -9,12 +10,12 @@ export class InputMode {
         this.current = new Input();
     }
 
-    add(name: string, input: Input): void {
-        this.inputs[name] = input;
+    add(id: Id, input: Input): void {
+        this.inputs[id] = input;
     }
 
-    set(name: string): void {
-        this.current = this.inputs[name];
+    set(id: Id): void {
+        this.current = this.inputs[id];
     }
 
     get(): Input {

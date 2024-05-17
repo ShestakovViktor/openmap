@@ -49,7 +49,7 @@ export class MarkerMode extends Input {
 
         this.viewerCtx.reRender();
 
-        this.editorCtx.formMode?.set(ENTITY.MARKER.name, markerId);
+        this.editorCtx.formMode?.set(ENTITY.MARKER.id, markerId);
 
         this.editorCtx.focusMode?.set(markerId);
     }

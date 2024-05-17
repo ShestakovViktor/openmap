@@ -60,7 +60,7 @@ export class AreaMode extends Input {
 
         if (!areaId) areaId = this.initArea();
 
-        this.editorCtx.formMode?.set(ENTITY.AREA.name, areaId);
+        this.editorCtx.formMode?.set(ENTITY.AREA.id, areaId);
 
         const area = this.editorCtx.store.entity
             .getById<Area>(areaId);
