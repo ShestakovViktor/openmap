@@ -1,4 +1,4 @@
-import {MOUSE} from "@enum";
+import {ENTITY, MOUSE} from "@enum";
 import {Marker} from "@type";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {Input} from "@ui/editor/mode";
@@ -18,40 +18,26 @@ export class EntityMode extends Input {
         this.viewerCtx = useViewerContext();
     }
 
-    private move(event: PointerEvent): void {
+    onPointerMove(event: PointerEvent): void {
         const x = event.x - this.viewerCtx.layout.x;
         const y = event.y - this.viewerCtx.layout.y;
 
         if (this.selected) {
-            this.selected.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-        }
-    }
-
-    onPointerMove(event: PointerEvent): void {
-        this.move(event);
-    }
-
-    onPointerUp(event: PointerEvent): void {
-
-        if (this.selected) {
             const id = Number(this.selected.getAttribute("data-id"));
             const entity = this.editorCtx.store.entity.getById<Marker>(id);
+            if (!entity) return;
 
-            if (!entity) throw new Error();
-
-            const x = (event.x - this.viewerCtx.layout.x)
-                / this.viewerCtx.layout.scale;
-            const y = (event.y - this.viewerCtx.layout.y)
-                / this.viewerCtx.layout.scale;
-
-            entity.x = Math.floor(x);
-            entity.y = Math.floor(y);
+            this.selected.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+            entity.x = Math.floor(x / this.viewerCtx.layout.scale);
+            entity.y = Math.floor(y / this.viewerCtx.layout.scale);
 
             this.editorCtx.store.entity.set(entity);
             this.editorCtx.formMode?.upd();
-            this.viewerCtx.reRender();
+            this.viewerCtx.reRender(id);
         }
+    }
 
+    onPointerUp(event: PointerEvent): void {
         this.selected = null;
     }
 
@@ -63,11 +49,20 @@ export class EntityMode extends Input {
             this.editorCtx.focusMode?.clear();
         }
         else {
+            const id = Number(selected.getAttribute("data-id"));
+
+            const entity = this.editorCtx.store.entity.getById(id);
+
+            if (!entity) throw new Error();
+
+            if (![
+                ENTITY.MARKER.id,
+                ENTITY.DECOR.id,
+                ENTITY.AREA.id,
+            ].includes(entity.entityTypeId)) return;
+
             event.stopImmediatePropagation();
             this.selected = selected;
-
-            const type = String(selected.getAttribute("data-type"));
-            const id = Number(selected.getAttribute("data-id"));
 
             if (event.shiftKey) {
                 this.editorCtx.focusMode?.add(id);
@@ -75,7 +70,7 @@ export class EntityMode extends Input {
             else {
                 this.editorCtx.focusMode?.set(id);
             }
-            this.editorCtx.formMode?.set(type, id);
+            //this.editorCtx.formMode?.set(entity.entityTypeId, id);
         }
     }
 }
