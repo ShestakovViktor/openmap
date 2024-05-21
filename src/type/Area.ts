@@ -7,5 +7,5 @@ export type Area = Entity & {
     height: number;
     points: {x: number; y: number}[];
     text: string;
-    graphicIds: Id[];
+    figureIds: Id[];
 };

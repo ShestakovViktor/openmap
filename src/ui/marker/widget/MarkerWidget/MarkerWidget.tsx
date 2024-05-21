@@ -1,10 +1,10 @@
 import styles from "./MarkerWidget.module.scss";
-import {JSX, Show, Suspense, createEffect, createMemo, createSignal, on} from "solid-js";
-import {Marker, Prop} from "@type";
+import {JSX, createMemo, createSignal} from "solid-js";
+import {Figure, Marker, Prop} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
 import {assetToSrc} from "@ui/app/utiliy";
-import {ENTITY} from "@enum";
 import {updateEffect} from "@ui/viewer/utility";
+import {InfoPopup} from "@ui/viewer/widget";
 
 type Props = {
     entity: Marker;
@@ -25,7 +25,8 @@ export function MarkerWidget(props: Props): JSX.Element {
             && prev.width == next.width
             && prev.height == next.height
             && prev.propId == next.propId
-            && prev.text == next.text;
+            && prev.text == next.text
+            && prev.figureIds == next.figureIds;
     };
 
     const [entity, setEntity] = createSignal<Marker>(props.entity, {equals});
@@ -62,55 +63,45 @@ export function MarkerWidget(props: Props): JSX.Element {
         }
     });
 
-    const [showInfo, setShowInfo] = createSignal(false);
+    const text = createMemo(() => entity().text);
 
-    let info: HTMLDivElement;
+    const figures = createMemo((): Figure[] => {
+        return entity().figureIds.map((id) => {
+            const figure = viewerCtx.store.asset.getById<Figure>(id);
+            if (!figure) throw new Error();
+            return figure;
+        });
+    });
+
+    const [getInfoPopupState, setInfoPopupState] = createSignal(false);
 
     return (
-        <Suspense>
+        <div
+            class={styles.MarkerWidget}
+            data-id={entity().id}
+            style={{transform: transform()}}
+            draggable={false}
+        >
             <div
-                class={styles.MarkerWidget}
-                data-id={entity().id}
-                style={{transform: transform()}}
-                draggable={false}
+                class={styles.Marker}
+                style={style()}
             >
-                <div
-                    class={styles.Marker}
-                    style={style()}
-                >
-                    <img
-                        class={styles.Prop}
-                        src={src()}
-                        draggable={false}
-                        onclick={(event) => {
-                            setShowInfo(true);
-
-                            window.addEventListener("pointerdown", (event) => {
-                                if (!info.contains(event.target as HTMLElement)) {
-                                    setShowInfo(false);
-                                }
-                            });
-
-                            event.stopPropagation();
-                        }}
-                    />
-                </div>
-
-                <Show when={showInfo()}>
-                    <div class={styles.Info} ref={info!}>
-                        <p class={styles.Text}>{entity().text}</p>
-                        {/* <Show when={data()?.graphicIds.length}>
-                            <img
-                                class={styles.Graphic}
-                                src={
-                                    viewerCtx.store.source
-                                        .getById(data()?.graphicIds[0]).content
-                                }
-                            />
-                        </Show> */}
-                    </div>
-                </Show>
+                <img
+                    class={styles.Prop}
+                    src={src()}
+                    draggable={false}
+                    onclick={(event) => {
+                        setInfoPopupState(!getInfoPopupState());
+                        event.stopPropagation();
+                    }}
+                />
             </div>
-        </Suspense>
+
+            <InfoPopup
+                state={[getInfoPopupState, setInfoPopupState]}
+                text={text()}
+                figures={figures()}
+            />
+        </div>
     );
 }

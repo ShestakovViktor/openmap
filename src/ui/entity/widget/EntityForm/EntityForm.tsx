@@ -37,6 +37,9 @@ export function EntityForm(props: Props): JSX.Element {
         else if (type == "number") {
             data = {id, [input.name]: Number(input.value)};
         }
+        else if (type == "array") {
+            data = {id, [input.name]: JSON.parse(input.value) || []};
+        }
         else {
             data = {id, [input.name]: String(input.value)};
         }

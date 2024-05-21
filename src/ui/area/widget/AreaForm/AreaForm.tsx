@@ -3,7 +3,7 @@ import {Accordion} from "@ui/widget";
 import en from "./string/en.json";
 
 import i18next from "i18next";
-import {JSX, Resource, Signal, createEffect, createReaction, createResource, on} from "solid-js";
+import {JSX, Signal, createEffect, createResource, on} from "solid-js";
 import {Area, Id} from "@type";
 import {
     EntityForm,
@@ -13,6 +13,7 @@ import {
 } from "@ui/entity/widget";
 import {useEditorContext} from "@ui/editor/context";
 import {NamespaceProvider} from "@ui/app/context";
+import {FigureSection} from "@ui/entity/widget/FigureSection";
 
 i18next.addResourceBundle("en", "area", {AreaForm: en}, true, true);
 
@@ -43,6 +44,7 @@ export function AreaForm(props: Props): JSX.Element {
                     <SystemSection entity={entity}/>
                     <PositionSection entity={entity}/>
                     <TextSection entity={entity}/>
+                    <FigureSection entity={entity}/>
                 </Accordion>
             </EntityForm>
         </NamespaceProvider>

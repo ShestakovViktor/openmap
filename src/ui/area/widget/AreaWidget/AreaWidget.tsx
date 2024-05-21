@@ -1,14 +1,13 @@
 import styles from "./AreaWidget.module.scss";
 import {
     JSX,
-    Show,
-    Suspense,
     createSignal,
     createMemo,
 } from "solid-js";
 import {useViewerContext} from "@ui/viewer/context";
-import {Area} from "@type";
+import {Area, Figure} from "@type";
 import {updateEffect} from "@ui/viewer/utility";
+import {InfoPopup} from "@ui/viewer/widget";
 
 type Props = {
     entity: Area;
@@ -26,7 +25,9 @@ export function AreaWidget(props: Props): JSX.Element {
 
     const equals = (prev: Area, next: Area): boolean => {
         return prev.x == next.x
-            && prev.y == next.y;
+            && prev.y == next.y
+            && prev.text == next.text
+            && prev.figureIds == next.figureIds;
     };
 
     const [entity, setEntity] = createSignal<Area>(props.entity, {equals});
@@ -45,9 +46,9 @@ export function AreaWidget(props: Props): JSX.Element {
         return entity().width * viewerCtx.layout.scale + "px";
     });
 
-    const height = (): string => {
+    const height = createMemo((): string => {
         return entity().height * viewerCtx.layout.scale + "px";
-    };
+    });
 
     const viewBox = createMemo((): string => {
         const x = -entity().width / 2 - factor();
@@ -88,38 +89,37 @@ export function AreaWidget(props: Props): JSX.Element {
             );
     });
 
-    return (
-        <Suspense>
-            <div
-                class={styles.AreaWidget}
-                data-id={entity().id}
-                style={{transform: transform()}}
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox={viewBox()}
-                    width={width()}
-                    height={height()}
-                >
-                    {polygon()}
-                    {helpers()}
-                </svg>
+    const text = createMemo((): string => entity().text);
 
-                <Show when={show()}>
-                    <div class={styles.Info}>
-                        <p class={styles.Text}>{entity().text}</p>
-                        {/* <Show when={entity.graphicIds.length}>
-                        <img
-                            class={styles.Graphic}
-                            src={
-                                viewerCtx.store.source
-                                    .getById(entity.graphicIds[0]).content
-                            }
-                        />
-                    </Show> */}
-                    </div>
-                </Show>
-            </div>
-        </Suspense>
+    const figures = createMemo((): Figure[] => {
+        return entity().figureIds.map((id) => {
+            const figure = viewerCtx.store.asset.getById<Figure>(id);
+            if (!figure) throw new Error();
+            return figure;
+        });
+    });
+
+    return (
+        <div
+            class={styles.AreaWidget}
+            data-id={entity().id}
+            style={{transform: transform()}}
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox={viewBox()}
+                width={width()}
+                height={height()}
+            >
+                {polygon()}
+                {helpers()}
+            </svg>
+
+            <InfoPopup
+                state={[show, setShow]}
+                text={text()}
+                figures={figures()}
+            />
+        </div>
     );
 }

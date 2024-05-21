@@ -9,5 +9,5 @@ export type Marker = Entity & {
     propId: Id | null;
 
     text: string;
-    graphicIds: Id[];
+    figureIds: Id[];
 };

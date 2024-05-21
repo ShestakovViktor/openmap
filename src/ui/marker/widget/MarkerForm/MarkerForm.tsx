@@ -22,6 +22,7 @@ import {
     SizeSection,
 } from "@ui/entity/widget";
 import {NamespaceProvider} from "@ui/app/context";
+import {FigureSection} from "@ui/entity/widget/FigureSection";
 
 i18next.addResourceBundle("en", "marker", {MarkerForm: en}, true, true);
 
@@ -54,6 +55,7 @@ export function MarkerForm(props: Props): JSX.Element {
                     <SizeSection entity={entity}/>
                     <PropSection entity={entity}/>
                     <TextSection entity={entity}/>
+                    <FigureSection entity={entity}/>
                     {/* <Row>
                         <input
                             type="file"

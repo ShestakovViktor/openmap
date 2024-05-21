@@ -33,7 +33,7 @@ export class AreaMode extends Input {
             height: 0,
             points: [],
             text: "",
-            graphicIds: [],
+            figureIds: [],
         });
 
         const overlay = this.editorCtx.store.entity

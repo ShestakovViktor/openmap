@@ -24,7 +24,7 @@ export class MarkerMode extends Input {
             height: 64,
             propId: null,
             text: "",
-            graphicIds: [],
+            figureIds: [],
         });
 
         const overlay = this.editorCtx.store.entity
@@ -47,7 +47,7 @@ export class MarkerMode extends Input {
 
         const markerId = this.initMarker(click);
 
-        this.viewerCtx.reRender();
+        this.viewerCtx.reRender(markerId);
 
         this.editorCtx.formMode?.set(ENTITY.MARKER.id, markerId);
 

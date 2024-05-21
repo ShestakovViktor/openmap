@@ -46,7 +46,7 @@ export class DecorMode extends Input{
 
         const entityId = this.initEntity(click);
 
-        this.viewerCtx.reRender();
+        this.viewerCtx.reRender(entityId);
 
         this.editorCtx.formMode?.set(ENTITY.DECOR.id, entityId);
 

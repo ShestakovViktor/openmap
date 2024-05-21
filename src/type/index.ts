@@ -12,4 +12,5 @@ export * from "./Param";
 export * from "./Data";
 export * from "./Image";
 export * from "./Prop";
+export * from "./Figure";
 export * from "./Layout";
