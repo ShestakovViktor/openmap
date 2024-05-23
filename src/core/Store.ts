@@ -34,6 +34,15 @@ export class Store {
 
     initData(params?: Partial<Data>): Data {
         const data: Data = {
+            system: {
+                1: {id: 1, name: "package", value: "0.0.1"},
+                2: {id: 2, name: "schema", value: 1},
+            },
+            config: {
+                1: {id: 1, name: "name", value: "New project"},
+                2: {id: 2, name: "width", value: 0},
+                3: {id: 3, name: "height", value: 0},
+            },
             entityType: {
                 [ENTITY.ENTITY.id]: ENTITY.ENTITY,
                 [ENTITY.LAYER.id]: ENTITY.LAYER,
@@ -48,11 +57,6 @@ export class Store {
                 [ASSET.PROP.id]: ASSET.PROP,
                 [ASSET.FIGURE.id]: ASSET.FIGURE,
                 [ASSET.MOTION.id]: ASSET.MOTION,
-            },
-            config: {
-                1: {id: 1, name: "name", value:  "New project"},
-                2: {id: 2, name: "width", value: 0},
-                3: {id: 3, name: "height", value: 0},
             },
             entity: {
                 1: {
