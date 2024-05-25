@@ -7,7 +7,6 @@ import PolygonIconSvg from "@public/icon/polygon.svg";
 import {Button} from "@ui/widget";
 import {For, JSX, createSignal, onMount} from "solid-js";
 import {useEditorContext} from "@ui/editor/context";
-import {ENTITY} from "@enum";
 
 export function ToolKit(): JSX.Element {
     const editorCtx = useEditorContext();
@@ -16,53 +15,68 @@ export function ToolKit(): JSX.Element {
     const buttons = [
         {
             icon: CursorIconSvg,
-            onClick: (): void => {
-                editorCtx.inputMode?.set(ENTITY.ENTITY.id);
-                editorCtx.toolbarMode?.set(ENTITY.ENTITY.id);
+            onClick(): void {
+                const {input, toolbar} = editorCtx.modes.entity;
+                editorCtx.entityFocus.clear();
+                editorCtx.userInput.set(input);
+                editorCtx.toolBar.clear();
+                editorCtx.toolBar.set(toolbar);
+                editorCtx.dockArea.clear();
             },
         },
         {
             icon: MarkerIconSvg,
-            onClick: (): void => {
-                editorCtx.inputMode?.set(ENTITY.MARKER.id);
-                editorCtx.formMode?.set(ENTITY.MARKER.id);
+            onClick(): void {
+                const {input, form, toolbar} = editorCtx.modes.marker;
+                form.set(null);
+                editorCtx.entityFocus.clear();
+                editorCtx.userInput.set(input);
+                editorCtx.dockArea.set(form);
+                editorCtx.toolBar.set(toolbar);
             },
-
         },
         {
             icon: DecorIconSvg,
-            onClick: (): void => {
-                editorCtx.inputMode?.set(ENTITY.DECOR.id);
-                editorCtx.formMode?.set(ENTITY.DECOR.id);
+            onClick(): void {
+                const {input, form} = editorCtx.modes.decor;
+                form.set(null);
+                editorCtx.entityFocus.clear();
+                editorCtx.userInput.set(input);
+                editorCtx.dockArea.set(form);
+                editorCtx.toolBar.clear();
             },
         },
         {
             icon: PolygonIconSvg,
-            onClick: (): void => {
-                editorCtx.inputMode?.set(ENTITY.AREA.id);
-                editorCtx.formMode?.set(ENTITY.AREA.id);
+            onClick(): void {
+                const {input, form} = editorCtx.modes.area;
+                form.set(null);
+                editorCtx.entityFocus.clear();
+                editorCtx.userInput.set(input);
+                editorCtx.dockArea.set(form);
+                editorCtx.toolBar.clear();
             },
         },
+
     ];
 
     onMount(() => {
         buttons[0].onClick();
-        setSelected(0);
     });
 
     return (
         <div class={styles.ToolKit}>
             <For each={buttons}>
-                {(item, index) => (
+                {(button, index) =>
                     <Button
-                        icon={item.icon}
-                        pressed={index() == selected()}
+                        pressed={selected() == index()}
+                        icon={button.icon}
                         onClick={() => {
-                            item.onClick();
                             setSelected(index());
+                            button.onClick();
                         }}
                     />
-                )}
+                }
             </For>
         </div>
     );

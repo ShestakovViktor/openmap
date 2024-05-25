@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-export class Input {
+export class UserInputMode {
     onPointerDown(event: PointerEvent): void {}
 
     onPointerMove(event: PointerEvent): void {}

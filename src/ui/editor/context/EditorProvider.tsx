@@ -1,6 +1,12 @@
 import {JSX, createSignal} from "solid-js";
-import {EditorContext} from "@ui/editor/context";
+import {EditorContexType, EditorContext} from "@ui/editor/context";
 import {Core, Store} from "@core";
+import {
+    DockArea,
+    EntityFocus,
+    ToolBar,
+    UserInput,
+} from "@ui/editor/mode";
 
 type Props = {
     value: {
@@ -12,11 +18,22 @@ type Props = {
 
 export function EditorProvider(props: Props): JSX.Element {
     const [init, reInit] = createSignal(undefined, {equals: false});
+    const userInput = new UserInput();
+    const entityFocus = new EntityFocus();
+    const dockArea = new DockArea();
+    const toolBar = new ToolBar();
+
+    const modes = {} as EditorContexType["modes"];
 
     const value = {
         ...props.value,
         init,
         reInit,
+        userInput,
+        entityFocus,
+        dockArea,
+        toolBar,
+        modes,
     };
 
     return (

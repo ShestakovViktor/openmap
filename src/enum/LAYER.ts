@@ -3,6 +3,4 @@ export const LAYER = {
     MAP: "map",
     OVERLAY: "overlay",
     STYLE: "style",
-    DOCKAREA: "dockarea",
-    TOOLBAR: "toolbar",
 };

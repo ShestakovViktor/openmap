@@ -102,7 +102,7 @@ export function AreaWidget(props: Props): JSX.Element {
     return (
         <div
             class={styles.AreaWidget}
-            data-id={entity().id}
+            data-entity-id={entity().id}
             style={{transform: transform()}}
         >
             <svg

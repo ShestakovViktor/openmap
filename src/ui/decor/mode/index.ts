@@ -1,1 +1,2 @@
-export * from "./DecorMode";
+export * from "./DecorFormMode";
+export * from "./DecorInputMode";

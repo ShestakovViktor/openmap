@@ -1,18 +1,47 @@
 import {Accessor, Setter, createContext, useContext} from "solid-js";
 import {Core, Store} from "@core";
-import {InputMode, FocusMode, FormMode, ToolbarMode} from "@ui/editor/mode";
+import {
+    UserInputMode,
+    ToolBarMode,
+    EntityFormMode,
+    DockArea,
+    ToolBar,
+    UserInput,
+    EntityFocus,
+} from "@ui/editor/mode";
 
 export type EditorContexType = {
     core: Core;
     store: Store;
 
-    inputMode?: InputMode;
-    formMode?: FormMode;
-    toolbarMode?: ToolbarMode;
-    focusMode?: FocusMode;
-
     init: Accessor<undefined>;
     reInit: Setter<undefined>;
+
+    userInput: UserInput;
+    entityFocus: EntityFocus;
+    dockArea: DockArea;
+    toolBar: ToolBar;
+
+    modes: {
+        entity: {
+            input: UserInputMode;
+            toolbar: ToolBarMode;
+        };
+        marker: {
+            input: UserInputMode;
+            form: EntityFormMode;
+            toolbar: ToolBarMode;
+        };
+        decor: {
+            input: UserInputMode;
+            form: EntityFormMode;
+        };
+        area: {
+            input: UserInputMode;
+            form: EntityFormMode;
+        };
+    };
+
 };
 
 export const EditorContext = createContext<EditorContexType | undefined>();

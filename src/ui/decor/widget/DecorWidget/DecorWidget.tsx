@@ -73,7 +73,7 @@ export function DecorWidget(props: Props): JSX.Element {
     return (
         <div
             class={styles.DecorWidget}
-            data-id={entity().id}
+            data-entity-id={entity().id}
             style={{transform: transform()}}
         >
             <div

@@ -78,7 +78,7 @@ export function MarkerWidget(props: Props): JSX.Element {
     return (
         <div
             class={styles.MarkerWidget}
-            data-id={entity().id}
+            data-entity-id={entity().id}
             style={{transform: transform()}}
             draggable={false}
         >

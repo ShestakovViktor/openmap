@@ -12,15 +12,10 @@ import {InitialDialog} from "@ui/project/widget";
 import {Modal} from "@ui/widget/Modal";
 import {useEditorContext} from "@ui/editor/context";
 import {VIEWER_ID} from "@ui/viewer/widget";
-import {
-    InputMode,
-    FocusMode,
-} from "@ui/editor/mode";
-import {EntityMode} from "@ui/entity/mode";
-import {MarkerMode} from "@ui/marker/mode";
-import {DecorMode} from "@ui/decor/mode";
-import {AreaMode} from "@ui/area/mode";
-import {ENTITY} from "@enum";
+import {EntityInputMode, EntityToolbarMode} from "@ui/entity/mode";
+import {MarkerFormMode, MarkerInputMode, MarkerToolbarMode} from "@ui/marker/mode";
+import {DecorFormMode, DecorInputMode} from "@ui/decor/mode";
+import {AreaFormMode, AreaInputMode} from "@ui/area/mode";
 
 type Props = {
     children: JSX.Element;
@@ -29,28 +24,40 @@ type Props = {
 export function Editor(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
-    editorCtx.inputMode = new InputMode();
-    editorCtx.inputMode.add(ENTITY.ENTITY.id, new EntityMode());
-    editorCtx.inputMode.add(ENTITY.MARKER.id, new MarkerMode());
-    editorCtx.inputMode.add(ENTITY.DECOR.id, new DecorMode());
-    editorCtx.inputMode.add(ENTITY.AREA.id, new AreaMode());
-
-    editorCtx.focusMode = new FocusMode();
-
     onMount(() => {
+        editorCtx.modes = {
+            entity: {
+                input: new EntityInputMode(),
+                toolbar: new EntityToolbarMode(),
+            },
+            marker: {
+                input: new MarkerInputMode(),
+                form: new MarkerFormMode(),
+                toolbar: new MarkerToolbarMode(),
+            },
+            decor: {
+                input: new DecorInputMode(),
+                form: new DecorFormMode(),
+            },
+            area: {
+                input: new AreaInputMode(),
+                form: new AreaFormMode(),
+            },
+        };
+
         const viewer = document.querySelector<HTMLDivElement>("#" + VIEWER_ID);
         if (!viewer) throw new Error();
 
         viewer.addEventListener("pointerdown", (event: PointerEvent) => {
-            editorCtx.inputMode?.get().onPointerDown(event);
+            editorCtx.userInput.active.onPointerDown(event);
         });
 
         viewer.addEventListener("pointermove", (event: PointerEvent) => {
-            editorCtx.inputMode?.get().onPointerMove(event);
+            editorCtx.userInput.active.onPointerMove(event);
         });
 
         viewer.addEventListener("pointerup", (event: PointerEvent) => {
-            editorCtx.inputMode?.get().onPointerUp(event);
+            editorCtx.userInput.active.onPointerUp(event);
         });
 
         const initialDialogModal = new Modal({background: true});

@@ -1,12 +1,12 @@
-import {Area, Layer, Id} from "@type";
-import {Input} from "@ui/editor/mode";
+import {Id, Layer, Area} from "@type";
+import {UserInputMode} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {ENTITY, LAYER} from "@enum";
 import {Accessor, Setter, createSignal} from "solid-js";
 import {pushAreaPoint} from "@ui/area/utility/pushAreaPoint";
 
-export class AreaMode extends Input {
+export class AreaInputMode extends UserInputMode {
     private getEntityId: Accessor<Id | undefined>;
 
     private setEntityId: Setter<Id | undefined>;
@@ -56,14 +56,14 @@ export class AreaMode extends Input {
                 / this.viewerCtx.layout.scale,
         };
 
-        let areaId = this.getEntityId();
+        let entityId = this.getEntityId();
 
-        if (!areaId) areaId = this.initArea();
+        if (!entityId) entityId = this.initArea();
 
-        this.editorCtx.formMode?.set(ENTITY.AREA.id, areaId);
+        // this.editorCtx.formMode?.set(ENTITY.AREA.id, areaId);
 
         const area = this.editorCtx.store.entity
-            .getById<Area>(areaId);
+            .getById<Area>(entityId);
 
         if (!area) throw new Error();
 
@@ -73,6 +73,9 @@ export class AreaMode extends Input {
 
         this.editorCtx.store.entity.set(area);
 
-        this.editorCtx.focusMode?.set(areaId);
+        // this.editorCtx.focusMode[1]((prev) => {
+        //     prev.forEach(entity => entity.clear());
+        //     return [new FocusMode(entityId)];
+        // });
     }
 }

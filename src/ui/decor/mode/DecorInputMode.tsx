@@ -1,10 +1,10 @@
-import {Input} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
-import {Layer, Id, Marker} from "@type";
 import {ENTITY, LAYER} from "@enum";
+import {Decor, Layer} from "@type";
+import {EntityFocusMode, UserInputMode} from "@ui/editor/mode";
 
-export class MarkerMode extends Input {
+export class DecorInputMode extends UserInputMode{
     private viewerCtx: ViewerContextType;
 
     private editorCtx: EditorContexType;
@@ -15,26 +15,25 @@ export class MarkerMode extends Input {
         this.editorCtx = useEditorContext();
     }
 
-    initMarker({x, y}: {x: number; y: number}): Id {
-        const markerId = this.editorCtx.store.entity.add<Marker>({
-            entityTypeId: ENTITY.MARKER.id,
+    initEntity({x, y}: {x: number; y: number}): number {
+        const decorId = this.editorCtx.store.entity.add<Decor>({
+            entityTypeId: ENTITY.DECOR.id,
             x,
             y,
             width: 64,
             height: 64,
             propId: null,
-            text: "",
-            figureIds: [],
+            motionId: null,
         });
 
         const overlay = this.editorCtx.store.entity
             .getByParams<Layer>({name: LAYER.OVERLAY})[0];
 
-        overlay.childIds.push(markerId);
+        overlay.childIds.push(decorId);
 
         this.editorCtx.store.entity.set(overlay);
 
-        return markerId;
+        return decorId;
     }
 
     onPointerDown(event: MouseEvent): void {
@@ -45,12 +44,13 @@ export class MarkerMode extends Input {
                 / this.viewerCtx.layout.scale,
         };
 
-        const markerId = this.initMarker(click);
+        const entityId = this.initEntity(click);
 
-        this.viewerCtx.reRender(markerId);
+        this.viewerCtx.reRender();
 
-        this.editorCtx.formMode?.set(ENTITY.MARKER.id, markerId);
+        this.editorCtx.modes.decor.form.set(entityId);
 
-        this.editorCtx.focusMode?.set(markerId);
+        const focusMode = new EntityFocusMode(entityId);
+        this.editorCtx.entityFocus.set(focusMode);
     }
 }

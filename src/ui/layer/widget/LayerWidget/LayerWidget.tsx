@@ -51,7 +51,7 @@ export function LayerWidget(props: Props): JSX.Element {
     return (
         <div
             class={styles.Layer}
-            data-id={entity().id}
+            data-entity-id={entity().id}
             style={style()}
         >
             <For each={entity().childIds}>
