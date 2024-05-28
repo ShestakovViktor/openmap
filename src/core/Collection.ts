@@ -34,6 +34,16 @@ export class Collection<U extends {id: Id}> {
         return entity ? structuredClone(entity) : null;
     }
 
+    getAll<T extends U = U>(): T[] {
+        const result: T[] = [];
+        for (const itemId in this.data) {
+            const item = this.data[itemId];
+            result.push(structuredClone(item) as T);
+        }
+
+        return result;
+    }
+
     getByParams<T extends U = U>(params: {[key: string]: any}): T[] {
         const result: T[] = [];
         for (const itemId in this.data) {
