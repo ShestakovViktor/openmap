@@ -84,7 +84,6 @@ export function FigureSelect(props: Props): JSX.Element {
         <Dialog
             class={styles.FigureDialog}
             onClose={() => assetFormDialog.hide()}
-            close
         >
             <FigureForm onSubmit={() => assetFormDialog.hide()}/>
         </Dialog>

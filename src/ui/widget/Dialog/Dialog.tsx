@@ -9,7 +9,6 @@ type Props = {
     id?: string;
     class?: string;
     title?: string;
-    close?: boolean;
 
     onOpen?: () => void;
     onClose?: () => void;
@@ -30,7 +29,7 @@ export function Dialog(props: Props): JSX.Element {
                     {props.title}
                 </div>
                 <div class={styles.Control}>
-                    <Show when={props.close}>
+                    <Show when={props.onClose}>
                         <Button
                             class={styles.CloseButton}
                             icon={SaltireIconSvg}

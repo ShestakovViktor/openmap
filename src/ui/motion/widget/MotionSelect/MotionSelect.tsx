@@ -37,7 +37,6 @@ export function MotionSelect({entity}: Props): JSX.Element {
         <Dialog
             class={styles.MotionDialog}
             onClose={() => motionFormDialog.hide()}
-            close
         >
             <MotionForm
                 onSubmit={() => motionFormDialog.hide()}
