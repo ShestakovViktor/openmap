@@ -26,7 +26,7 @@ export function Tabs(props: Props): JSX.Element {
                             }}
                             onClick={() => setSelected(index())}
                         >
-                            {child.name}
+                            {child.title}
                         </div>
                     }
                 </For>

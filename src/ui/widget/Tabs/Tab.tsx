@@ -2,7 +2,7 @@ import {JSX} from "solid-js";
 
 export type TabProps = {
     children: JSX.Element | JSX.Element[];
-    name: string;
+    title: string;
     class?: string;
 };
 
