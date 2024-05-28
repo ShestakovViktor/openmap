@@ -39,9 +39,10 @@ export class Core {
         const map = this.store.entity
             .getByParams<Layer>({name: LAYER.MAP})[0];
 
-        const tileIds = tiles.map((tile) => {
+        const tileIds = tiles.map((tile, index) => {
             const imageId = this.store.asset.add<Image>({
                 assetTypeId: ASSET.IMAGE,
+                name: `tile ${index + 1}`,
                 data: tile.data,
                 media: tile.media,
                 encoding: tile.encoding,
