@@ -13,7 +13,7 @@ type Props = {
 };
 
 export function PropForm(props: Props): JSX.Element {
-    const data = {assetTypeId: ASSET.PROP.id};
+    const data = {assetTypeId: ASSET.PROP};
 
     return (
         <AssetForm onSubmit={props.onSubmit} data={data}>

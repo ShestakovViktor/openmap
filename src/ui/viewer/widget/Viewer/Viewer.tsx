@@ -29,7 +29,7 @@ export function Viewer(): JSX.Element {
     );
 
     const [motions, {refetch}] = createResource(
-        () => viewerCtx.store.asset.getByParams({assetTypeId: ASSET.MOTION.id}),
+        () => viewerCtx.store.asset.getByParams({assetTypeId: ASSET.MOTION}),
         {initialValue: []}
     );
 

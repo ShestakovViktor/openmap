@@ -57,9 +57,9 @@ export class EntityInputMode extends UserInputMode {
         if (!entity) throw new Error();
 
         if (![
-            ENTITY.MARKER.id,
-            ENTITY.DECOR.id,
-            ENTITY.AREA.id,
+            ENTITY.MARKER,
+            ENTITY.DECOR,
+            ENTITY.AREA,
         ].includes(entity.entityTypeId)) {
             this.editorCtx.entityFocus.clear();
             this.editorCtx.dockArea.clear();
@@ -77,7 +77,7 @@ export class EntityInputMode extends UserInputMode {
             this.editorCtx.entityFocus.set(entityFocus);
         }
 
-        if (entity.entityTypeId == ENTITY.MARKER.id) {
+        if (entity.entityTypeId == ENTITY.MARKER) {
             const {
                 form: markerForm,
                 toolbar: markerToolbar,
@@ -92,7 +92,7 @@ export class EntityInputMode extends UserInputMode {
             this.editorCtx.toolBar.set(entityToolbar);
             this.editorCtx.toolBar.add(markerToolbar);
         }
-        else if (entity.entityTypeId == ENTITY.DECOR.id) {
+        else if (entity.entityTypeId == ENTITY.DECOR) {
             const {
                 form: decorForm,
             } = this.editorCtx.modes.decor;
@@ -105,7 +105,7 @@ export class EntityInputMode extends UserInputMode {
             this.editorCtx.dockArea.set(decorForm);
             this.editorCtx.toolBar.set(entityToolbar);
         }
-        else if (entity.entityTypeId == ENTITY.AREA.id) {
+        else if (entity.entityTypeId == ENTITY.AREA) {
             const {
                 form: areaForm,
             } = this.editorCtx.modes.area;

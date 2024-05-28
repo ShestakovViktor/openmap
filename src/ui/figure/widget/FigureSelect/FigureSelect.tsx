@@ -37,7 +37,7 @@ export function FigureSelect(props: Props): JSX.Element {
 
     const [assetsData, {refetch}] = createResource<Asset[]>(() => {
         return editorCtx.store.asset
-            .getByParams<Asset>({typeId: ASSET.FIGURE.id});
+            .getByParams<Asset>({typeId: ASSET.FIGURE});
     });
 
     createEffect(on(editorCtx.init, refetch));

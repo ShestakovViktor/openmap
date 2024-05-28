@@ -20,7 +20,7 @@ type Props = {
 };
 
 export function MotionForm(props: Props): JSX.Element {
-    const data = {assetTypeId: ASSET.MOTION.id};
+    const data = {assetTypeId: ASSET.MOTION};
 
     return (
         <AssetForm

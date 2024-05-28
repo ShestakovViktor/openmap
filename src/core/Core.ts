@@ -41,7 +41,7 @@ export class Core {
 
         const tileIds = tiles.map((tile) => {
             const imageId = this.store.asset.add<Image>({
-                assetTypeId: ASSET.IMAGE.id,
+                assetTypeId: ASSET.IMAGE,
                 data: tile.data,
                 media: tile.media,
                 encoding: tile.encoding,
@@ -49,7 +49,7 @@ export class Core {
             });
 
             const tileId = this.store.entity.add<Tile>({
-                entityTypeId: ENTITY.TILE.id,
+                entityTypeId: ENTITY.TILE,
                 x: tile.x,
                 y: tile.y,
                 width: tile.width,

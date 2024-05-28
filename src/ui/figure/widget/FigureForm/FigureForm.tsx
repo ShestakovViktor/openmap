@@ -18,7 +18,7 @@ type Props = {
 };
 
 export function FigureForm(props: Props): JSX.Element {
-    const data = {typeId: ASSET.FIGURE.id};
+    const data = {typeId: ASSET.FIGURE};
 
     return (
         <AssetForm onSubmit={props.onSubmit} data={data}>

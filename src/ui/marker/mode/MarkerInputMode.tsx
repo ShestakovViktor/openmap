@@ -17,7 +17,7 @@ export class MarkerInputMode extends UserInputMode {
 
     initMarker({x, y}: {x: number; y: number}): Id {
         const markerId = this.editorCtx.store.entity.add<Marker>({
-            entityTypeId: ENTITY.MARKER.id,
+            entityTypeId: ENTITY.MARKER,
             x,
             y,
             width: 64,

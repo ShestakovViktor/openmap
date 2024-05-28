@@ -27,7 +27,7 @@ export function MotionSelect({entity}: Props): JSX.Element {
 
     const [motions, {refetch}] = createResource(() => {
         return editorCtx.store.asset
-            .getByParams<Motion>({assetTypeId: ASSET.MOTION.id});
+            .getByParams<Motion>({assetTypeId: ASSET.MOTION});
     });
 
     createEffect(on(editorCtx.init, refetch));

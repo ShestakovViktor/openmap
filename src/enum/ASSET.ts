@@ -1,7 +1,7 @@
 export const ASSET = {
-    ASSET: {id: 1, name: "asset"},
-    IMAGE: {id: 2, name: "image"},
-    PROP: {id: 3, name: "prop"},
-    FIGURE: {id: 4, name: "figure"},
-    MOTION: {id: 5, name: "motion"},
+    ASSET: 1,
+    IMAGE: 2,
+    PROP: 3,
+    FIGURE: 4,
+    MOTION: 5,
 };

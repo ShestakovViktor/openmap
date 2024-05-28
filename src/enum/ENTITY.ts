@@ -1,8 +1,9 @@
 export const ENTITY =  {
-    ENTITY: {id: 1, name: "entity"},
-    LAYER: {id: 2, name: "layer"},
-    TILE: {id: 3, name: "tile"},
-    MARKER: {id: 4, name: "marker"},
-    DECOR: {id: 5, name: "decor"},
-    AREA: {id: 6, name: "area"},
+    ENTITY: 1,
+    LAYER: 2,
+    TILE: 3,
+    FOOTNOTE: 4,
+    MARKER: 5,
+    DECOR: 6,
+    AREA: 7,
 };

@@ -17,7 +17,7 @@ export class DecorInputMode extends UserInputMode{
 
     initEntity({x, y}: {x: number; y: number}): number {
         const decorId = this.editorCtx.store.entity.add<Decor>({
-            entityTypeId: ENTITY.DECOR.id,
+            entityTypeId: ENTITY.DECOR,
             x,
             y,
             width: 64,

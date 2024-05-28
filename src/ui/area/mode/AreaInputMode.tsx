@@ -26,7 +26,7 @@ export class AreaInputMode extends UserInputMode {
 
     initArea(): Id {
         const areaId = this.editorCtx.store.entity.add<Area>({
-            entityTypeId: ENTITY.AREA.id,
+            entityTypeId: ENTITY.AREA,
             x: 0,
             y: 0,
             width: 0,

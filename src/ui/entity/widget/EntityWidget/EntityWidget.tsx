@@ -28,11 +28,11 @@ export function EntityWidget(props: Props): JSX.Element {
     );
 
     const entities: {[key: string]: ValidComponent} = {
-        [ENTITY.LAYER.id]: LayerWidget,
-        [ENTITY.TILE.id]: TileWidget,
-        [ENTITY.MARKER.id]: MarkerWidget,
-        [ENTITY.DECOR.id]: DecorWidget,
-        [ENTITY.AREA.id]: AreaWidget,
+        [ENTITY.LAYER]: LayerWidget,
+        [ENTITY.TILE]: TileWidget,
+        [ENTITY.MARKER]: MarkerWidget,
+        [ENTITY.DECOR]: DecorWidget,
+        [ENTITY.AREA]: AreaWidget,
     };
 
     return (
