@@ -3,6 +3,7 @@ import en from "./string/en.json";
 import i18next from "i18next";
 import {Field} from "@ui/widget";
 import {JSX} from "solid-js";
+import {DATA} from "@enum";
 
 i18next.addResourceBundle(
     "en", "asset", {ClassField: en}, true, true
@@ -20,7 +21,7 @@ export function ClassField(): JSX.Element {
             <input
                 type="text"
                 name="class"
-                data-type="string"
+                data-type={DATA.STRING}
                 required
             />
         </Field>

@@ -6,7 +6,7 @@ import {useEditorContext} from "@ui/editor/context";
 import {useViewerContext} from "@ui/viewer/context";
 import {Entity, Layer, Id} from "@type";
 import i18next from "i18next";
-import {LAYER} from "@enum";
+import {DATA} from "@enum";
 
 i18next.addResourceBundle("en", "entity", {EntityForm: en}, true, true);
 
@@ -23,7 +23,7 @@ export function EntityForm(props: Props): JSX.Element {
     function handleChange(event: Event): void {
         const form = event.currentTarget as HTMLFormElement;
         const input = event.target as HTMLInputElement;
-        const type = input.getAttribute("data-type");
+        const type = Number(input.getAttribute("data-type"));
 
         const idInput = form.querySelector("input[name=\"id\"]") as HTMLInputElement;
         const id = Number(idInput.value);
@@ -31,13 +31,13 @@ export function EntityForm(props: Props): JSX.Element {
 
         let data: {id: Id} & Partial<Entity>;
 
-        if (type == "id") {
+        if (type == DATA.REFERENCE) {
             data = {id, [input.name]: Number(input.value) || null};
         }
-        else if (type == "number") {
+        else if (type == DATA.NUMBER) {
             data = {id, [input.name]: Number(input.value)};
         }
-        else if (type == "array") {
+        else if (type == DATA.ARRAY) {
             data = {id, [input.name]: JSON.parse(input.value) || []};
         }
         else {

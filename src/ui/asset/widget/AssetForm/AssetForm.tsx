@@ -7,6 +7,7 @@ import i18next from "i18next";
 import {Asset, Id} from "@type";
 import {readFile} from "@ui/app/utiliy";
 import {useViewerContext} from "@ui/viewer/context";
+import {ASSET, DATA} from "@enum";
 
 i18next.addResourceBundle("en", "asset", {AssetForm: en}, true, true);
 
@@ -26,12 +27,12 @@ export function AssetForm(props: Props): JSX.Element {
 
     function handleChange(event: Event): void {
         const input = event.target as HTMLInputElement;
-        const type = input.getAttribute("data-type");
+        const type = Number(input.getAttribute("data-type"));
 
-        if (type == "number") {
+        if (type == DATA.NUMBER) {
             data[input.name] = Number(input.value);
         }
-        else if (type == "file" && input.files) {
+        else if (type == DATA.FILE && input.files) {
             data[input.name] = input.files[0];
         }
         else {

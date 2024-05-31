@@ -3,6 +3,7 @@ import i18next from "i18next";
 
 import {Field} from "@ui/widget";
 import {JSX, Resource} from "solid-js";
+import {DATA} from "@enum";
 
 i18next.addResourceBundle("en", "entity", {EntityTypeIdField: en}, true, true);
 
@@ -22,7 +23,7 @@ export function EntityTypeIdField(props: Props): JSX.Element {
             <input
                 name="entityTypeId"
                 value={props.entity()?.entityTypeId ?? ""}
-                data-type="number"
+                data-type={DATA.REFERENCE}
                 readonly
             />
         </Field>

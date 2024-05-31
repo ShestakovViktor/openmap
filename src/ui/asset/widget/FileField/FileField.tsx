@@ -3,6 +3,7 @@ import en from "./string/en.json";
 import i18next from "i18next";
 import {Field} from "@ui/widget";
 import {JSX} from "solid-js";
+import {DATA} from "@enum";
 
 i18next.addResourceBundle(
     "en", "asset", {FileField: en}, true, true
@@ -23,7 +24,7 @@ export function FileField(props: Props): JSX.Element {
             </label>
             <input
                 type="file"
-                data-type="file"
+                data-type={DATA.FILE}
                 name="file"
                 accept={props.accept}
                 required

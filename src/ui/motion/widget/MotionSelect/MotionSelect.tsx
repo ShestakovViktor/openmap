@@ -7,7 +7,7 @@ import {For, JSX, Resource, createEffect, createResource, on} from "solid-js";
 import {Modal} from "@ui/widget/Modal";
 import {Id, Motion} from "@type";
 import {MotionForm} from "../MotionForm";
-import {ASSET} from "@enum";
+import {ASSET, DATA} from "@enum";
 import {useEditorContext} from "@ui/editor/context";
 
 i18next.addResourceBundle("en", "motion", {"MotionSelectDialog": en}, true, true);
@@ -50,7 +50,7 @@ export function MotionSelect({entity}: Props): JSX.Element {
                 ref={inputRef}
                 name="motionId"
                 type="hidden"
-                data-type="id"
+                data-type={DATA.REFERENCE}
                 value={selected() ?? ""}
             />
             <div class={styles.Showcase}>

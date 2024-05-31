@@ -3,6 +3,7 @@ import i18next from "i18next";
 
 import {Field} from "@ui/widget";
 import {JSX, Resource} from "solid-js";
+import {DATA} from "@enum";
 
 i18next.addResourceBundle("en", "entity", {WidthField: en}, true, true);
 
@@ -23,7 +24,7 @@ export function WidthField(props: Props): JSX.Element {
                 type="number"
                 name="width"
                 value={props.entity()?.width ?? ""}
-                data-type="number"
+                data-type={DATA.NUMBER}
             />
         </Field>
     );
