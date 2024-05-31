@@ -74,6 +74,7 @@ export class WebImageDriver implements ImageDriver {
 
                 const dataUrl = canvas.toDataURL(mime);
                 const data = dataUrl.split(/[;:,]/);
+                const size = atob(data[3]).length;
 
                 tiles.push({
                     x,
@@ -83,6 +84,7 @@ export class WebImageDriver implements ImageDriver {
                     media: data[1],
                     encoding: data[2],
                     data: data[3],
+                    size,
                 });
             }
         }

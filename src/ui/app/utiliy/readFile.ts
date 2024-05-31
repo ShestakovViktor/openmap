@@ -2,6 +2,7 @@ export async function readFile(file: File): Promise<{
     media: string;
     encoding: string;
     data: string;
+    size: number;
 }>{
     return await new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -15,6 +16,7 @@ export async function readFile(file: File): Promise<{
                 media: dataUrl[1],
                 encoding: dataUrl[2],
                 data: dataUrl[3],
+                size: file.size,
             });
         });
 

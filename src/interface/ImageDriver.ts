@@ -6,6 +6,7 @@ export type ImageTile = {
     media: string;
     encoding: string;
     data: string;
+    size: number;
 };
 
 export interface ImageDriver {

@@ -47,6 +47,7 @@ export class Core {
                 media: tile.media,
                 encoding: tile.encoding,
                 path: "",
+                size: tile.size,
             });
 
             const tileId = this.store.entity.add<Tile>({
