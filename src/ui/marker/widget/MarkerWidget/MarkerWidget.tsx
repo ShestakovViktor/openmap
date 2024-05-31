@@ -1,10 +1,10 @@
 import styles from "./MarkerWidget.module.scss";
-import {JSX, createMemo, createSignal} from "solid-js";
-import {Figure, Marker, Prop} from "@type";
+import {JSX, Show, createMemo, createSignal} from "solid-js";
+import {Marker, Prop} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
 import {assetToSrc} from "@ui/app/utiliy";
 import {updateEffect} from "@ui/viewer/utility";
-import {InfoPopup} from "@ui/viewer/widget";
+import {EntityWidget} from "@ui/entity/widget";
 
 type Props = {
     entity: Marker;
@@ -24,9 +24,7 @@ export function MarkerWidget(props: Props): JSX.Element {
             && prev.y == next.y
             && prev.width == next.width
             && prev.height == next.height
-            && prev.propId == next.propId
-            && prev.text == next.text
-            && prev.figureIds == next.figureIds;
+            && prev.propId == next.propId;
     };
 
     const [entity, setEntity] = createSignal<Marker>(props.entity, {equals});
@@ -63,17 +61,22 @@ export function MarkerWidget(props: Props): JSX.Element {
         }
     });
 
-    const text = createMemo(() => entity().text);
+    // function hideListener(event: PointerEvent): void {
+    //     if (!ref.contains(event.target as HTMLElement)) {
+    //         setShow(false);
+    //     }
+    // }
 
-    const figures = createMemo((): Figure[] => {
-        return entity().figureIds.map((id) => {
-            const figure = viewerCtx.store.asset.getById<Figure>(id);
-            if (!figure) throw new Error();
-            return figure;
-        });
-    });
+    // createEffect(on(show, (value) => {
+    //     if (value) {
+    //         window.addEventListener("pointerdown", hideListener);
+    //     }
+    //     else {
+    //         window.removeEventListener("pointerdown", hideListener);
+    //     }
+    // }));
 
-    const [getInfoPopupState, setInfoPopupState] = createSignal(false);
+    const [show, setShow] = createSignal(false);
 
     return (
         <div
@@ -91,17 +94,15 @@ export function MarkerWidget(props: Props): JSX.Element {
                     src={src()}
                     draggable={false}
                     onclick={(event) => {
-                        setInfoPopupState(!getInfoPopupState());
+                        setShow(!show());
                         event.stopPropagation();
                     }}
                 />
             </div>
 
-            <InfoPopup
-                state={[getInfoPopupState, setInfoPopupState]}
-                text={text()}
-                figures={figures()}
-            />
+            <Show when={show() && entity().footnoteId}>
+                {id => <EntityWidget entityId={id()}/>}
+            </Show>
         </div>
     );
 }

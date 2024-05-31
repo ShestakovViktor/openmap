@@ -1,7 +1,7 @@
 import {EntityFocusMode, UserInputMode} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
-import {Id, Layer, Marker} from "@type";
+import {Id, Layer, Footnote, Marker} from "@type";
 import {ENTITY, LAYER} from "@enum";
 
 export class MarkerInputMode extends UserInputMode {
@@ -16,6 +16,12 @@ export class MarkerInputMode extends UserInputMode {
     }
 
     initMarker({x, y}: {x: number; y: number}): Id {
+        const footnoteId = this.editorCtx.store.entity.add<Footnote>({
+            entityTypeId: ENTITY.FOOTNOTE,
+            text: "",
+            figureIds: [],
+        });
+
         const markerId = this.editorCtx.store.entity.add<Marker>({
             entityTypeId: ENTITY.MARKER,
             x,
@@ -23,8 +29,7 @@ export class MarkerInputMode extends UserInputMode {
             width: 64,
             height: 64,
             propId: null,
-            text: "",
-            figureIds: [],
+            footnoteId,
         });
 
         const overlay = this.editorCtx.store.entity

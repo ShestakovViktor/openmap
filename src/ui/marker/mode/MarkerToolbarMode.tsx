@@ -11,7 +11,6 @@ export class MarkerToolbarMode extends ToolBarMode{
 
         super(showSignal);
 
-        const entityIdSignal = createSignal<Id | null>(null);
         const toolbar = document.querySelector("#" + IDS.TOOLBAR);
         if (!toolbar) throw new Error();
 

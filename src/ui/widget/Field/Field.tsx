@@ -13,6 +13,7 @@ export function Field(props: Props): JSX.Element {
         <div
             class={styles.Field}
             classList={{
+                [props.class ?? ""]: Boolean(props.class),
                 [styles[props.type ?? "row"]]: true,
             }}
         >

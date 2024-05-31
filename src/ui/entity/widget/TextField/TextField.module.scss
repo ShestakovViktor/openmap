@@ -1,0 +1,7 @@
+.TextField {
+    height: 100%;
+
+    :nth-child(2) {
+        flex-grow: 1;
+    }
+}

@@ -7,15 +7,17 @@ import {
     Resource,
     createEffect,
     createResource,
+    createSignal,
     on,
 } from "solid-js";
 import {Dialog, Modal} from "@ui/widget";
 import i18next from "i18next";
 import {Asset, Id} from "@type";
-import {ASSET} from "@enum";
+import {ASSET, DATA} from "@enum";
 import {FigureForm} from "@ui/figure/widget";
 import {assetToSrc} from "@ui/app/utiliy";
 import {useEditorContext} from "@ui/editor/context";
+import {AssetBrowser} from "@ui/asset/widget";
 
 i18next.addResourceBundle("en", "prop", {"PropSelect": en}, true, true);
 
@@ -25,85 +27,44 @@ type Props = {
 
 export function FigureSelect(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
-    let inputRef: HTMLInputElement | undefined;
+    let input: HTMLInputElement | undefined;
 
-    const [selected, {mutate: setSelected, refetch: getSelected}]
-        = createResource<Id[]>(
-            () => props.entity()?.figureIds ?? [],
-            {initialValue: []}
-        );
+    const [value, setValue] = createSignal<Id[]>([]);
 
-    createEffect(on(props.entity, getSelected));
-
-    const [assetsData, {refetch}] = createResource<Asset[]>(() => {
-        return editorCtx.store.asset
-            .getByParams<Asset>({typeId: ASSET.FIGURE});
-    });
-
-    createEffect(on(editorCtx.init, refetch));
-
-    const previews = (
-        <For each={assetsData()}>
-            {(asset) => {
-                const src = (): string => {
-                    return asset.path || assetToSrc(asset);
-                };
-
-                return <img
-                    class={styles.Preview}
-                    classList={{
-                        [styles.Selected]: selected().includes(asset.id),
-                    }}
-                    src={src()}
-                    onClick={() => {
-                        const index = selected().findIndex(
-                            (id) => id == asset.id
-                        );
-
-                        if (index == -1) {
-                            setSelected((prev) => [...prev, asset.id]);
-                        }
-                        else {
-                            setSelected((prev) => {
-                                return prev.filter((item, i) => i != index);
-                            });
-                        }
-
-                        if (!inputRef) throw new Error();
-                        inputRef.dispatchEvent(
-                            new Event("change", {bubbles: true})
-                        );
-                    }}
-                />;
-            }}
-        </For>
-    );
-
-    const assetFormDialog = new Modal();
-    assetFormDialog.render(
+    const assetBrowserDialog = new Modal();
+    assetBrowserDialog.render(
         <Dialog
-            class={styles.FigureDialog}
-            onClose={() => assetFormDialog.hide()}
+            class={styles.AssetBrowserDialog}
+            onClose={() => assetBrowserDialog.hide()}
         >
-            <FigureForm onSubmit={() => assetFormDialog.hide()}/>
+            <AssetBrowser
+                type={ASSET.FIGURE}
+                onSelect={(ids: Id[]) => {
+                    setValue(ids);
+                    input!.dispatchEvent(
+                        new Event("change", {bubbles: true})
+                    );
+                    assetBrowserDialog.hide();
+                }}
+                multiple
+            />
         </Dialog>
     );
 
     return (
         <div class={styles.FigureSelect}>
             <input
-                ref={inputRef}
+                ref={input}
                 name="figureIds"
                 type="hidden"
-                value={JSON.stringify(selected())}
-                data-type="array"
+                value={JSON.stringify(value())}
+                data-type={DATA.ARRAY}
             />
             <div class={styles.Showcase}>
-                {previews}
                 <button
                     class={styles.Preview}
                     onClick={() => {
-                        assetFormDialog.show();
+                        assetBrowserDialog.show();
                     }}
                 >+</button>
             </div>

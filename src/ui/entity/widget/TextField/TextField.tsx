@@ -1,5 +1,6 @@
 import en from "./string/en.json";
 import i18next from "i18next";
+import styles from "./TextField.module.scss";
 
 import {Field} from "@ui/widget";
 import {JSX, Resource, Signal} from "solid-js";
@@ -13,7 +14,7 @@ type Props = {
 
 export function TextField(props: Props): JSX.Element {
     return (
-        <Field type="column">
+        <Field class={styles.TextField} type="column">
             <label for="text">
                 {i18next.t(
                     "entity:TextField.label",

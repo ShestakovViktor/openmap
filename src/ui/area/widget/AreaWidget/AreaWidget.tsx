@@ -3,11 +3,12 @@ import {
     JSX,
     createSignal,
     createMemo,
+    Show,
 } from "solid-js";
 import {useViewerContext} from "@ui/viewer/context";
-import {Area, Figure} from "@type";
+import {Area} from "@type";
 import {updateEffect} from "@ui/viewer/utility";
-import {InfoPopup} from "@ui/viewer/widget";
+import {EntityWidget} from "@ui/entity/widget";
 
 type Props = {
     entity: Area;
@@ -26,8 +27,7 @@ export function AreaWidget(props: Props): JSX.Element {
     const equals = (prev: Area, next: Area): boolean => {
         return prev.x == next.x
             && prev.y == next.y
-            && prev.text == next.text
-            && prev.figureIds == next.figureIds;
+            && prev.points == next.points;
     };
 
     const [entity, setEntity] = createSignal<Area>(props.entity, {equals});
@@ -89,16 +89,6 @@ export function AreaWidget(props: Props): JSX.Element {
             );
     });
 
-    const text = createMemo((): string => entity().text);
-
-    const figures = createMemo((): Figure[] => {
-        return entity().figureIds.map((id) => {
-            const figure = viewerCtx.store.asset.getById<Figure>(id);
-            if (!figure) throw new Error();
-            return figure;
-        });
-    });
-
     return (
         <div
             class={styles.AreaWidget}
@@ -115,11 +105,9 @@ export function AreaWidget(props: Props): JSX.Element {
                 {helpers()}
             </svg>
 
-            <InfoPopup
-                state={[show, setShow]}
-                text={text()}
-                figures={figures()}
-            />
+            <Show when={entity().footnoteId}>
+                {id => <EntityWidget entityId={id()}/>}
+            </Show>
         </div>
     );
 }

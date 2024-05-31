@@ -2,6 +2,7 @@ import {ENTITY, MOUSE} from "@enum";
 import {Entity, Marker} from "@type";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {EntityFocusMode, UserInputMode} from "@ui/editor/mode";
+import {getEntity} from "@ui/editor/utility";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 
 export class EntityInputMode extends UserInputMode {
@@ -42,14 +43,16 @@ export class EntityInputMode extends UserInputMode {
 
     onPointerDown(event: MouseEvent): void {
         if (event.buttons != MOUSE.LEFT) return;
-        const entityFocus = new EntityFocusMode(event.target as HTMLElement);
+        const element = getEntity(event.target as HTMLElement);
 
-        if (!entityFocus.element || !entityFocus.entityId) {
+        if (!element) {
             this.editorCtx.entityFocus.clear();
             this.editorCtx.dockArea.clear();
             this.editorCtx.toolBar.set(this.editorCtx.modes.entity.toolbar);
             return;
         }
+
+        const entityFocus = new EntityFocusMode(element);
 
         const entity = this.editorCtx.store.entity
             .getById<Entity>(entityFocus.entityId);

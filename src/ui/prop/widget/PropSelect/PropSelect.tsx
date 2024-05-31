@@ -1,21 +1,14 @@
 import en from "./string/en.json";
 import styles from "./PropSelect.module.scss";
 
-import {
-    For,
-    JSX,
-    Resource,
-    createEffect,
-    createResource,
-    on,
-} from "solid-js";
-import {Dialog, Modal} from "@ui/widget";
+import {JSX, Resource, createComputed, createMemo, createSignal} from "solid-js";
 import i18next from "i18next";
-import {Asset, Id} from "@type";
-import {ASSET} from "@enum";
-import {PropForm} from "../PropForm";
-import {assetToSrc} from "@ui/app/utiliy";
+import {Id} from "@type";
+import {AssetBrowser} from "@ui/asset/widget";
 import {useEditorContext} from "@ui/editor/context";
+import {Modal, Dialog} from "@ui/widget";
+import {ASSET, DATA} from "@enum";
+import {PropForm} from "../PropForm";
 
 i18next.addResourceBundle("en", "prop", {"PropSelect": en}, true, true);
 
@@ -25,81 +18,54 @@ type Props = {
 
 export function PropSelect(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
-    let inputRef: HTMLInputElement | undefined;
+    let input: HTMLInputElement | undefined;
 
-    const [selected, {mutate: setSelected, refetch: getSelected}]
-        = createResource<number | undefined>(
-            () => props.entity()?.propId ?? undefined
-        );
-
-    createEffect(on(props.entity, getSelected));
-
-    const [assetsData, {refetch}] = createResource<Asset[]>(() => {
-        return editorCtx.store.asset
-            .getByParams<Asset>({assetTypeId: ASSET.PROP});
-    });
-
-    createEffect(on(editorCtx.init, refetch));
-
-    const previews = (
-        <For each={assetsData()}>
-            {(asset) => {
-                const src = (): string => {
-                    return asset.path || assetToSrc(asset);
-                };
-
-                return <img
-                    class={styles.Preview}
-                    classList={{
-                        [styles.Selected]: asset.id == selected(),
-                    }}
-                    src={src()}
-                    onClick={() => {
-                        if (asset.id == selected()) {
-                            setSelected();
-                        }
-                        else {
-                            setSelected(asset.id);
-                        }
-                        if (!inputRef) throw new Error();
-                        inputRef.dispatchEvent(
-                            new Event("change", {bubbles: true})
-                        );
-                    }}
-                />;
-            }}
-        </For>
+    const [value, setValue] = createSignal<Id | undefined>(
+        props.entity()?.propId ?? undefined
     );
 
-    const assetFormDialog = new Modal();
-    assetFormDialog.render(
+    const selected = createMemo<Id[]>(() => {
+        const selected = value();
+        return selected ? [selected] : [];
+    });
+
+    const assetBrowserDialog = new Modal();
+    assetBrowserDialog.render(
         <Dialog
-            class={styles.PropDialog}
-            onClose={() => assetFormDialog.hide()}
-            close
+            class={styles.AssetBrowserDialog}
+            onClose={() => assetBrowserDialog.hide()}
         >
-            <PropForm onSubmit={() => assetFormDialog.hide()}/>
+            <AssetBrowser
+                type={ASSET.PROP}
+                form={PropForm}
+                selected={selected()}
+                onSelect={(ids: Id[]) => {
+                    setValue(ids[0]);
+                    input!.dispatchEvent(
+                        new Event("change", {bubbles: true})
+                    );
+                    assetBrowserDialog.hide();
+                }}
+            />
         </Dialog>
     );
 
     return (
         <div class={styles.PropSelect}>
             <input
-                ref={inputRef}
-                name="propId"
-                type="hidden"
-                value={selected()}
-                data-type="id"
+                ref={input}
+                name={"propId"}
+                type={"hidden"}
+                value={value() ?? ""}
+                data-type={DATA.REFERENCE}
             />
-            <div class={styles.Showcase}>
-                {previews}
-                <button
-                    class={styles.Preview}
-                    onClick={() => {
-                        assetFormDialog.show();
-                    }}
-                >+</button>
-            </div>
+            <div>{value()}</div>
+            <button
+                class={styles.Preview}
+                onClick={() => {
+                    assetBrowserDialog.show();
+                }}
+            >Choose asset</button>
         </div>
     );
 }

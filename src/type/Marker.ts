@@ -8,6 +8,5 @@ export type Marker = Entity & {
 
     propId: Id | null;
 
-    text: string;
-    figureIds: Id[];
+    footnoteId: Id;
 };

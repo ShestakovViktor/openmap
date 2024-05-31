@@ -41,7 +41,7 @@ export function DecorForm(props: Props): JSX.Element {
 
     return (
         <NamespaceProvider namespace={"DecorForm"}>
-            <EntityForm class={styles.DecorForm}>
+            <EntityForm entityId={props.entityId} class={styles.DecorForm}>
                 <Accordion>
                     <SystemSection entity={entity}/>
                     <PositionSection entity={entity}/>

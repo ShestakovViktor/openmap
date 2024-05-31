@@ -4,6 +4,7 @@ export * from "./Entity";
 export * from "./Asset";
 export * from "./Motion";
 export * from "./Layer";
+export * from "./Footnote";
 export * from "./Marker";
 export * from "./Area";
 export * from "./Tile";

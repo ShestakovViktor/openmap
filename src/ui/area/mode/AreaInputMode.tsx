@@ -1,4 +1,4 @@
-import {Id, Layer, Area} from "@type";
+import {Id, Layer, Footnote, Area} from "@type";
 import {UserInputMode} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
@@ -25,6 +25,12 @@ export class AreaInputMode extends UserInputMode {
     }
 
     initArea(): Id {
+        const footnoteId = this.editorCtx.store.entity.add<Footnote>({
+            entityTypeId: ENTITY.FOOTNOTE,
+            text: "",
+            figureIds: [],
+        });
+
         const areaId = this.editorCtx.store.entity.add<Area>({
             entityTypeId: ENTITY.AREA,
             x: 0,
@@ -32,8 +38,7 @@ export class AreaInputMode extends UserInputMode {
             width: 0,
             height: 0,
             points: [],
-            text: "",
-            figureIds: [],
+            footnoteId,
         });
 
         const overlay = this.editorCtx.store.entity

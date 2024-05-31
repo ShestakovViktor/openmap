@@ -4,7 +4,6 @@ import i18next from "i18next";
 
 import {Id, Marker} from "@type";
 import {
-    Accessor,
     JSX,
     Signal,
     createEffect,
@@ -17,7 +16,6 @@ import {
     EntityForm,
     PositionSection,
     SystemSection,
-    TextSection,
     PropSection,
     SizeSection,
 } from "@ui/entity/widget";
@@ -48,22 +46,15 @@ export function MarkerForm(props: Props): JSX.Element {
 
     return (
         <NamespaceProvider namespace={"MarkerForm"}>
-            <EntityForm class={styles.MarkerForm}>
+            <EntityForm
+                entityId={props.entityId}
+                class={styles.MarkerForm}
+            >
                 <Accordion>
                     <SystemSection entity={entity}/>
                     <PositionSection entity={entity}/>
                     <SizeSection entity={entity}/>
                     <PropSection entity={entity}/>
-                    <TextSection entity={entity}/>
-                    <FigureSection entity={entity}/>
-                    {/* <Row>
-                        <input
-                            type="file"
-                            name="graphic"
-                            accept="image/*"
-                            multiple
-                        />
-                    </Row> */}
                 </Accordion>
             </EntityForm>
         </NamespaceProvider>

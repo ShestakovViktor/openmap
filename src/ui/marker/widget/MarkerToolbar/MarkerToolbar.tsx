@@ -1,58 +1,50 @@
+import FootnoteIconSvg from "@public/icon/footnote.svg";
 import styles from "./MarkerToolbar.module.scss";
-import OkIconSvg from "@public/icon/ok.svg";
-import NoIconSvg from "@public/icon/no.svg";
 
-import {Button, Toolbar} from "@ui/widget";
+import {Button, Dialog, Modal, Toolbar} from "@ui/widget";
 import en from "./string/en.json";
 
 import i18next from "i18next";
-import {Accessor, JSX, Setter, createSignal} from "solid-js";
-import {Layer, Id} from "@type";
+import {JSX, createSignal} from "solid-js";
+import {FootnoteDialog} from "@ui/footnote/widget";
+import {Id, Marker} from "@type";
 import {useEditorContext} from "@ui/editor/context";
-import {LAYER} from "@enum";
-import {useViewerContext} from "@ui/viewer/context";
 
-i18next.addResourceBundle("en", "area", {MarkerToolbar: en}, true, true);
+i18next.addResourceBundle("en", "marker", {MarkerToolbar: en}, true, true);
 
-type Props = {
-    signal?: [
-        getId: Accessor<number | undefined>,
-        setId: Setter<number | undefined>,
-    ];
-};
-
-export function MarkerToolbar(props: Props): JSX.Element {
+export function MarkerToolbar(): JSX.Element {
     const editorCtx = useEditorContext();
-    const viewerCtx = useViewerContext();
+    const update = createSignal(undefined, {equals: false});
 
-    const [getId, setId] = props.signal ?? createSignal<Id | undefined>();
+    const footnoteId = createSignal<Id | null>(null);
 
-    function cancelMarker(): void {
-        const markerId = getId();
-        if (markerId) editorCtx.store.entity.del(markerId);
-
-        const overlay = editorCtx.store.entity
-            .getByParams<Layer>({name: LAYER.OVERLAY})[0];
-
-        overlay.childIds = overlay.childIds
-            .filter(id => id != markerId);
-
-        editorCtx.store.entity.set(overlay);
-
-        setId(undefined);
-        viewerCtx.reRender();
-    }
+    const footnoteDialog = new Modal();
+    footnoteDialog.render(
+        <FootnoteDialog
+            entityId={footnoteId}
+            update={update}
+            onClose={() => footnoteDialog.hide()}
+        />
+    );
 
     return (
         <Toolbar>
             <Button
-                icon={NoIconSvg}
+                icon={FootnoteIconSvg}
                 onClick={() => {
-                    cancelMarker();
+
+                    const focusModes = editorCtx.entityFocus.get();
+                    if (focusModes.length > 1) return;
+
+                    const id = focusModes[0].entityId;
+
+                    const marker = editorCtx.store.entity.getById<Marker>(id);
+                    if (!marker) throw new Error();
+
+                    footnoteId[1](marker.footnoteId);
+
+                    footnoteDialog.show();
                 }}
-            />
-            <Button
-                icon={OkIconSvg}
             />
         </Toolbar>
     );

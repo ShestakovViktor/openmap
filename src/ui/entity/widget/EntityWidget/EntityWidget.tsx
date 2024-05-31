@@ -8,6 +8,7 @@ import {ENTITY} from "@enum";
 import {Id} from "@type";
 import {DecorWidget} from "@ui/decor/widget";
 import {AreaWidget} from "@ui/area/widget";
+import {FootnoteWidget} from "@ui/footnote/widget";
 
 type Props = {
     entityId: Id;
@@ -30,6 +31,7 @@ export function EntityWidget(props: Props): JSX.Element {
     const entities: {[key: string]: ValidComponent} = {
         [ENTITY.LAYER]: LayerWidget,
         [ENTITY.TILE]: TileWidget,
+        [ENTITY.FOOTNOTE]: FootnoteWidget,
         [ENTITY.MARKER]: MarkerWidget,
         [ENTITY.DECOR]: DecorWidget,
         [ENTITY.AREA]: AreaWidget,

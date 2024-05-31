@@ -1,0 +1,46 @@
+.AssetBrowser {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .Controls {
+
+    }
+
+    .Assets {
+        border-collapse: collapse; 
+        overflow: scroll;
+
+        table {
+            width: 100%;
+
+            thead {
+                position: sticky;
+                top: 0;
+            }
+
+            tr {
+                cursor: pointer;
+                text-align: center;
+                user-select: none;
+
+                &.Selected {
+                    background-color: lemonchiffon;
+                }
+
+                td {
+                    padding: 8px;
+                }
+            }
+
+        }
+    }
+}
+
+.FormDialog {
+    width: 60%;
+    height: 60%;
+}

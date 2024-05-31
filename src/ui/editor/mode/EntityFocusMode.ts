@@ -1,37 +1,33 @@
 import {Id} from "@type";
 
 export class EntityFocusMode {
-    entityId: Id | null = null;
+    element: HTMLElement;
 
-    element: HTMLElement | null = null;
+    entityId: Id;
 
     constructor(target: Id | HTMLElement) {
-        this.element = typeof target == "number"
-            ? document.querySelector<HTMLElement>(
+        if (typeof target == "number") {
+            const element = document.querySelector<HTMLElement>(
                 `[data-entity-id="${target}"]`
-            )
-            : this.getEntity(target);
+            );
+            if (!element) throw new Error();
+            this.element = element;
+        }
+        else {
+            this.element = target;
+        }
 
-        if (!this.element) return;
+        const entityId = this.element.getAttribute("data-entity-id");
+        if (!entityId) throw new Error();
 
-        this.entityId = Number(this.element.getAttribute("data-entity-id"));
+        this.entityId = Number(entityId);
     }
 
     focus(): void {
-        if (this.element) this.element.classList.add("Selected");
+        this.element.classList.add("Selected");
     }
 
     unfocus(): void {
-        if (!this.element) return;
         this.element.classList.remove("Selected");
-    }
-
-    getEntity(element: HTMLElement): HTMLElement | null {
-        const parent = element.parentElement;
-        return Number(element.getAttribute("data-entity-id"))
-            ? element
-            : parent
-                ? this.getEntity(parent)
-                : null;
     }
 }
