@@ -10,7 +10,7 @@ export class EntityToolbarMode extends ToolBarMode{
 
         super(showSignal);
 
-        const toolbar = document.querySelector("#" + IDS.TOOLBAR);
+        const toolbar = document.querySelector("#" + IDS.TOOL_KIT);
         if (!toolbar) throw new Error();
 
         <Show when={showSignal[0]()}>

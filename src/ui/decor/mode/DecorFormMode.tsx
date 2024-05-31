@@ -12,7 +12,7 @@ export class DecorFormMode extends EntityFormMode{
         const entityIdSiganl = createSignal<Id | null>(null);
 
         super(showSignal, entityIdSiganl, updateSignal);
-        const dockarea = document.querySelector("#" + IDS.DOCKAREA);
+        const dockarea = document.querySelector("#" + IDS.DOCK_AREA);
         if (!dockarea) throw new Error();
 
         <Show when={showSignal[0]()}>

@@ -1,3 +1,4 @@
+import {IDS} from "@enum";
 import styles from "./WorkSpace.module.scss";
 import {JSX} from "solid-js";
 
@@ -6,5 +7,9 @@ type Props = {
 };
 
 export function WorkSpace(props: Props): JSX.Element {
-    return (<div class={styles.WorkSpace}>{props.children}</div>);
+    return (
+        <div id={IDS.WORK_SPACE} class={styles.WorkSpace}>
+            {props.children}
+        </div>
+    );
 }

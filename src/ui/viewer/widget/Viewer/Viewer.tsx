@@ -13,12 +13,10 @@ import {
 import {useViewerContext} from "@ui/viewer/context";
 import {Viewport} from "@ui/viewer/utility";
 import {EntityWidget} from "@ui/entity/widget";
-import {ASSET} from "@enum";
+import {ASSET, IDS} from "@enum";
 import {Portal} from "solid-js/web";
 import {assetToSrc} from "@ui/app/utiliy";
 import {Entity} from "@type";
-
-export const VIEWER_ID = "viewer";
 
 export function Viewer(): JSX.Element {
     const viewerCtx = useViewerContext();
@@ -81,7 +79,7 @@ export function Viewer(): JSX.Element {
     });
 
     return (
-        <div id={VIEWER_ID} class={styles.Viewer} ref={viewerEl!}>
+        <div id={IDS.VIEWER} class={styles.Viewer} ref={viewerEl!}>
             <For each={motions()}>
                 {(motion) =>
                     <Portal mount={document.querySelector("head")!}>

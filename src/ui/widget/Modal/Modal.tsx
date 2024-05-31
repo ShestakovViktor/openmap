@@ -1,5 +1,5 @@
+import {IDS} from "@enum";
 import styles from "./Modal.module.scss";
-import {MODAL_ID} from "@ui/editor/widget";
 import {Accessor, JSX, Setter, Show, createSignal} from "solid-js";
 import {Portal} from "solid-js/web";
 
@@ -26,7 +26,7 @@ export class Modal {
 
     render(element: JSX.Element): void {
         <Show when={this.visibility()}>
-            <Portal mount={document.querySelector("#" + MODAL_ID)!}>
+            <Portal mount={document.querySelector("#" + IDS.MODAL_LAYER)!}>
                 <Show when={this.params?.background}>
                     <div class={styles.Background}></div>
                 </Show>

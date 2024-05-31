@@ -1,8 +1,13 @@
 import styles from "./ModalLayer.module.scss";
 import {JSX} from "solid-js";
-
-export const MODAL_ID = "modal";
+import {IDS} from "@enum";
 
 export function ModalLayer(): JSX.Element {
-    return (<div id={MODAL_ID} class={styles.ModalLayer}></div>);
+    return (
+        <div
+            id={IDS.MODAL_LAYER}
+            class={styles.ModalLayer}
+        >
+        </div>
+    );
 }

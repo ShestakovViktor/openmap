@@ -1,3 +1,4 @@
+import {IDS} from "@enum";
 import {JSX, onMount} from "solid-js";
 import styles from "./Editor.module.scss";
 import {
@@ -11,7 +12,6 @@ import {
 import {InitialDialog} from "@ui/project/widget";
 import {Modal} from "@ui/widget/Modal";
 import {useEditorContext} from "@ui/editor/context";
-import {VIEWER_ID} from "@ui/viewer/widget";
 import {EntityInputMode, EntityToolbarMode} from "@ui/entity/mode";
 import {MarkerFormMode, MarkerInputMode, MarkerToolbarMode} from "@ui/marker/mode";
 import {DecorFormMode, DecorInputMode} from "@ui/decor/mode";
@@ -45,7 +45,7 @@ export function Editor(props: Props): JSX.Element {
             },
         };
 
-        const viewer = document.querySelector<HTMLDivElement>("#" + VIEWER_ID);
+        const viewer = document.querySelector<HTMLDivElement>("#" + IDS.VIEWER);
         if (!viewer) throw new Error();
 
         viewer.addEventListener("pointerdown", (event: PointerEvent) => {
@@ -68,7 +68,7 @@ export function Editor(props: Props): JSX.Element {
     });
 
     return (
-        <div id="editor" class={styles.Editor}>
+        <div id={IDS.EDITOR} class={styles.Editor}>
             <WorkSpace>
                 {props.children}
                 <ToolBar/>
