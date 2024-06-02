@@ -7,20 +7,16 @@ import {DecorForm} from "../widget";
 
 export class DecorFormMode extends EntityFormMode{
     constructor() {
-        const showSignal = createSignal(false);
-        const updateSignal = createSignal(undefined, {equals: false});
-        const entityIdSiganl = createSignal<Id | null>(null);
+        const showForm = createSignal(false);
+        const entityId = createSignal<Id | null>(null);
 
-        super(showSignal, entityIdSiganl, updateSignal);
+        super(showForm, entityId);
         const dockarea = document.querySelector("#" + IDS.DOCK_AREA);
         if (!dockarea) throw new Error();
 
-        <Show when={showSignal[0]()}>
+        <Show when={showForm[0]()}>
             <Portal mount={dockarea}>
-                <DecorForm
-                    entityId={entityIdSiganl}
-                    update={updateSignal}
-                />
+                <DecorForm entityId={entityId[0]}/>
             </Portal>
         </Show>;
     }

@@ -3,13 +3,7 @@ import en from "./string/en.json";
 import i18next from "i18next";
 
 import {Footnote, Id} from "@type";
-import {
-    JSX,
-    Signal,
-    createEffect,
-    createResource,
-    on,
-} from "solid-js";
+import {JSX, Accessor, createResource} from "solid-js";
 import {useEditorContext} from "@ui/editor/context";
 import {Tab, Tabs} from "@ui/widget";
 import {EntityForm, TextField} from "@ui/entity/widget";
@@ -19,24 +13,17 @@ import {FigureSelect} from "@ui/figure/widget";
 i18next.addResourceBundle("en", "footnote", {FootnoteForm: en}, true, true);
 
 type Props = {
-    entityId: Signal<Id | null>;
-    update: Signal<undefined>;
+    entityId: Accessor<Id | null>;
 };
 
 export function FootnoteForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
-    const [getEntityId] = props.entityId;
-    const [update] = props.update;
-
-    const [entity, {refetch}] = createResource(() => {
-        const entityId = getEntityId();
-        if (!entityId) return null;
-        return editorCtx.store.entity.getById<Footnote>(entityId);
+    const [entity] = createResource(props.entityId, (entityId) => {
+        return entityId
+            ? editorCtx.store.entity.getById<Footnote>(entityId) ?? undefined
+            : undefined;
     });
-
-    createEffect(on(getEntityId, refetch));
-    createEffect(on(update, refetch));
 
     return (
         <NamespaceProvider namespace={"FootnoteForm"}>

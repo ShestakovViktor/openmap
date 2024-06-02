@@ -1,7 +1,7 @@
 import styles from "./EntityForm.module.scss";
 import en from "./string/en.json";
 
-import {JSX, Show, Signal} from "solid-js";
+import {JSX, Accessor, Show} from "solid-js";
 import {useEditorContext} from "@ui/editor/context";
 import {useViewerContext} from "@ui/viewer/context";
 import {Entity, Id} from "@type";
@@ -11,7 +11,7 @@ import {DATA} from "@enum";
 i18next.addResourceBundle("en", "entity", {EntityForm: en}, true, true);
 
 type Props = {
-    entityId: Signal<Id | null>;
+    entityId: Accessor<Id | null>;
     children?: JSX.Element | JSX.Element[];
     class?: string;
     onDelete?: () => void;
@@ -21,13 +21,11 @@ export function EntityForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
     const viewerCtx = useViewerContext();
 
-    const [getEntityId] = props.entityId;
-
     function handleChange(event: Event): void {
         const input = event.target as HTMLInputElement;
         const type = Number(input.getAttribute("data-type"));
 
-        const id = getEntityId();
+        const id = props.entityId();
         if (!id) return;
 
         let data: {id: Id} & Partial<Entity>;

@@ -9,7 +9,7 @@ import {FigureSelect} from "@ui/figure/widget";
 i18next.addResourceBundle("en", "entity", {FigureSection: en}, true, true);
 
 type Props = {
-    entity: Resource<{figureIds: Id[]} | null>;
+    entity: Resource<{figureIds: Id[]} | undefined>;
 };
 
 export function FigureSection(props: Props): JSX.Element {

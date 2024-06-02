@@ -8,7 +8,7 @@ import {DATA} from "@enum";
 i18next.addResourceBundle("en", "entity", {YField: en}, true, true);
 
 type Props = {
-    entity: Resource<{y: number} | null>;
+    entity: Resource<{y: number} | undefined>;
 };
 
 export function YField(props: Props): JSX.Element {

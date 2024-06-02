@@ -13,7 +13,7 @@ import {PropForm} from "../PropForm";
 i18next.addResourceBundle("en", "prop", {"PropSelect": en}, true, true);
 
 type Props = {
-    entity: Resource<{propId: Id | null} | null>;
+    entity: Resource<{propId: Id | null} | undefined>;
 };
 
 export function PropSelect(props: Props): JSX.Element {

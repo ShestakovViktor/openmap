@@ -8,7 +8,7 @@ import {DATA} from "@enum";
 i18next.addResourceBundle("en", "entity", {HeightField: en}, true, true);
 
 type Props = {
-    entity: Resource<{height: number} | null>;
+    entity: Resource<{height: number} | undefined>;
 };
 
 export function HeightField(props: Props): JSX.Element {

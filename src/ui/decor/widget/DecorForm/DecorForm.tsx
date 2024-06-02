@@ -3,7 +3,7 @@ import {Accordion} from "@ui/widget";
 import en from "./string/en.json";
 
 import i18next from "i18next";
-import {JSX, Signal, createEffect, createResource, on} from "solid-js";
+import {JSX, Accessor, createResource} from "solid-js";
 import {Decor, Id} from "@type";
 import {
     PropSection,
@@ -18,26 +18,16 @@ import {NamespaceProvider} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "decor", {DecorForm: en}, true, true);
 
-type Props = {
-    entityId: Signal<Id | null>;
-    update: Signal<undefined>;
-};
+type Props = {entityId: Accessor<Id | null>};
 
 export function DecorForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
-    const [getId] = props.entityId;
-    const [update] = props.update;
-
-    const [entity, {refetch}] = createResource(() => {
-        const entityId = getId();
-        if (!entityId) return null;
-        const entity = editorCtx.store.entity.getById<Decor>(entityId);
-        return entity;
+    const [entity] = createResource(props.entityId, (entityId) => {
+        return entityId
+            ? editorCtx.store.entity.getById<Decor>(entityId) ?? undefined
+            : undefined;
     });
-
-    createEffect(on(getId, refetch));
-    createEffect(on(update, refetch));
 
     return (
         <NamespaceProvider namespace={"DecorForm"}>

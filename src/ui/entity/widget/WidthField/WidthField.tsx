@@ -8,7 +8,7 @@ import {DATA} from "@enum";
 i18next.addResourceBundle("en", "entity", {WidthField: en}, true, true);
 
 type Props = {
-    entity: Resource<{width: number} | null>;
+    entity: Resource<{width: number} | undefined>;
 };
 
 export function WidthField(props: Props): JSX.Element {

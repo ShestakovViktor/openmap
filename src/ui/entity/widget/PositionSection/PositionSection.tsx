@@ -10,7 +10,7 @@ import {YField} from "../YField";
 i18next.addResourceBundle("en", "entity", {PositionSection: en}, true, true);
 
 type Props = {
-    entity: Resource<{x: number; y: number} | null>;
+    entity: Resource<{x: number; y: number} | undefined>;
 };
 
 export function PositionSection(props: Props): JSX.Element {

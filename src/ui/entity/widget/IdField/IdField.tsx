@@ -8,7 +8,7 @@ import {DATA} from "@enum";
 i18next.addResourceBundle("en", "entity", {IdField: en}, true, true);
 
 type Props = {
-    entity: Resource<{id: number} | null>;
+    entity: Resource<{id: number} | undefined>;
 };
 
 export function IdField(props: Props): JSX.Element {

@@ -13,7 +13,7 @@ import {useEditorContext} from "@ui/editor/context";
 i18next.addResourceBundle("en", "motion", {"MotionSelectDialog": en}, true, true);
 
 type Props = {
-    entity: Resource<{motionId: Id | null} | null>;
+    entity: Resource<{motionId: Id | null} | undefined>;
 };
 
 export function MotionSelect({entity}: Props): JSX.Element {

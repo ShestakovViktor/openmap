@@ -3,13 +3,12 @@ import i18next from "i18next";
 import styles from "./TextField.module.scss";
 
 import {Field} from "@ui/widget";
-import {JSX, Resource, Signal} from "solid-js";
+import {JSX, Resource} from "solid-js";
 
 i18next.addResourceBundle("en", "entity", {TextField: en}, true, true);
 
 type Props = {
-    entity: Resource<{text: string} | null>;
-    expand?: Signal<boolean>;
+    entity: Resource<{text: string} | undefined>;
 };
 
 export function TextField(props: Props): JSX.Element {

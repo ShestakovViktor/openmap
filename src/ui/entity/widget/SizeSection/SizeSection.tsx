@@ -8,7 +8,7 @@ import {WidthField, HeightField} from "@ui/entity/widget";
 i18next.addResourceBundle("en", "entity", {SizeSection: en}, true, true);
 
 type Props = {
-    entity: Resource<{width: number; height: number} | null>;
+    entity: Resource<{width: number; height: number} | undefined>;
 };
 
 export function SizeSection(props: Props): JSX.Element {

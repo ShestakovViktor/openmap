@@ -9,7 +9,7 @@ import {PropSelect} from "@ui/prop/widget";
 i18next.addResourceBundle("en", "entity", {PropSection: en}, true, true);
 
 type Props = {
-    entity: Resource<{propId: Id | null} | null>;
+    entity: Resource<{propId: Id | null} | undefined>;
 };
 
 export function PropSection(props: Props): JSX.Element {

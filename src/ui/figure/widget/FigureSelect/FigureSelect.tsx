@@ -22,7 +22,7 @@ import {AssetBrowser} from "@ui/asset/widget";
 i18next.addResourceBundle("en", "prop", {"PropSelect": en}, true, true);
 
 type Props = {
-    entity: Resource<{figureIds: Id[]} | null>;
+    entity: Resource<{figureIds: Id[]} | undefined>;
 };
 
 export function FigureSelect(props: Props): JSX.Element {

@@ -3,13 +3,7 @@ import en from "./string/en.json";
 import i18next from "i18next";
 
 import {Id, Marker} from "@type";
-import {
-    JSX,
-    Signal,
-    createEffect,
-    createResource,
-    on,
-} from "solid-js";
+import {Accessor, JSX, Signal, createResource} from "solid-js";
 import {useEditorContext} from "@ui/editor/context";
 import {Accordion} from "@ui/widget";
 import {
@@ -20,29 +14,21 @@ import {
     SizeSection,
 } from "@ui/entity/widget";
 import {NamespaceProvider} from "@ui/app/context";
-import {FigureSection} from "@ui/entity/widget/FigureSection";
 
 i18next.addResourceBundle("en", "marker", {MarkerForm: en}, true, true);
 
 type Props = {
-    entityId: Signal<Id | null>;
-    update: Signal<undefined>;
+    entityId: Accessor<Id | null>;
 };
 
 export function MarkerForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
-    const [getEntityId] = props.entityId;
-    const [update] = props.update;
-
-    const [entity, {refetch}] = createResource(() => {
-        const entityId = getEntityId();
-        if (!entityId) return null;
-        return editorCtx.store.entity.getById<Marker>(entityId);
+    const [entity] = createResource(props.entityId, (entityId) => {
+        return entityId
+            ? editorCtx.store.entity.getById<Marker>(entityId) ?? undefined
+            : undefined;
     });
-
-    createEffect(on(getEntityId, refetch));
-    createEffect(on(update, refetch));
 
     return (
         <NamespaceProvider namespace={"MarkerForm"}>

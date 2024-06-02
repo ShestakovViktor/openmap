@@ -10,7 +10,7 @@ import {Id} from "@type";
 i18next.addResourceBundle("en", "entity", {MotionSection: en}, true, true);
 
 type Props = {
-    entity: Resource<{motionId: Id | null} | null>;
+    entity: Resource<{motionId: Id | null} | undefined>;
 };
 
 export function MotionSection(props: Props): JSX.Element {
