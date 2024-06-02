@@ -1,20 +1,24 @@
+@use "mixin";
+
 .Toolbar {
     display: flex;
-    flex-direction: column;
     gap: 16px;
 
-    > * {
-        flex: 0 0 auto;
-
-        padding: 8px;
-        aspect-ratio: 1;
+    button {
         width: 42px;
-        background-color: white !important;
-        box-shadow: 0px 2px 4px 0px hsla(0, 0%, 30%, 0.4);
+        height: 42px;
+        border: 1px solid var(--grey-90);
 
-        * {
-            width: 16px;
-            height: 16px;
-        }
+        @include mixin.Button;
+    }
+
+    &.Column {
+        flex-direction: column;
+        height: fit-content;
+    }
+
+    &.Row {
+        flex-direction: row;
+        width: fit-content;
     }
 }

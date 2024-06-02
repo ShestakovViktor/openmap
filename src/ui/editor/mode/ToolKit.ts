@@ -1,9 +1,9 @@
-import {ToolBarMode} from "./ToolBarMode";
+import {ToolKitMode} from "./ToolKitMode";
 
-export class ToolBar {
-    private activeModes: ToolBarMode[] = [];
+export class ToolKit {
+    private activeModes: ToolKitMode[] = [];
 
-    set(newMode: ToolBarMode): void {
+    set(newMode: ToolKitMode): void {
         this.activeModes.forEach(mode => {
             if (mode != newMode) mode.hide();
         });
@@ -11,7 +11,7 @@ export class ToolBar {
         this.activeModes = [newMode];
     }
 
-    add(mode: ToolBarMode): void {
+    add(mode: ToolKitMode): void {
         if (this.activeModes.includes(mode)) return;
         mode.show();
         this.activeModes.push(mode);

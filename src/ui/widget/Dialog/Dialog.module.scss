@@ -1,3 +1,5 @@
+@use "mixin";
+
 .Dialog {
     display: flex;
     padding: 16px;
@@ -27,6 +29,13 @@
 
         .Control {
             grid-area: Control;
+
+            button {
+                width: 32px;
+                height: 32px;
+                border: unset;
+
+            }
         }
     }
 

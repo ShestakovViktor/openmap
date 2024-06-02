@@ -39,7 +39,7 @@ export function FootnoteForm(props: Props): JSX.Element {
                     >
                         <TextField entity={entity}/>
                     </Tab>
-                    <Tab
+                    {/* <Tab
                         title={
                             i18next.t(
                                 "footnote:FootnoteForm.figureTabTitle",
@@ -48,7 +48,7 @@ export function FootnoteForm(props: Props): JSX.Element {
                         }
                     >
                         <FigureSelect entity={entity}/>
-                    </Tab>
+                    </Tab> */}
                 </Tabs>
             </EntityForm>
         </NamespaceProvider>

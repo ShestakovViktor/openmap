@@ -1,12 +1,11 @@
 import styles from "./SystemKit.module.scss";
-import en from "./string/en.json";
 import FileIconSvg from "@public/icon/file.svg";
 import DisketteIconSvg from "@public/icon/diskette.svg";
 import DownloadIconSvg from "@public/icon/download.svg";
 import i18next from "i18next";
 
 import {useEditorContext} from "@ui/editor/context";
-import {Button} from "@ui/widget";
+import {Button, Toolbar} from "@ui/widget";
 import {JSX} from "solid-js";
 
 export function SystemKit(): JSX.Element {
@@ -60,8 +59,9 @@ export function SystemKit(): JSX.Element {
     }
 
     return (
-        <div class={styles.SystemKit}>
+        <Toolbar class={styles.SystemKit} row>
             <Button
+                class={styles.Button}
                 icon={DisketteIconSvg}
                 tooltip={i18next.t(
                     "layout:SystemBar.exportProject",
@@ -71,6 +71,7 @@ export function SystemKit(): JSX.Element {
             />
 
             <Button
+                class={styles.Button}
                 icon={FileIconSvg}
                 tooltip={i18next.t(
                     "layout:SystemBar.exportProject",
@@ -79,6 +80,7 @@ export function SystemKit(): JSX.Element {
                 onClick={() => void handleProjectExport()}
             />
             <Button
+                class={styles.Button}
                 icon={ DownloadIconSvg }
                 tooltip={i18next.t(
                     "layout:SystemBar.compileProject",
@@ -86,7 +88,6 @@ export function SystemKit(): JSX.Element {
                 )}
                 onClick={() => void handleProjectCompile()}
             />
-
-        </div>
+        </Toolbar>
     );
 }

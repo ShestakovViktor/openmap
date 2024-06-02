@@ -12,7 +12,7 @@ import {popAreaPoint} from "@ui/area/utility";
 
 i18next.addResourceBundle("en", "area", {AreaToolbar: en}, true, true);
 
-export function AreaToolbar(): JSX.Element {
+export function AreaToolKit(): JSX.Element {
     // const editorCtx = useEditorContext();
     // const viewerCtx = useViewerContext();
 
@@ -33,7 +33,8 @@ export function AreaToolbar(): JSX.Element {
 
     return (
         <Toolbar>
-            <Button/>
+            <Button
+            />
         </Toolbar>
     );
 }

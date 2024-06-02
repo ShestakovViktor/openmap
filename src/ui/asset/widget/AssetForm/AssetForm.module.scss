@@ -1,3 +1,5 @@
+@use "mixin";
+
 .Form {
     width: 100%;
     height: 100%;
@@ -6,14 +8,10 @@
     flex-direction: column;
     gap: 16px;
 
-    input {
-        padding: 8px;
-        color: inherit;
-
-        border: 1px solid var(--grey-60);
-        border-radius: 8px;
-        outline: none;
+    input[type="submit"] {
+        @include mixin.Input;
     }
+
 
     textarea {
         width: 100%;

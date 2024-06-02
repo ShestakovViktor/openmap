@@ -1,14 +1,14 @@
 import en from "./string/en.json";
 import styles from "./PropSelect.module.scss";
 
-import {JSX, Resource, createComputed, createMemo, createSignal} from "solid-js";
+import {JSX, Resource, createMemo} from "solid-js";
 import i18next from "i18next";
-import {Id} from "@type";
-import {AssetBrowser} from "@ui/asset/widget";
+import {Id, Prop} from "@type";
 import {useEditorContext} from "@ui/editor/context";
 import {Modal, Dialog} from "@ui/widget";
-import {ASSET, DATA} from "@enum";
-import {PropForm} from "../PropForm";
+import {DATA} from "@enum";
+import {assetToSrc} from "@ui/app/utiliy";
+import {PropBrowser} from "../PropBrowser";
 
 i18next.addResourceBundle("en", "prop", {"PropSelect": en}, true, true);
 
@@ -20,13 +20,30 @@ export function PropSelect(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
     let input: HTMLInputElement | undefined;
 
-    const [value, setValue] = createSignal<Id | undefined>(
-        props.entity()?.propId ?? undefined
-    );
+    const propId = createMemo((): Id | null => {
+        const entity = props.entity();
+        return entity?.propId ?? null;
+    });
 
-    const selected = createMemo<Id[]>(() => {
-        const selected = value();
-        return selected ? [selected] : [];
+    const selected = createMemo(() => {
+        const id = propId();
+        return id ? [id] : [];
+    });
+
+    const src = createMemo((): string => {
+        const id = propId();
+
+        if (!id) {
+            return "./icon/no.svg";
+        }
+        else {
+            const asset = editorCtx.store.asset
+                .getById<Prop>(id);
+
+            if (!asset) throw new Error();
+
+            return asset.path || assetToSrc(asset);
+        }
     });
 
     const assetBrowserDialog = new Modal();
@@ -35,15 +52,15 @@ export function PropSelect(props: Props): JSX.Element {
             class={styles.AssetBrowserDialog}
             onClose={() => assetBrowserDialog.hide()}
         >
-            <AssetBrowser
-                type={ASSET.PROP}
-                form={PropForm}
+            <PropBrowser
                 selected={selected()}
                 onSelect={(ids: Id[]) => {
-                    setValue(ids[0]);
-                    input!.dispatchEvent(
-                        new Event("change", {bubbles: true})
-                    );
+                    if (input) {
+                        input.value = String(ids[0]);
+                        input.dispatchEvent(
+                            new Event("change", {bubbles: true})
+                        );
+                    }
                     assetBrowserDialog.hide();
                 }}
             />
@@ -56,16 +73,16 @@ export function PropSelect(props: Props): JSX.Element {
                 ref={input}
                 name={"propId"}
                 type={"hidden"}
-                value={value() ?? ""}
+                value={propId() ?? ""}
                 data-type={DATA.REFERENCE}
             />
-            <div>{value()}</div>
-            <button
+            <img
                 class={styles.Preview}
+                src={src()}
                 onClick={() => {
                     assetBrowserDialog.show();
                 }}
-            >Choose asset</button>
+            />
         </div>
     );
 }

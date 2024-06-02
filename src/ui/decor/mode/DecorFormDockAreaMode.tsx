@@ -1,11 +1,11 @@
 import {IDS} from "@enum";
-import {EntityFormMode} from "@ui/editor/mode";
+import {DockAreaFormMode} from "@ui/editor/mode";
 import {Show, createSignal} from "solid-js";
 import {Portal} from "solid-js/web";
 import {Id} from "@type";
-import {AreaForm} from "@ui/area/widget";
+import {DecorForm} from "../widget";
 
-export class AreaFormMode extends EntityFormMode{
+export class DecorFormDockAreaMode extends DockAreaFormMode{
     constructor() {
         const showForm = createSignal(false);
         const entityId = createSignal<Id | null>(null);
@@ -16,7 +16,7 @@ export class AreaFormMode extends EntityFormMode{
 
         <Show when={showForm[0]()}>
             <Portal mount={dockarea}>
-                <AreaForm entityId={entityId[0]} />
+                <DecorForm entityId={entityId[0]}/>
             </Portal>
         </Show>;
     }

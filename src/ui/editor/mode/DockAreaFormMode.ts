@@ -2,12 +2,12 @@ import {Signal} from "solid-js";
 import {DockAreaMode} from "./DockAreaMode";
 import {Id} from "@type";
 
-export class EntityFormMode extends DockAreaMode {
+export class DockAreaFormMode extends DockAreaMode {
     constructor(
-        showForm: Signal<boolean>,
+        showSignal: Signal<boolean>,
         private entityId: Signal<Id | null>
     ) {
-        super(showForm);
+        super(showSignal);
     }
 
     set(id: Id | null): void {

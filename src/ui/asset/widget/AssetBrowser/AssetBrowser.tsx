@@ -1,21 +1,23 @@
+import PlusIconSvg from "@public/icon/plus.svg";
+import SaltireIconSvg from "@public/icon/saltire.svg";
 import styles from "./AssetBrowser.module.scss";
 import en from "./string/en.json";
 
-import {For, JSX, Show, ValidComponent, createEffect, createResource, createSignal, on} from "solid-js";
-import {Dialog, Modal} from "@ui/widget";
+import {For, JSX, Show, createEffect, createResource, createSignal, on} from "solid-js";
 import i18next from "i18next";
 import {Asset, Id} from "@type";
 import {useEditorContext} from "@ui/editor/context";
-import {Dynamic} from "solid-js/web";
+import {Button} from "@ui/widget";
 
 i18next.addResourceBundle("en", "asset", {"AssetBrowser": en}, true, true);
 
 type Props = {
     type?: Id;
-    form?: ValidComponent;
     multiple?: boolean;
     selected?: Id[];
-    onSelect: (ids: Id[]) => void;
+    onCreate?: () => void;
+    onSelect?: (ids: Id[]) => void;
+    onDelete?: (ids: Id[]) => void;
 };
 
 export function AssetBrowser(props: Props): JSX.Element {
@@ -31,28 +33,14 @@ export function AssetBrowser(props: Props): JSX.Element {
 
     createEffect(on(editorCtx.init, refetch));
 
-    const [selected, setSelected] = createSignal<Id[]>(props.selected ?? []);
+    const [selected, setSelected] = createSignal<Id[]>([] as Id[]);
 
-    const assetFormDialog = new Modal();
-    assetFormDialog.render(
-        <Dialog
-            class={styles.FormDialog}
-            onClose={() => assetFormDialog.hide()}
-        >
-            <Dynamic
-                component={props.form}
-                onSubmit={() => assetFormDialog.hide()}
-            />
-        </Dialog>
-    );
+    createEffect(() => {
+        setSelected(props.selected ?? []);
+    });
 
     return (
         <div class={styles.AssetBrowser}>
-            <div class={styles.Controls}>
-                <Show when={props.form}>
-                    <button onClick={() => assetFormDialog.show()}>+</button>
-                </Show>
-            </div>
             <div class={styles.Assets}>
                 <table>
                     <thead>
@@ -61,6 +49,16 @@ export function AssetBrowser(props: Props): JSX.Element {
                             <th>name</th>
                             <th>media</th>
                             <th>size (in kb)</th>
+                            <th>
+                                <Show when={props.onCreate}>
+                                    <Button
+                                        icon={PlusIconSvg}
+                                        onClick={() => {
+                                            if (props.onCreate) props.onCreate();
+                                        }}
+                                    />
+                                </Show>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,20 +83,38 @@ export function AssetBrowser(props: Props): JSX.Element {
                                     }}
                                     onDblClick={() => {
                                         setSelected([asset.id]);
-                                        props.onSelect(selected());
+                                        if (props.onSelect) {
+                                            props.onSelect(selected());
+                                        }
                                     }}
                                 >
                                     <td>{asset.id}</td>
                                     <td>{asset.name}</td>
                                     <td>{asset.media}</td>
                                     <td>{Math.floor(asset.size / 1024)}</td>
+                                    <td>
+                                        <Show when={props.onDelete}>
+                                            <Button
+                                                icon={SaltireIconSvg}
+                                                onClick={() => {
+                                                    if (props.onDelete) props.onDelete([asset.id]);
+                                                }}
+                                            />
+                                        </Show>
+                                    </td>
                                 </tr>
                             }
                         </For>
                     </tbody>
                 </table>
             </div>
-            <button onClick={() => props.onSelect(selected())}>select</button>
+            <button
+                onClick={() => {
+                    if (props.onSelect) props.onSelect(selected());
+                }}
+            >
+                select
+            </button>
         </div>
     );
 }

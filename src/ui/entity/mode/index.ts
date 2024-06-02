@@ -1,2 +1,2 @@
-export * from "./EntityToolbarMode";
+export * from "./EntityToolKitMode";
 export * from "./EntityInputMode";

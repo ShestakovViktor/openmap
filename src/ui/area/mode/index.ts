@@ -1,2 +1,2 @@
-export * from "./AreaFormMode";
+export * from "./AreaFormDockAreaMode";
 export * from "./AreaInputMode";

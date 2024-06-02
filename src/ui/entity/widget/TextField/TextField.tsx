@@ -13,7 +13,7 @@ type Props = {
 
 export function TextField(props: Props): JSX.Element {
     return (
-        <Field class={styles.TextField} type="column">
+        <Field class={styles.TextField} column>
             <label for="text">
                 {i18next.t(
                     "entity:TextField.label",

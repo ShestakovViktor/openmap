@@ -1,6 +1,6 @@
 import {Signal} from "solid-js";
 
-export class ToolBarMode {
+export class ToolKitMode {
     constructor(
         private showSignal: Signal<boolean>
     ) {}

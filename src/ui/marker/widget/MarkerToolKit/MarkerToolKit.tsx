@@ -1,4 +1,5 @@
 import FootnoteIconSvg from "@public/icon/footnote.svg";
+import styles from "./MarkerToolKit.module.scss";
 
 import {Button, Modal, Toolbar} from "@ui/widget";
 import en from "./string/en.json";
@@ -11,15 +12,15 @@ import {useEditorContext} from "@ui/editor/context";
 
 i18next.addResourceBundle("en", "marker", {MarkerToolbar: en}, true, true);
 
-export function MarkerToolbar(): JSX.Element {
+export function MarkerToolKit(): JSX.Element {
     const editorCtx = useEditorContext();
 
-    const footnoteId = createSignal<Id | null>(null);
+    const [footnoteId, setFootnoteId] = createSignal<Id | null>(null);
 
     const footnoteDialog = new Modal();
     footnoteDialog.render(
         <FootnoteDialog
-            entityId={footnoteId[0]}
+            entityId={footnoteId}
             onClose={() => footnoteDialog.hide()}
         />
     );
@@ -38,7 +39,7 @@ export function MarkerToolbar(): JSX.Element {
                     const marker = editorCtx.store.entity.getById<Marker>(id);
                     if (!marker) throw new Error();
 
-                    footnoteId[1](marker.footnoteId);
+                    setFootnoteId(marker.footnoteId);
 
                     footnoteDialog.show();
                 }}

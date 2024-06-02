@@ -2,23 +2,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    border: none;
     background-color: unset;
 
     color: inherit;
 
     cursor: pointer;
-
-    &.Pressed {
-        background-color: var(--grey-80);
-    }
-
+    
     .Icon {
         cursor: pointer;
         width: 16px;
         height: 16px;
-        color: var(--grey-30);
     }
 
     .Label {

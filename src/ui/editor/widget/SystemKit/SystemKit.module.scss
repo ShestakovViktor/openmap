@@ -1,27 +1,2 @@
 .SystemKit {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-
-    pointer-events: auto;
-
-    padding: 16px;
-    gap: 16px;
-
-    > * {
-        flex: 0 0 auto;
-
-        padding: 8px;
-        aspect-ratio: 1;
-        width: 42px;
-        background-color: white;
-        box-shadow: 0px 2px 4px 0px hsla(0, 0%, 30%, 0.4);
-
-        * {
-            width: 16px;
-            height: 16px;
-        }
-    }
 }

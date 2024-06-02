@@ -1,3 +1,5 @@
+@use "mixin";
+
 .AssetBrowser {
     width: 100%;
     height: 100%;
@@ -6,13 +8,15 @@
     flex-direction: column;
     gap: 16px;
 
-    .Controls {
-
-    }
-
     .Assets {
         border-collapse: collapse; 
         overflow: scroll;
+
+        button {
+            width: 24px;
+            height: 24px;
+            @include mixin.Button;
+        }
 
         table {
             width: 100%;
@@ -31,7 +35,7 @@
                     background-color: lemonchiffon;
                 }
 
-                td {
+                th, td {
                     padding: 8px;
                 }
             }
@@ -41,6 +45,6 @@
 }
 
 .FormDialog {
-    width: 60%;
-    height: 60%;
+    width: fit-content;
+    height: fit-content;
 }

@@ -1,3 +1,3 @@
 export * from "./MarkerForm";
-export * from "./MarkerToolbar";
+export * from "./MarkerToolKit";
 export * from "./MarkerWidget";

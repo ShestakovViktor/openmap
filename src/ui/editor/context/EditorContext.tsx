@@ -2,10 +2,10 @@ import {Accessor, Setter, createContext, useContext} from "solid-js";
 import {Core, Store} from "@core";
 import {
     UserInputMode,
-    ToolBarMode,
-    EntityFormMode,
+    ToolKitMode,
+    DockAreaFormMode,
     DockArea,
-    ToolBar,
+    ToolKit,
     UserInput,
     EntityFocus,
 } from "@ui/editor/mode";
@@ -20,25 +20,25 @@ export type EditorContexType = {
     userInput: UserInput;
     entityFocus: EntityFocus;
     dockArea: DockArea;
-    toolBar: ToolBar;
+    toolKit: ToolKit;
 
     modes: {
         entity: {
             input: UserInputMode;
-            toolbar: ToolBarMode;
+            toolKit: ToolKitMode;
         };
         marker: {
             input: UserInputMode;
-            form: EntityFormMode;
-            toolbar: ToolBarMode;
+            form: DockAreaFormMode;
+            toolKit: ToolKitMode;
         };
         decor: {
             input: UserInputMode;
-            form: EntityFormMode;
+            form: DockAreaFormMode;
         };
         area: {
             input: UserInputMode;
-            form: EntityFormMode;
+            form: DockAreaFormMode;
         };
     };
 

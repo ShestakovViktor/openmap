@@ -4,7 +4,7 @@ import {Core, Store} from "@core";
 import {
     DockArea,
     EntityFocus,
-    ToolBar,
+    ToolKit,
     UserInput,
 } from "@ui/editor/mode";
 
@@ -21,7 +21,7 @@ export function EditorProvider(props: Props): JSX.Element {
     const userInput = new UserInput();
     const entityFocus = new EntityFocus();
     const dockArea = new DockArea();
-    const toolBar = new ToolBar();
+    const toolKit = new ToolKit();
 
     const modes = {} as EditorContexType["modes"];
 
@@ -32,7 +32,7 @@ export function EditorProvider(props: Props): JSX.Element {
         userInput,
         entityFocus,
         dockArea,
-        toolBar,
+        toolKit,
         modes,
     };
 

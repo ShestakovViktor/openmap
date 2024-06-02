@@ -1,21 +1,33 @@
 import {IDS} from "@enum";
 import {JSX, onMount} from "solid-js";
 import styles from "./Editor.module.scss";
-import {
-    ModalLayer,
-    DockArea,
-    ToolKit,
-    WorkSpace,
-    ToolBar,
-    SystemKit,
-} from "@src/ui/editor/widget";
 import {InitialDialog} from "@ui/project/widget";
 import {Modal} from "@ui/widget/Modal";
 import {useEditorContext} from "@ui/editor/context";
-import {EntityInputMode, EntityToolbarMode} from "@ui/entity/mode";
-import {MarkerFormMode, MarkerInputMode, MarkerToolbarMode} from "@ui/marker/mode";
-import {DecorFormMode, DecorInputMode} from "@ui/decor/mode";
-import {AreaFormMode, AreaInputMode} from "@ui/area/mode";
+import {
+    ModalLayer,
+    DockArea,
+    WorkSpace,
+    ToolKit,
+    CommandKit,
+} from "@src/ui/editor/widget";
+import {
+    EntityInputMode,
+    EntityToolKitMode,
+} from "@ui/entity/mode";
+import {
+    MarkerFormDockAreaMode,
+    MarkerInputMode,
+    MarkerToolKitMode,
+} from "@ui/marker/mode";
+import {
+    DecorFormDockAreaMode,
+    DecorInputMode,
+} from "@ui/decor/mode";
+import {
+    AreaFormDockAreaMode,
+    AreaInputMode,
+} from "@ui/area/mode";
 
 type Props = {
     children: JSX.Element;
@@ -28,20 +40,20 @@ export function Editor(props: Props): JSX.Element {
         editorCtx.modes = {
             entity: {
                 input: new EntityInputMode(),
-                toolbar: new EntityToolbarMode(),
+                toolKit: new EntityToolKitMode(),
             },
             marker: {
                 input: new MarkerInputMode(),
-                form: new MarkerFormMode(),
-                toolbar: new MarkerToolbarMode(),
+                form: new MarkerFormDockAreaMode(),
+                toolKit: new MarkerToolKitMode(),
             },
             decor: {
                 input: new DecorInputMode(),
-                form: new DecorFormMode(),
+                form: new DecorFormDockAreaMode(),
             },
             area: {
                 input: new AreaInputMode(),
-                form: new AreaFormMode(),
+                form: new AreaFormDockAreaMode(),
             },
         };
 
@@ -71,10 +83,9 @@ export function Editor(props: Props): JSX.Element {
         <div id={IDS.EDITOR} class={styles.Editor}>
             <WorkSpace>
                 {props.children}
-                <ToolBar/>
+                <ToolKit/>
             </WorkSpace>
-            <SystemKit/>
-            <ToolKit/>
+            <CommandKit/>
             <DockArea/>
             <ModalLayer/>
         </div>

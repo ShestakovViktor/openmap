@@ -3,12 +3,12 @@
     width: 100%;
     height: 100%;
 
+    background-color: hsla(0, 0%, 97%, 1);
     display: grid;
     grid-template-columns: auto 300px;
-    grid-template-rows: min-content min-content auto;
+    grid-template-rows: min-content auto;
     grid-template-areas: 
-        "ViewPort SystemKit"
-        "ViewPort ToolKit"
+        "ViewPort CommandKit"
         "ViewPort DockArea";
 
     > :nth-child(1) {
@@ -16,14 +16,10 @@
     }
 
     > :nth-child(2) {
-        grid-area: SystemKit;
+        grid-area: CommandKit;
     }
 
     > :nth-child(3) {
-        grid-area: ToolKit;
-    }
-
-    > :nth-child(4) {
         grid-area: DockArea;
     }
 }

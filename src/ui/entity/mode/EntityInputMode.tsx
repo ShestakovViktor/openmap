@@ -32,7 +32,6 @@ export class EntityInputMode extends UserInputMode {
             entity.y = Math.floor(y / this.viewerCtx.layout.scale);
 
             this.editorCtx.store.entity.set(entity);
-            // this.editorCtx.formMode?.upd();
             this.viewerCtx.reRender(id);
         }
     }
@@ -48,7 +47,7 @@ export class EntityInputMode extends UserInputMode {
         if (!element) {
             this.editorCtx.entityFocus.clear();
             this.editorCtx.dockArea.clear();
-            this.editorCtx.toolBar.set(this.editorCtx.modes.entity.toolbar);
+            this.editorCtx.toolKit.set(this.editorCtx.modes.entity.toolKit);
             return;
         }
 
@@ -66,7 +65,7 @@ export class EntityInputMode extends UserInputMode {
         ].includes(entity.entityTypeId)) {
             this.editorCtx.entityFocus.clear();
             this.editorCtx.dockArea.clear();
-            this.editorCtx.toolBar.set(this.editorCtx.modes.entity.toolbar);
+            this.editorCtx.toolKit.set(this.editorCtx.modes.entity.toolKit);
             return;
         }
 
@@ -83,17 +82,17 @@ export class EntityInputMode extends UserInputMode {
         if (entity.entityTypeId == ENTITY.MARKER) {
             const {
                 form: markerForm,
-                toolbar: markerToolbar,
+                toolKit: markerToolKit,
             } = this.editorCtx.modes.marker;
 
             const {
-                toolbar: entityToolbar,
+                toolKit: entityToolKit,
             } = this.editorCtx.modes.entity;
 
             markerForm.set(entity.id);
             this.editorCtx.dockArea.set(markerForm);
-            this.editorCtx.toolBar.set(entityToolbar);
-            this.editorCtx.toolBar.add(markerToolbar);
+            this.editorCtx.toolKit.set(entityToolKit);
+            this.editorCtx.toolKit.add(markerToolKit);
         }
         else if (entity.entityTypeId == ENTITY.DECOR) {
             const {
@@ -101,12 +100,12 @@ export class EntityInputMode extends UserInputMode {
             } = this.editorCtx.modes.decor;
 
             const {
-                toolbar: entityToolbar,
+                toolKit: entityToolKit,
             } = this.editorCtx.modes.entity;
 
             decorForm.set(entity.id);
             this.editorCtx.dockArea.set(decorForm);
-            this.editorCtx.toolBar.set(entityToolbar);
+            this.editorCtx.toolKit.set(entityToolKit);
         }
         else if (entity.entityTypeId == ENTITY.AREA) {
             const {
@@ -114,12 +113,12 @@ export class EntityInputMode extends UserInputMode {
             } = this.editorCtx.modes.area;
 
             const {
-                toolbar: entityToolbar,
+                toolKit: entityToolKit,
             } = this.editorCtx.modes.entity;
 
             areaForm.set(entity.id);
             this.editorCtx.dockArea.set(areaForm);
-            this.editorCtx.toolBar.set(entityToolbar);
+            this.editorCtx.toolKit.set(entityToolKit);
         }
     }
 }

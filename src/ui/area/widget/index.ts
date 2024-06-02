@@ -1,3 +1,3 @@
 export * from "./AreaForm";
-export * from "./AreaToolbar";
+export * from "./AreaToolKit";
 export * from "./AreaWidget";

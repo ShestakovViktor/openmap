@@ -6,6 +6,8 @@
 
     overflow: hidden;
 
+    background-color: var(--grey-90);
+
     > :nth-child(2) {
         position: absolute;
         right: 16px;
