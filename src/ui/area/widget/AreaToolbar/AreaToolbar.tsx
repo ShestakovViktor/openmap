@@ -1,5 +1,4 @@
 import styles from "./AreaToolbar.module.scss";
-import BackIconSvg from "@public/icon/back.svg";
 
 import {Button, Toolbar} from "@ui/widget";
 import en from "./string/en.json";
@@ -34,9 +33,7 @@ export function AreaToolbar(): JSX.Element {
 
     return (
         <Toolbar>
-            <Button
-                icon={BackIconSvg}
-            />
+            <Button/>
         </Toolbar>
     );
 }
