@@ -59,7 +59,7 @@ export function SystemKit(): JSX.Element {
     }
 
     return (
-        <Toolbar class={styles.SystemKit} row>
+        <Toolbar class={styles.SystemKit}>
             <Button
                 class={styles.Button}
                 icon={DisketteIconSvg}

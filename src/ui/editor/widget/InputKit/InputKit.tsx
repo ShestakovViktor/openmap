@@ -65,7 +65,7 @@ export function InputKit(): JSX.Element {
     });
 
     return (
-        <Toolbar class={styles.InputKit} row>
+        <Toolbar class={styles.InputKit}>
             <For each={buttons}>
                 {(button, index) =>
                     <Button
