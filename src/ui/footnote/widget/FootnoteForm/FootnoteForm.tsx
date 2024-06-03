@@ -8,7 +8,7 @@ import {useEditorContext} from "@ui/editor/context";
 import {Tab, Tabs} from "@ui/widget";
 import {EntityForm, TextField} from "@ui/entity/widget";
 import {NamespaceProvider} from "@ui/app/context";
-import {FigureSelect} from "@ui/figure/widget";
+// import {FigureSelect} from "@ui/figure/widget";
 
 i18next.addResourceBundle("en", "footnote", {FootnoteForm: en}, true, true);
 

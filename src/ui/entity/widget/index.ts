@@ -13,3 +13,4 @@ export * from "./SystemSection";
 export * from "./PositionSection";
 export * from "./EntityForm";
 export * from "./EntityWidget";
+export * from "./FootnoteSection";

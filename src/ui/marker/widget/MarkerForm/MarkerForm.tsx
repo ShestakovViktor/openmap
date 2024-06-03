@@ -14,6 +14,7 @@ import {
     SizeSection,
 } from "@ui/entity/widget";
 import {NamespaceProvider} from "@ui/app/context";
+import {FootnoteSection} from "@ui/entity/widget/FootnoteSection/FootnoteSection";
 
 i18next.addResourceBundle("en", "marker", {MarkerForm: en}, true, true);
 
@@ -41,6 +42,7 @@ export function MarkerForm(props: Props): JSX.Element {
                     <PositionSection entity={entity}/>
                     <SizeSection entity={entity}/>
                     <PropSection entity={entity}/>
+                    <FootnoteSection entity={entity}/>
                 </Accordion>
             </EntityForm>
         </NamespaceProvider>
