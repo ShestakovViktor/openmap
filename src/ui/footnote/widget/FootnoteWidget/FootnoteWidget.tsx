@@ -1,10 +1,9 @@
 import styles from "./FootnoteWidget.module.scss";
-import {JSX, Show, createMemo, createSignal} from "solid-js";
+import {JSX, Show, createEffect, createMemo, createSignal, on} from "solid-js";
 import {Figure} from "@type";
 import {FigureGallery} from "@ui/footnote/widget";
 import {Footnote} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
-import {updateEffect} from "@ui/viewer/utility";
 
 type Props = {
     entity: Footnote;
@@ -29,7 +28,11 @@ export function FootnoteWidget(props: Props): JSX.Element {
 
     const [entity, setEntity] = createSignal<Footnote>(props.entity, {equals});
 
-    updateEffect(viewerCtx.render, fetchEntity, setEntity, props.entity.id);
+    createEffect(on(
+        viewerCtx.render,
+        (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
+        {defer: true}
+    ));
 
     const text = createMemo(() => entity().text);
 

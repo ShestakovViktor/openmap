@@ -4,10 +4,11 @@ import {
     createSignal,
     createMemo,
     Show,
+    createEffect,
+    on,
 } from "solid-js";
 import {useViewerContext} from "@ui/viewer/context";
 import {Area} from "@type";
-import {updateEffect} from "@ui/viewer/utility";
 import {EntityWidget} from "@ui/entity/widget";
 
 type Props = {
@@ -32,7 +33,11 @@ export function AreaWidget(props: Props): JSX.Element {
 
     const [entity, setEntity] = createSignal<Area>(props.entity, {equals});
 
-    updateEffect(viewerCtx.render, fetchEntity, setEntity, props.entity.id);
+    createEffect(on(
+        viewerCtx.render,
+        (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
+        {defer: true}
+    ));
 
     const factor = createMemo((): number => 5 / viewerCtx.layout.scale);
 

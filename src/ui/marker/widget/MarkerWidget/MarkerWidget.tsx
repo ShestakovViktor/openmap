@@ -1,9 +1,8 @@
 import styles from "./MarkerWidget.module.scss";
-import {JSX, Show, createMemo, createSignal} from "solid-js";
+import {JSX, Show, createEffect, createMemo, createSignal, on} from "solid-js";
 import {Marker, Prop} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
 import {assetToSrc} from "@ui/app/utiliy";
-import {updateEffect} from "@ui/viewer/utility";
 import {EntityWidget} from "@ui/entity/widget";
 
 type Props = {
@@ -29,7 +28,11 @@ export function MarkerWidget(props: Props): JSX.Element {
 
     const [entity, setEntity] = createSignal<Marker>(props.entity, {equals});
 
-    updateEffect(viewerCtx.render, fetchEntity, setEntity, props.entity.id);
+    createEffect(on(
+        viewerCtx.render,
+        (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
+        {defer: true}
+    ));
 
     const transform = createMemo((): string => {
         const x = entity().x * viewerCtx.layout.scale;

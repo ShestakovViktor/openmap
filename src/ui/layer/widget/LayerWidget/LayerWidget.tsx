@@ -1,10 +1,9 @@
-import {For, JSX, createMemo, createSignal} from "solid-js";
+import {For, JSX, createEffect, createMemo, createSignal, on} from "solid-js";
 import styles from "./LayerWidget.module.scss";
 import {useViewerContext} from "@ui/viewer/context";
 import {Layer} from "@type";
 import {EntityWidget} from "@ui/entity/widget";
 import {LAYER} from "@enum";
-import {updateEffect} from "@ui/viewer/utility";
 
 type Props = {
     entity: Layer;
@@ -25,7 +24,11 @@ export function LayerWidget(props: Props): JSX.Element {
 
     const [entity, setEntity] = createSignal<Layer>(props.entity, {equals});
 
-    updateEffect(viewerCtx.render, fetchEntity, setEntity, props.entity.id);
+    createEffect(on(
+        viewerCtx.render,
+        (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
+        {defer: true}
+    ));
 
     const style = createMemo((): JSX.CSSProperties => {
         const name = entity().name;

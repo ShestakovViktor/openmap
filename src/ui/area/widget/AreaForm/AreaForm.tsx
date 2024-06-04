@@ -22,11 +22,9 @@ type Props = {
 export function AreaForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
-    const [entity] = createResource(props.entityId, (entityId) => {
-        return entityId
-            ? editorCtx.store.entity.getById<Area>(entityId) ?? undefined
-            : undefined;
-    });
+    const [entity] = createResource(props.entityId, (entityId) =>
+        editorCtx.store.entity.getById<Area>(entityId) ?? undefined
+    );
 
     return (
         <NamespaceProvider namespace={"AreaForm"}>

@@ -25,11 +25,9 @@ type Props = {
 export function MarkerForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
-    const [entity] = createResource(props.entityId, (entityId) => {
-        return entityId
-            ? editorCtx.store.entity.getById<Marker>(entityId) ?? undefined
-            : undefined;
-    });
+    const [entity] = createResource(props.entityId, (entityId) =>
+        editorCtx.store.entity.getById<Marker>(entityId) ?? undefined
+    );
 
     return (
         <NamespaceProvider namespace={"MarkerForm"}>

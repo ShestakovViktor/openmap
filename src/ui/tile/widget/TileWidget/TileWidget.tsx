@@ -1,9 +1,8 @@
 import styles from "./TileWidget.module.scss";
 import {JSX, createEffect, createMemo, createSignal, on} from "solid-js";
-import {Asset, Id, Tile} from "@type";
+import {Asset, Tile} from "@type";
 import {useViewerContext} from "@ui/viewer/context";
 import {assetToSrc} from "@ui/app/utiliy";
-import {updateEffect} from "@ui/viewer/utility";
 
 type Props = {
     entity: Tile;
@@ -24,7 +23,11 @@ export function TileWidget(props: Props): JSX.Element {
 
     const [entity, setEntity] = createSignal<Tile>(props.entity, {equals});
 
-    updateEffect(viewerCtx.render, fetchEntity, setEntity, props.entity.id);
+    createEffect(on(
+        viewerCtx.render,
+        (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
+        {defer: true}
+    ));
 
     const style = createMemo((): JSX.CSSProperties => {
         const x = entity().x;

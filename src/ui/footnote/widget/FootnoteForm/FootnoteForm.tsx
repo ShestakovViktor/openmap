@@ -19,11 +19,9 @@ type Props = {
 export function FootnoteForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
-    const [entity] = createResource(props.entityId, (entityId) => {
-        return entityId
-            ? editorCtx.store.entity.getById<Footnote>(entityId) ?? undefined
-            : undefined;
-    });
+    const [entity] = createResource(props.entityId, (entityId) =>
+        editorCtx.store.entity.getById<Footnote>(entityId) ?? undefined
+    );
 
     return (
         <NamespaceProvider namespace={"FootnoteForm"}>

@@ -23,11 +23,9 @@ type Props = {entityId: Accessor<Id | null>};
 export function DecorForm(props: Props): JSX.Element {
     const editorCtx = useEditorContext();
 
-    const [entity] = createResource(props.entityId, (entityId) => {
-        return entityId
-            ? editorCtx.store.entity.getById<Decor>(entityId) ?? undefined
-            : undefined;
-    });
+    const [entity] = createResource(props.entityId, (entityId) =>
+        editorCtx.store.entity.getById<Decor>(entityId) ?? undefined
+    );
 
     return (
         <NamespaceProvider namespace={"DecorForm"}>

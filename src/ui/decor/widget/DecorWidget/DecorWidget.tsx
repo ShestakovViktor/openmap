@@ -4,7 +4,6 @@ import {useViewerContext} from "@ui/viewer/context";
 
 import {Decor, Asset, Motion} from "@type";
 import {assetToSrc} from "@ui/app/utiliy";
-import {updateEffect} from "@ui/viewer/utility";
 
 type Props = {
     entity: Decor;
@@ -30,7 +29,11 @@ export function DecorWidget(props: Props): JSX.Element {
 
     const [entity, setEntity] = createSignal<Decor>(props.entity, {equals});
 
-    updateEffect(viewerCtx.render, fetchEntity, setEntity, props.entity.id);
+    createEffect(on(
+        viewerCtx.render,
+        (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
+        {defer: true}
+    ));
 
     const transform = createMemo((): string => {
         const x = entity().x * viewerCtx.layout.scale;
