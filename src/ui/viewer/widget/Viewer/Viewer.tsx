@@ -17,28 +17,44 @@ import {ASSET, IDS} from "@enum";
 import {Portal} from "solid-js/web";
 import {assetToSrc} from "@ui/app/utiliy";
 import {Entity} from "@type";
+import {useStoreContext} from "@ui/app/context";
 
 export function Viewer(): JSX.Element {
+    const storeCtx = useStoreContext();
     const viewerCtx = useViewerContext();
     let viewerEl: HTMLDivElement;
 
     const [root, {refetch: refetchRoot}] = createResource(
-        () => viewerCtx.store.entity.getByParams<Entity>({name:"root"})[0]
+        () => storeCtx.store.entity.getByParams<Entity>({name:"root"})[0]
     );
 
-    const [motions, {refetch}] = createResource(
-        () => viewerCtx.store.asset.getByParams({assetTypeId: ASSET.MOTION}),
+    const [motions, {refetch: refetchAsset}] = createResource(
+        () => storeCtx.store.asset.getByParams({assetTypeId: ASSET.MOTION}),
         {initialValue: []}
     );
 
-    createEffect(on(viewerCtx.prepare, refetch, {defer: true}));
+    createEffect(on(
+        storeCtx.initializing,
+        refetchAsset,
+        {defer: true}
+    ));
 
-    createEffect(on(viewerCtx.init, refetchRoot, {defer: true}));
+    createEffect(on(
+        storeCtx.update.asset.get,
+        refetchAsset,
+        {defer: true}
+    ));
 
-    createEffect(on(viewerCtx.init, () => {
-        const {value: width} = viewerCtx.store.config
+    createEffect(on(
+        storeCtx.initializing,
+        refetchRoot,
+        {defer: true}
+    ));
+
+    createEffect(on(storeCtx.initializing, () => {
+        const {value: width} = storeCtx.store.config
             .getByParams({name: "width"})[0];
-        const {value: height} = viewerCtx.store.config
+        const {value: height} = storeCtx.store.config
             .getByParams({name: "height"})[0];
 
         viewerCtx.setLayout({

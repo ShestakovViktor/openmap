@@ -3,17 +3,17 @@ import {JSX, Show, createEffect, createMemo, createSignal, on} from "solid-js";
 import {Figure} from "@type";
 import {FigureGallery} from "@ui/footnote/widget";
 import {Footnote} from "@type";
-import {useViewerContext} from "@ui/viewer/context";
+import {useStoreContext} from "@ui/app/context";
 
 type Props = {
     entity: Footnote;
 };
 
 export function FootnoteWidget(props: Props): JSX.Element {
-    const viewerCtx = useViewerContext();
+    const storeCtx = useStoreContext();
 
     const fetchEntity = (): Footnote => {
-        const entity = viewerCtx.store.entity
+        const entity = storeCtx.store.entity
             .getById<Footnote>(props.entity.id);
 
         if (!entity) throw new Error(String(props.entity.id));
@@ -29,7 +29,7 @@ export function FootnoteWidget(props: Props): JSX.Element {
     const [entity, setEntity] = createSignal<Footnote>(props.entity, {equals});
 
     createEffect(on(
-        viewerCtx.render,
+        storeCtx.update.entity.get,
         (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
         {defer: true}
     ));
@@ -38,7 +38,7 @@ export function FootnoteWidget(props: Props): JSX.Element {
 
     const figures = createMemo((): Figure[] => {
         return entity().figureIds.map((id) => {
-            const figure = viewerCtx.store.asset.getById<Figure>(id);
+            const figure = storeCtx.store.asset.getById<Figure>(id);
             if (!figure) throw new Error();
             return figure;
         });

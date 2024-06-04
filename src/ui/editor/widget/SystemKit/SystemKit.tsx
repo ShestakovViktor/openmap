@@ -4,13 +4,13 @@ import DisketteIconSvg from "@public/icon/diskette.svg";
 import DownloadIconSvg from "@public/icon/download.svg";
 import i18next from "i18next";
 
-import {useEditorContext} from "@ui/editor/context";
 import {Button, Toolbar} from "@ui/widget";
 import {JSX} from "solid-js";
+import {useCoreContext, useStoreContext} from "@ui/app/context";
 
 export function SystemKit(): JSX.Element {
-
-    const editorCtx = useEditorContext();
+    const storeCtx = useStoreContext();
+    const coreCtx = useCoreContext();
 
     async function handleProjectSave(): Promise<void> {
         const persistent = await navigator.storage.persist();
@@ -26,17 +26,17 @@ export function SystemKit(): JSX.Element {
         const dataFileHandle = await root.getFileHandle("data.om", {create: true});
         const dataFileWritableStream = await dataFileHandle.createWritable();
         await dataFileWritableStream.write(
-            JSON.stringify(editorCtx.store.getData())
+            JSON.stringify(storeCtx.store.getData())
         );
         await dataFileWritableStream.close();
     }
 
     async function handleProjectExport(): Promise<void> {
-        const projectFile = await editorCtx.core.converter.exportAsFile();
+        const projectFile = await coreCtx.core.converter.exportAsFile();
 
         const projectFileUrl = URL.createObjectURL(projectFile);
 
-        const {value: projectName} = editorCtx.store.config
+        const {value: projectName} = storeCtx.store.config
             .getByParams({name: "name"})[0];
         const tempLink = document.createElement("a");
         tempLink.download = projectName + ".om";
@@ -46,7 +46,7 @@ export function SystemKit(): JSX.Element {
     }
 
     async function handleProjectCompile(): Promise<void> {
-        const websiteArchive = await editorCtx.core.converter
+        const websiteArchive = await coreCtx.core.converter
             .exportAsSite();
 
         const projectFileUrl = URL.createObjectURL(websiteArchive);

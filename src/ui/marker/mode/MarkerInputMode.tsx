@@ -3,26 +3,30 @@ import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {Id, Layer, Footnote, Marker} from "@type";
 import {ENTITY, LAYER} from "@enum";
+import {StoreContextType, useStoreContext} from "@ui/app/context";
 
 export class MarkerInputMode extends UserInputMode {
+    private storeCtx: StoreContextType;
+
     private viewerCtx: ViewerContextType;
 
     private editorCtx: EditorContexType;
 
     constructor() {
         super();
+        this.storeCtx = useStoreContext();
         this.viewerCtx = useViewerContext();
         this.editorCtx = useEditorContext();
     }
 
     initMarker({x, y}: {x: number; y: number}): Id {
-        const footnoteId = this.editorCtx.store.entity.add<Footnote>({
+        const footnoteId = this.storeCtx.store.entity.add<Footnote>({
             entityTypeId: ENTITY.FOOTNOTE,
             text: "",
             figureIds: [],
         });
 
-        const markerId = this.editorCtx.store.entity.add<Marker>({
+        const markerId = this.storeCtx.store.entity.add<Marker>({
             entityTypeId: ENTITY.MARKER,
             x,
             y,
@@ -32,12 +36,13 @@ export class MarkerInputMode extends UserInputMode {
             footnoteId,
         });
 
-        const overlay = this.editorCtx.store.entity
+        const overlay = this.storeCtx.store.entity
             .getByParams<Layer>({name: LAYER.OVERLAY})[0];
 
         overlay.childIds.push(markerId);
 
-        this.editorCtx.store.entity.set(overlay);
+        this.storeCtx.store.entity.set(overlay);
+        this.storeCtx.update.entity.set(overlay.id);
 
         return markerId;
     }
@@ -51,8 +56,6 @@ export class MarkerInputMode extends UserInputMode {
         };
 
         const entityId = this.initMarker(click);
-
-        this.viewerCtx.reRender();
 
         this.editorCtx.modes.marker.form.set(entityId);
 

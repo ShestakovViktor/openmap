@@ -2,11 +2,10 @@ import styles from "./EntityForm.module.scss";
 import en from "./string/en.json";
 
 import {JSX, Accessor, Show} from "solid-js";
-import {useEditorContext} from "@ui/editor/context";
-import {useViewerContext} from "@ui/viewer/context";
 import {Entity, Id} from "@type";
 import i18next from "i18next";
 import {DATA} from "@enum";
+import {useStoreContext} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "entity", {EntityForm: en}, true, true);
 
@@ -18,8 +17,7 @@ type Props = {
 };
 
 export function EntityForm(props: Props): JSX.Element {
-    const editorCtx = useEditorContext();
-    const viewerCtx = useViewerContext();
+    const storeCtx = useStoreContext();
 
     function handleChange(event: Event): void {
         const input = event.target as HTMLInputElement;
@@ -43,8 +41,8 @@ export function EntityForm(props: Props): JSX.Element {
             data = {id, [input.name]: String(input.value)};
         }
 
-        editorCtx.store.entity.set<Entity>(data);
-        viewerCtx.reRender(id);
+        storeCtx.store.entity.set<Entity>(data);
+        storeCtx.update.entity.set(id);
     }
 
     function handleDelete(event: SubmitEvent): void {

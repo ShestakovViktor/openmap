@@ -8,7 +8,7 @@ import {AssetBrowser} from "@ui/asset/widget";
 import {Modal, Dialog} from "@ui/widget";
 import {ASSET} from "@enum";
 import {PropForm} from "../PropForm";
-import {useEditorContext} from "@ui/editor/context";
+import {useStoreContext} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "prop", {"PropSelect": en}, true, true);
 
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export function PropBrowser(props: Props): JSX.Element {
-    const editorCtx = useEditorContext();
+    const storeCtx = useStoreContext();
 
     const assetFormDialog = new Modal();
     assetFormDialog.render(
@@ -26,7 +26,9 @@ export function PropBrowser(props: Props): JSX.Element {
             class={styles.AssetFormDialog}
             onClose={() => assetFormDialog.hide()}
         >
-            <PropForm onSubmit={() => assetFormDialog.hide()}/>
+            <PropForm onSubmit={() => {
+                assetFormDialog.hide();
+            }}/>
         </Dialog>
     );
 
@@ -39,7 +41,7 @@ export function PropBrowser(props: Props): JSX.Element {
             }}
             onDelete={(ids) => {
                 ids.forEach((id) => {
-                    editorCtx.store.asset.del(id);
+                    storeCtx.store.asset.del(id);
                 });
             }}
             onSelect={props.onSelect}

@@ -6,6 +6,7 @@ import {render} from "solid-js/web";
 import {ViewerProvider} from "@ui/viewer/context";
 import {Viewer} from "@src/ui/viewer/widget";
 import {Store} from "@core";
+import {StoreProvider} from "@ui/app/context";
 
 export default async function show(
     path: string,
@@ -16,9 +17,11 @@ export default async function show(
 
     render(() => {
         return (
-            <ViewerProvider store={new Store(data)}>
-                <Viewer/>
-            </ViewerProvider>
+            <StoreProvider store={new Store(data)}>
+                <ViewerProvider>
+                    <Viewer/>
+                </ViewerProvider>
+            </StoreProvider>
         );
     }, container);
 }

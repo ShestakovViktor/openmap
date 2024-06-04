@@ -10,17 +10,19 @@ import {
 import {useViewerContext} from "@ui/viewer/context";
 import {Area} from "@type";
 import {EntityWidget} from "@ui/entity/widget";
+import {useStoreContext} from "@ui/app/context";
 
 type Props = {
     entity: Area;
 };
 
 export function AreaWidget(props: Props): JSX.Element {
+    const storeCtx = useStoreContext();
     const viewerCtx = useViewerContext();
     const [show, setShow] = createSignal(false);
 
     const fetchEntity = (): Area => {
-        const entity = viewerCtx.store.entity.getById<Area>(props.entity.id);
+        const entity = storeCtx.store.entity.getById<Area>(props.entity.id);
         if (!entity) throw new Error(`Entity not exists ${props.entity.id}`);
         return entity;
     };
@@ -34,7 +36,7 @@ export function AreaWidget(props: Props): JSX.Element {
     const [entity, setEntity] = createSignal<Area>(props.entity, {equals});
 
     createEffect(on(
-        viewerCtx.render,
+        storeCtx.update.entity.get,
         (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
         {defer: true}
     ));

@@ -1,19 +1,21 @@
 import styles from "./MarkerWidget.module.scss";
 import {JSX, Show, createEffect, createMemo, createSignal, on} from "solid-js";
 import {Marker, Prop} from "@type";
-import {useViewerContext} from "@ui/viewer/context";
 import {assetToSrc} from "@ui/app/utiliy";
 import {EntityWidget} from "@ui/entity/widget";
+import {useStoreContext} from "@ui/app/context";
+import {useViewerContext} from "@ui/viewer/context";
 
 type Props = {
     entity: Marker;
 };
 
 export function MarkerWidget(props: Props): JSX.Element {
+    const storeCtx = useStoreContext();
     const viewerCtx = useViewerContext();
 
     const fetchEntity = (): Marker => {
-        const entity = viewerCtx.store.entity.getById<Marker>(props.entity.id);
+        const entity = storeCtx.store.entity.getById<Marker>(props.entity.id);
         if (!entity) throw new Error(String(props.entity.id));
         return entity;
     };
@@ -29,7 +31,7 @@ export function MarkerWidget(props: Props): JSX.Element {
     const [entity, setEntity] = createSignal<Marker>(props.entity, {equals});
 
     createEffect(on(
-        viewerCtx.render,
+        storeCtx.update.entity.get,
         (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
         {defer: true}
     ));
@@ -55,7 +57,7 @@ export function MarkerWidget(props: Props): JSX.Element {
             return "./icon/marker.svg";
         }
         else {
-            const asset = viewerCtx.store.asset
+            const asset = storeCtx.store.asset
                 .getById<Prop>(propId);
 
             if (!asset) throw new Error();

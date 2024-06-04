@@ -5,8 +5,7 @@ import {Button, Page} from "@ui/widget";
 
 import i18next from "i18next";
 import {JSX} from "solid-js";
-import {useViewerContext} from "@ui/viewer/context";
-import {useEditorContext} from "@ui/editor/context";
+import {useCoreContext, useStoreContext} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "project", {StartChoice: en}, true, true);
 
@@ -16,8 +15,8 @@ type Props = {
 };
 
 export function StartPage(props: Props): JSX.Element {
-    const editorCtx = useEditorContext();
-    const viewerCtx = useViewerContext();
+    const storeCtx = useStoreContext();
+    const coreCtx = useCoreContext();
 
     async function handleProjectRestore(): Promise<void> {
         const root = await navigator.storage.getDirectory();
@@ -26,11 +25,10 @@ export function StartPage(props: Props): JSX.Element {
         const dataString = await dataFile.text();
         const data = JSON.parse(dataString);
 
-        editorCtx.core.converter.loadProject(data);
+        coreCtx.core.converter.loadProject(data);
 
-        viewerCtx.rePrepare();
-        viewerCtx.reInit();
-        viewerCtx.reRender();
+        storeCtx.initialize();
+        storeCtx.update.entity.set();
 
         props.onComplete();
     }
@@ -44,11 +42,9 @@ export function StartPage(props: Props): JSX.Element {
             if (!input.files?.length) return;
             const file = input.files[0];
 
-            editorCtx.core.converter.importProject(file)
+            coreCtx.core.converter.importProject(file)
                 .then(() => {
-                    viewerCtx.rePrepare();
-                    viewerCtx.reInit();
-                    viewerCtx.reRender();
+                    storeCtx.initialize();
                 })
                 .catch(error => {throw new Error(error);});
             props.onComplete();

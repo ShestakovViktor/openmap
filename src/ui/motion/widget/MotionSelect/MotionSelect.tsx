@@ -8,7 +8,7 @@ import {Modal} from "@ui/widget/Modal";
 import {Id, Motion} from "@type";
 import {MotionForm} from "../MotionForm";
 import {ASSET, DATA} from "@enum";
-import {useEditorContext} from "@ui/editor/context";
+import {useStoreContext} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "motion", {"MotionSelectDialog": en}, true, true);
 
@@ -17,7 +17,7 @@ type Props = {
 };
 
 export function MotionSelect({entity}: Props): JSX.Element {
-    const editorCtx = useEditorContext();
+    const storeCtx = useStoreContext();
     let inputRef: HTMLInputElement | undefined;
 
     const [selected, {mutate: setSelected, refetch: refetchSelected}]
@@ -26,11 +26,15 @@ export function MotionSelect({entity}: Props): JSX.Element {
     createEffect(on(entity, refetchSelected));
 
     const [motions, {refetch}] = createResource(() => {
-        return editorCtx.store.asset
+        return storeCtx.store.asset
             .getByParams<Motion>({assetTypeId: ASSET.MOTION});
     });
 
-    createEffect(on(editorCtx.init, refetch));
+    createEffect(on(
+        storeCtx.update.asset.get,
+        refetch,
+        {defer: true}
+    ));
 
     const motionFormDialog = new Modal();
     motionFormDialog.render(

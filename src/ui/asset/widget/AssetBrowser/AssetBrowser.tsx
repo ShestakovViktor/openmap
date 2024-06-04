@@ -8,6 +8,7 @@ import i18next from "i18next";
 import {Asset, Id} from "@type";
 import {useEditorContext} from "@ui/editor/context";
 import {Button} from "@ui/widget";
+import {useStoreContext} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "asset", {"AssetBrowser": en}, true, true);
 
@@ -21,17 +22,21 @@ type Props = {
 };
 
 export function AssetBrowser(props: Props): JSX.Element {
-    const editorCtx = useEditorContext();
+    const storeCtx = useStoreContext();
 
     const fetch = (): Asset[] => props.type
-        ? editorCtx.store.asset
+        ? storeCtx.store.asset
             .getByParams<Asset>({assetTypeId: props.type})
-        : editorCtx.store.asset
+        : storeCtx.store.asset
             .getAll<Asset>();
 
     const [assets, {refetch}] = createResource<Asset[]>(fetch);
 
-    createEffect(on(editorCtx.init, refetch));
+    createEffect(on(
+        storeCtx.update.asset.get,
+        refetch,
+        {defer: true}
+    ));
 
     const [selected, setSelected] = createSignal<Id[]>([] as Id[]);
 

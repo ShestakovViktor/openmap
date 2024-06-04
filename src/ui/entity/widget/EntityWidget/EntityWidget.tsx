@@ -2,13 +2,13 @@ import {JSX, ValidComponent, createResource} from "solid-js";
 import {TileWidget} from "@src/ui/tile/widget";
 import {LayerWidget} from "@src/ui/layer/widget";
 import {MarkerWidget} from "@src/ui/marker/widget";
-import {useViewerContext} from "@ui/viewer/context";
 import {Dynamic} from "solid-js/web";
 import {ENTITY} from "@enum";
 import {Id} from "@type";
 import {DecorWidget} from "@ui/decor/widget";
 import {AreaWidget} from "@ui/area/widget";
 import {FootnoteWidget} from "@ui/footnote/widget";
+import {useStoreContext} from "@ui/app/context";
 
 type Props = {
     entityId: Id;
@@ -16,11 +16,11 @@ type Props = {
 };
 
 export function EntityWidget(props: Props): JSX.Element {
-    const viewerCtx = useViewerContext();
+    const storeCtx = useStoreContext();
 
     const [entity] = createResource(
         () => {
-            const entity = viewerCtx.store.entity.getById(props.entityId);
+            const entity = storeCtx.store.entity.getById(props.entityId);
             if (!entity) {
                 throw new Error(`There is no entity with id ${props.entityId}`);
             }

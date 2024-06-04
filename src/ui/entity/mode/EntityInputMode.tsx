@@ -1,11 +1,14 @@
 import {ENTITY, MOUSE} from "@enum";
 import {Entity, Marker} from "@type";
+import {StoreContextType, useStoreContext} from "@ui/app/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {EntityFocusMode, UserInputMode} from "@ui/editor/mode";
 import {getEntity} from "@ui/editor/utility";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 
 export class EntityInputMode extends UserInputMode {
+    private storeCtx: StoreContextType;
+
     private editorCtx: EditorContexType;
 
     private viewerCtx: ViewerContextType;
@@ -14,6 +17,7 @@ export class EntityInputMode extends UserInputMode {
 
     constructor() {
         super();
+        this.storeCtx = useStoreContext();
         this.editorCtx = useEditorContext();
         this.viewerCtx = useViewerContext();
     }
@@ -24,15 +28,15 @@ export class EntityInputMode extends UserInputMode {
 
         if (this.selected) {
             const id = Number(this.selected.getAttribute("data-entity-id"));
-            const entity = this.editorCtx.store.entity.getById<Marker>(id);
+            const entity = this.storeCtx.store.entity.getById<Marker>(id);
             if (!entity) return;
 
             this.selected.style.transform = `translate3d(${x}px, ${y}px, 0)`;
             entity.x = Math.floor(x / this.viewerCtx.layout.scale);
             entity.y = Math.floor(y / this.viewerCtx.layout.scale);
 
-            this.editorCtx.store.entity.set(entity);
-            this.viewerCtx.reRender(id);
+            this.storeCtx.store.entity.set(entity);
+            this.storeCtx.update.entity.set(id);
         }
     }
 
@@ -53,7 +57,7 @@ export class EntityInputMode extends UserInputMode {
 
         const entityFocus = new EntityFocusMode(element);
 
-        const entity = this.editorCtx.store.entity
+        const entity = this.storeCtx.store.entity
             .getById<Entity>(entityFocus.entityId);
 
         if (!entity) throw new Error();

@@ -1,18 +1,18 @@
 import styles from "./TileWidget.module.scss";
 import {JSX, createEffect, createMemo, createSignal, on} from "solid-js";
 import {Asset, Tile} from "@type";
-import {useViewerContext} from "@ui/viewer/context";
 import {assetToSrc} from "@ui/app/utiliy";
+import {useStoreContext} from "@ui/app/context";
 
 type Props = {
     entity: Tile;
 };
 
 export function TileWidget(props: Props): JSX.Element {
-    const viewerCtx = useViewerContext();
+    const storeCtx = useStoreContext();
 
     const fetchEntity = (): Tile => {
-        const tile = viewerCtx.store.entity.getById<Tile>(props.entity.id);
+        const tile = storeCtx.store.entity.getById<Tile>(props.entity.id);
         if (!tile) throw new Error(`There is no tile with id ${props.entity.id}`);
         return tile;
     };
@@ -24,7 +24,7 @@ export function TileWidget(props: Props): JSX.Element {
     const [entity, setEntity] = createSignal<Tile>(props.entity, {equals});
 
     createEffect(on(
-        viewerCtx.render,
+        storeCtx.update.entity.get,
         (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
         {defer: true}
     ));
@@ -44,7 +44,7 @@ export function TileWidget(props: Props): JSX.Element {
             return "";
         }
         else {
-            const asset = viewerCtx.store.asset
+            const asset = storeCtx.store.asset
                 .getById<Asset>(imageId);
 
             if (!asset) throw new Error();

@@ -1,19 +1,21 @@
 import {For, JSX, createEffect, createMemo, createSignal, on} from "solid-js";
 import styles from "./LayerWidget.module.scss";
-import {useViewerContext} from "@ui/viewer/context";
 import {Layer} from "@type";
-import {EntityWidget} from "@ui/entity/widget";
 import {LAYER} from "@enum";
+import {EntityWidget} from "@ui/entity/widget";
+import {useStoreContext} from "@ui/app/context";
+import {useViewerContext} from "@ui/viewer/context";
 
 type Props = {
     entity: Layer;
 };
 
 export function LayerWidget(props: Props): JSX.Element {
+    const storeCtx = useStoreContext();
     const viewerCtx = useViewerContext();
 
     const fetchEntity = (): Layer => {
-        const entity = viewerCtx.store.entity.getById<Layer>(props.entity.id);
+        const entity = storeCtx.store.entity.getById<Layer>(props.entity.id);
         if (!entity) throw new Error(String(props.entity.id));
         return entity;
     };
@@ -25,7 +27,7 @@ export function LayerWidget(props: Props): JSX.Element {
     const [entity, setEntity] = createSignal<Layer>(props.entity, {equals});
 
     createEffect(on(
-        viewerCtx.render,
+        storeCtx.update.entity.get,
         (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
         {defer: true}
     ));

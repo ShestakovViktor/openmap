@@ -7,9 +7,9 @@ import {Button, Dialog, Modal, Section, Toolbar} from "@ui/widget";
 import {JSX, Resource, createMemo, createResource} from "solid-js";
 import {Id, Prop} from "@type";
 import {PropBrowser} from "@ui/prop/widget";
-import {useEditorContext} from "@ui/editor/context";
 import {assetToSrc} from "@ui/app/utiliy";
 import {DATA} from "@enum";
+import {useStoreContext} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "entity", {PropSection: en}, true, true);
 
@@ -20,13 +20,14 @@ type Props = {
 };
 
 export function PropSection(props: Props): JSX.Element {
-    const editorCtx = useEditorContext();
+    const storeCtx = useStoreContext();
     let input: HTMLInputElement | undefined;
 
     const [propId, {mutate: setPropId}]
         = createResource<Id | null, Entity | undefined>(
             () => props.entity(),
-            (entity) => entity ? entity.propId : null
+            (entity) => entity ? entity.propId : null,
+            {initialValue: null}
         );
 
     const src = createMemo((): string => {
@@ -36,7 +37,7 @@ export function PropSection(props: Props): JSX.Element {
             return "./icon/no.svg";
         }
         else {
-            const asset = editorCtx.store.asset
+            const asset = storeCtx.store.asset
                 .getById<Prop>(id);
 
             if (!asset) throw new Error();

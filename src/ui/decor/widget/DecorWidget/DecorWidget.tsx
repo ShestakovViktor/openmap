@@ -4,16 +4,18 @@ import {useViewerContext} from "@ui/viewer/context";
 
 import {Decor, Asset, Motion} from "@type";
 import {assetToSrc} from "@ui/app/utiliy";
+import {useStoreContext} from "@ui/app/context";
 
 type Props = {
     entity: Decor;
 };
 
 export function DecorWidget(props: Props): JSX.Element {
+    const storeCtx = useStoreContext();
     const viewerCtx = useViewerContext();
 
     const fetchEntity = (): Decor => {
-        const tile = viewerCtx.store.entity.getById<Decor>(props.entity.id);
+        const tile = storeCtx.store.entity.getById<Decor>(props.entity.id);
         if (!tile) throw new Error(`Entity does not exists ${props.entity.id}`);
         return tile;
     };
@@ -30,7 +32,7 @@ export function DecorWidget(props: Props): JSX.Element {
     const [entity, setEntity] = createSignal<Decor>(props.entity, {equals});
 
     createEffect(on(
-        viewerCtx.render,
+        storeCtx.update.entity.get,
         (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
         {defer: true}
     ));
@@ -48,7 +50,7 @@ export function DecorWidget(props: Props): JSX.Element {
             return "./icon/decor.svg";
         }
         else {
-            const asset = viewerCtx.store.asset
+            const asset = storeCtx.store.asset
                 .getById<Asset>(propId);
 
             if (!asset) throw new Error();
@@ -64,7 +66,7 @@ export function DecorWidget(props: Props): JSX.Element {
             return "";
         }
         else {
-            const motion = viewerCtx.store.asset
+            const motion = storeCtx.store.asset
                 .getById<Motion>(motionId);
 
             if (!motion) throw new Error();

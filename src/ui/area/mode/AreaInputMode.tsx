@@ -1,37 +1,37 @@
 import {Id, Layer, Footnote, Area} from "@type";
 import {UserInputMode} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
-import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {ENTITY, LAYER} from "@enum";
 import {Accessor, Setter, createSignal} from "solid-js";
 import {pushAreaPoint} from "@ui/area/utility/pushAreaPoint";
+import {StoreContextType, useStoreContext} from "@ui/app/context";
 
 export class AreaInputMode extends UserInputMode {
     private getEntityId: Accessor<Id | undefined>;
 
     private setEntityId: Setter<Id | undefined>;
 
-    private viewerCtx: ViewerContextType;
+    private storeCtx: StoreContextType;
 
-    private editorCtx: EditorContexType;
+    private viewerCtx: ViewerContextType;
 
     constructor() {
         super();
+        this.storeCtx = useStoreContext();
         this.viewerCtx = useViewerContext();
-        this.editorCtx = useEditorContext();
 
         const signal = createSignal<number>();
         [this.getEntityId, this.setEntityId] = signal;
     }
 
     initArea(): Id {
-        const footnoteId = this.editorCtx.store.entity.add<Footnote>({
+        const footnoteId = this.storeCtx.store.entity.add<Footnote>({
             entityTypeId: ENTITY.FOOTNOTE,
             text: "",
             figureIds: [],
         });
 
-        const areaId = this.editorCtx.store.entity.add<Area>({
+        const areaId = this.storeCtx.store.entity.add<Area>({
             entityTypeId: ENTITY.AREA,
             x: 0,
             y: 0,
@@ -41,12 +41,13 @@ export class AreaInputMode extends UserInputMode {
             footnoteId,
         });
 
-        const overlay = this.editorCtx.store.entity
+        const overlay = this.storeCtx.store.entity
             .getByParams<Layer>({name: LAYER.OVERLAY})[0];
 
         overlay.childIds.push(areaId);
 
-        this.editorCtx.store.entity.set(overlay);
+        this.storeCtx.store.entity.set(overlay);
+        this.storeCtx.update.entity.set(overlay.id);
 
         this.setEntityId(areaId);
 
@@ -67,16 +68,14 @@ export class AreaInputMode extends UserInputMode {
 
         // this.editorCtx.formMode?.set(ENTITY.AREA.id, areaId);
 
-        const area = this.editorCtx.store.entity
+        const area = this.storeCtx.store.entity
             .getById<Area>(entityId);
 
         if (!area) throw new Error();
 
         pushAreaPoint(area, click);
 
-        this.viewerCtx.reRender();
-
-        this.editorCtx.store.entity.set(area);
+        this.storeCtx.store.entity.set(area);
 
         // this.editorCtx.focusMode[1]((prev) => {
         //     prev.forEach(entity => entity.clear());

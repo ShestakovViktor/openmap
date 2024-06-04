@@ -2,12 +2,11 @@ import styles from "./AssetForm.module.scss";
 import en from "./string/en.json";
 
 import {JSX} from "solid-js";
-import {useEditorContext} from "@ui/editor/context";
 import i18next from "i18next";
 import {Asset, Id} from "@type";
 import {readFile} from "@ui/app/utiliy";
-import {useViewerContext} from "@ui/viewer/context";
-import {ASSET, DATA} from "@enum";
+import {DATA} from "@enum";
+import {useStoreContext} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "asset", {AssetForm: en}, true, true);
 
@@ -20,8 +19,7 @@ type Props = {
 };
 
 export function AssetForm(props: Props): JSX.Element {
-    const viewerCtx = useViewerContext();
-    const editorCtx = useEditorContext();
+    const storeCtx = useStoreContext();
 
     const data: {[key: string]: string | number | File} = props.data ?? {};
 
@@ -49,11 +47,10 @@ export function AssetForm(props: Props): JSX.Element {
         readFile(file as File)
             .then((fileData) => {
                 Object.assign(asset, fileData);
-                const assetId = editorCtx.store.asset
+                const assetId = storeCtx.store.asset
                     .add(asset as Omit<Asset, "id">);
 
-                editorCtx.reInit();
-                viewerCtx.rePrepare();
+                storeCtx.update.asset.set(assetId);
 
                 if (props.onSubmit) props.onSubmit(assetId);
             })
