@@ -7,7 +7,6 @@ import {
 } from "webpack-dev-server";
 import {merge} from "webpack-merge";
 import common from "./webpack.config";
-import webpack from "webpack";
 
 interface Configuration extends WebpackConfiguration {
     devServer?: WebpackDevServerConfiguration;
@@ -23,7 +22,7 @@ export default merge<Configuration>(common, {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./public/editor.html",
+            template: "./res/html/editor.html",
             minify: false,
         }),
     ],
@@ -32,6 +31,6 @@ export default merge<Configuration>(common, {
         port: 3000,
         hot: true,
         compress: true,
-        static: ["./public", "./build"],
+        static: ["./build"],
     },
 });

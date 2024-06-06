@@ -1,6 +1,6 @@
 import en from "./string/en.json";
 import i18next from "i18next";
-import FootnoteIconSvg from "@public/icon/footnote.svg";
+import FootnoteIconSvg from "@res/svg/footnote.svg";
 
 import {Button, Modal, Section, Toolbar} from "@ui/widget";
 import {JSX, Resource, createResource} from "solid-js";

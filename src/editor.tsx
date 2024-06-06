@@ -1,6 +1,6 @@
 import "@src/i18n";
-import "@style/colors.scss";
-import "@style/global.scss";
+import "@res/style/colors.scss";
+import "@res/style/global.scss";
 
 import {Core} from "@core";
 import {Store} from "@core";

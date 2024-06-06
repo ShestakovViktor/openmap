@@ -1,5 +1,3 @@
-@use "mixin";
-
 .Field {
     display: flex;
     gap: 16px;
@@ -19,7 +17,6 @@
         }
 
         input {
-            @include mixin.Input;
             flex: 1 1 auto;
             width: 0;
         }

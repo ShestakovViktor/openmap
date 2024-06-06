@@ -1,7 +1,7 @@
 import en from "./string/en.json";
 import i18next from "i18next";
 import styles from "./PropSection.module.scss";
-import PaletteIconSvg from "@public/icon/palette.svg";
+import PaletteIconSvg from "@res/svg/palette.svg";
 
 import {Button, Dialog, Modal, Section, Toolbar} from "@ui/widget";
 import {JSX, Resource, createMemo, createResource} from "solid-js";

@@ -1,5 +1,3 @@
-@use "mixin";
-
 .Form {
     width: 100%;
     height: 100%;
@@ -9,7 +7,6 @@
     gap: 16px;
 
     input[type="submit"] {
-        @include mixin.Input;
     }
 
 

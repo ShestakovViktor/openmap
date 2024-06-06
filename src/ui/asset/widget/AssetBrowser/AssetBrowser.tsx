@@ -1,5 +1,5 @@
-import PlusIconSvg from "@public/icon/plus.svg";
-import SaltireIconSvg from "@public/icon/saltire.svg";
+import PlusIconSvg from "@res/svg/plus.svg";
+import SaltireIconSvg from "@res/svg/saltire.svg";
 import styles from "./AssetBrowser.module.scss";
 import en from "./string/en.json";
 

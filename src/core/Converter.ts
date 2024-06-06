@@ -1,3 +1,4 @@
+import template from "@res/html/viewer.html";
 import {Media} from "@core";
 import {ArchiveDriver} from "@src/interface";
 import {Asset, Data, Id} from "@type";
@@ -133,12 +134,8 @@ export class Converter {
         return byteArray;
     }
 
-    private async getTemplateBlob(): Promise<Blobs> {
+    private getTemplateBlob(): Blobs {
         const {value: name} = this.store.config.getByParams({name: "name"})[0];
-
-        const fileName = "viewer.html";
-        const response = await fetch(fileName);
-        const template = await response.text();
 
         const website = template.replace("./project", "./" + String(name));
         const blob = new Blob([website], {type: "text/html"});

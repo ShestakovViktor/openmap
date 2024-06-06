@@ -1,8 +1,8 @@
 import styles from "./InputKit.module.scss";
-import CursorIconSvg from "@public/icon/cursor.svg";
-import MarkerIconSvg from "@public/icon/marker.svg";
-import DecorIconSvg from "@public/icon/decor.svg";
-import PolygonIconSvg from "@public/icon/polygon.svg";
+import CursorIconSvg from "@res/svg/cursor.svg";
+import MarkerIconSvg from "@res/svg/marker.svg";
+import DecorIconSvg from "@res/svg/decor.svg";
+import PolygonIconSvg from "@res/svg/polygon.svg";
 
 import {Button, Toolbar} from "@ui/widget";
 import {For, JSX, createSignal, onMount} from "solid-js";

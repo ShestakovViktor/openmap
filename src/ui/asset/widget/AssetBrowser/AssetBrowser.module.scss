@@ -1,5 +1,3 @@
-@use "mixin";
-
 .AssetBrowser {
     width: 100%;
     height: 100%;
@@ -15,7 +13,6 @@
         button {
             width: 24px;
             height: 24px;
-            @include mixin.Button;
         }
 
         table {

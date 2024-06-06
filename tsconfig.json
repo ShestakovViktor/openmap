@@ -29,11 +29,17 @@
             "@core/*": [
                 "src/core/*"
             ],
-            "@ui": [
-                "src/ui"
+            "@enum": [
+                "src/enum"
             ],
-            "@ui/*": [
-                "src/ui/*"
+            "@enum/*": [
+                "src/enum/*"
+            ],
+            "@interface": [
+                "src/interface"
+            ],
+            "@interface/*": [
+                "src/interface/*"
             ],
             "@type": [
                 "src/type"
@@ -41,17 +47,11 @@
             "@type/*": [
                 "src/type/*"
             ],
-            "@enum": [
-                "src/enum"
+            "@ui": [
+                "src/ui"
             ],
-            "@enum/*": [
-                "src/enum/*"
-            ],
-            "@style": [
-                "src/style"
-            ],
-            "@style/*": [
-                "src/style/*"
+            "@ui/*": [
+                "src/ui/*"
             ],
             "@src": [
                 "src",
@@ -59,11 +59,11 @@
             "@src/*": [
                 "src/*"
             ],
-            "@public": [
-                "public"
+            "@res": [
+                "res"
             ],
-            "@public/*": [
-                "public/*"
+            "@res/*": [
+                "res/*"
             ],
         },
         "resolveJsonModule": true,

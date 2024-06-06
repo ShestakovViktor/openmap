@@ -1,6 +1,5 @@
 import path from "path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import CopyWebpackPlugin from "copy-webpack-plugin";
 
 import {Configuration} from "webpack";
 import {merge} from "webpack-merge";
@@ -19,11 +18,8 @@ export default merge<Configuration>(common, {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./public/editor.html",
+            template: "./res/html/editor.html",
             minify: false,
-        }),
-        new CopyWebpackPlugin({
-            patterns: [{from: "./public/", to: "./"}],
         }),
     ],
 });

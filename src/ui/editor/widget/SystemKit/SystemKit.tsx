@@ -1,7 +1,7 @@
 import styles from "./SystemKit.module.scss";
-import FileIconSvg from "@public/icon/file.svg";
-import DisketteIconSvg from "@public/icon/diskette.svg";
-import DownloadIconSvg from "@public/icon/download.svg";
+import FileIconSvg from "@res/svg/file.svg";
+import DisketteIconSvg from "@res/svg/diskette.svg";
+import DownloadIconSvg from "@res/svg/download.svg";
 import i18next from "i18next";
 
 import {Button, Toolbar} from "@ui/widget";

@@ -1,11 +1,8 @@
-@use "mixin";
-
 .InputKit {
     display: flex;
     justify-content: center;
     pointer-events: auto;
 
     .Pressed {
-        @include mixin.Pressed;
     }
 }

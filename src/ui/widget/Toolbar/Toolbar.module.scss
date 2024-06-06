@@ -1,5 +1,3 @@
-@use "mixin";
-
 .Toolbar {
     display: flex;
     gap: 16px;
@@ -8,8 +6,6 @@
         width: 42px;
         height: 42px;
         border: 1px solid var(--grey-90);
-
-        @include mixin.Button;
     }
 
     &.Column {

@@ -1,5 +1,5 @@
 import styles from "./EntityToolKit.module.scss";
-import MoveIconSvg from "@public/icon/move.svg";
+import MoveIconSvg from "@res/svg/move.svg";
 
 import {Button, Toolbar} from "@ui/widget";
 import en from "./string/en.json";

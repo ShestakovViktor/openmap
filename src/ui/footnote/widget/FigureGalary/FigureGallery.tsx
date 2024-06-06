@@ -1,6 +1,6 @@
 import styles from "./FigureGallery.module.scss";
-import NextIconSvg from "@public/icon/next.svg";
-import PrevIconSvg from "@public/icon/prev.svg";
+import NextIconSvg from "@res/svg/next.svg";
+import PrevIconSvg from "@res/svg/prev.svg";
 
 import {Figure} from "@type";
 import {For, JSX, createSignal} from "solid-js";

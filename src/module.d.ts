@@ -8,6 +8,11 @@ declare module "*.svg" {
     export default content;
 }
 
+declare module "*.html" {
+    const content: string;
+    export default content;
+}
+
 declare module "*.module.scss" {
     const content: {[key: string]: string} = {};
     export default content;
