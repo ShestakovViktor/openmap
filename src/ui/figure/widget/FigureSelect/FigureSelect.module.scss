@@ -8,14 +8,56 @@
         flex-wrap: wrap;
         gap: 16px;
 
-        .Preview {
-            width: 64px;
-            height: 64px;
-            cursor: pointer;
-            border-radius: 16px;
 
-            &.Selected {
-                border: 2px solid seagreen;
+        .Figure {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            &:last-child {
+                .Preview {
+                    width: 32px;
+                }
+            }
+            .Preview {
+                width: 96px;
+                height: 64px;
+                border: 1px solid var(--grey-60);
+                border-radius: 8px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                img {
+                    object-fit: contain;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                svg {
+                    width: 16px;
+                    height: 16px;
+                    path {
+                        stroke: var(--theme);
+                    }
+                }
+            }
+
+            .Controls {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-evenly;
+                
+                button {
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 4px;
+                    border: 1px solid var(--grey-60);
+
+                    path {
+                        stroke: var(--theme);
+                    }
+                }
             }
         }
     }

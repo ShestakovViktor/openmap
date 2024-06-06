@@ -10,7 +10,7 @@ import {
 } from "@ui/asset/widget";
 import {ASSET} from "@enum";
 
-i18next.addResourceBundle("en", "prop", {PropForm: en}, true, true);
+i18next.addResourceBundle("en", "figure", {FigureForm: en}, true, true);
 
 type Props = {
     onSubmit?: (AssetId: Id) => void;
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export function FigureForm(props: Props): JSX.Element {
-    const data = {typeId: ASSET.FIGURE};
+    const data = {assetTypeId: ASSET.FIGURE};
 
     return (
         <AssetForm onSubmit={props.onSubmit} data={data}>

@@ -17,7 +17,7 @@
         .TabButton {
             cursor: pointer;
             &.Selected {
-                border-bottom: 2px solid seagreen;
+                border-bottom: 2px solid var(--theme);
             }
         }
     }

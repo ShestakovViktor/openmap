@@ -1,52 +1,70 @@
 import styles from "./FigureSelect.module.scss";
 import en from "./string/en.json";
+import FigureIconSvg from "@res/svg/figure.svg";
+import NextIconSvg from "@res/svg/next.svg";
+import PrevIconSvg from "@res/svg/prev.svg";
+import PlusIconSvg from "@res/svg/plus.svg";
+import SaltireIconSvg from "@res/svg/saltire.svg";
 
-import {
-    For,
-    JSX,
-    Resource,
-    createEffect,
-    createResource,
-    createSignal,
-    on,
-} from "solid-js";
-import {Dialog, Modal} from "@ui/widget";
+import {For, JSX, Resource, Show, createMemo, createResource, createSignal} from "solid-js";
 import i18next from "i18next";
-import {Asset, Id} from "@type";
-import {ASSET, DATA} from "@enum";
-import {FigureForm} from "@ui/figure/widget";
+import {Id} from "@type";
+import {DATA} from "@enum";
+import {Button, Dialog, Icon, Modal} from "@ui/widget";
+import {FigureBrowser} from "../FigureBrowser";
+import {useStoreContext} from "@ui/app/context";
 import {assetToSrc} from "@ui/app/utiliy";
-import {useEditorContext} from "@ui/editor/context";
-import {AssetBrowser} from "@ui/asset/widget";
 
-i18next.addResourceBundle("en", "prop", {"PropSelect": en}, true, true);
+i18next.addResourceBundle("en", "figure", {"FigureSelect": en}, true, true);
 
-type Props = {
-    entity: Resource<{figureIds: Id[]} | undefined>;
+type Entity = {
+    figureIds: (Id | null)[];
 };
 
+type Props = {
+    entity: Resource<Entity | undefined>;
+};
+
+type FigureIds = (Id | null)[];
+
 export function FigureSelect(props: Props): JSX.Element {
-    const editorCtx = useEditorContext();
+    const storeCtx = useStoreContext();
+
     let input: HTMLInputElement | undefined;
+    const [figureIds, {mutate: setFigureIds}]
+        = createResource<FigureIds, Entity | undefined>(
+            () => props.entity(),
+            (entity) => {
+                console.log("qwe");
+                return entity ? entity.figureIds : [];
+            },
+            {initialValue: []}
+        );
 
-    const [value, setValue] = createSignal<Id[]>([]);
+    const [selected, setSelected] = createSignal<Id>(0);
 
-    const assetBrowserDialog = new Modal();
-    assetBrowserDialog.render(
+    const foo = createMemo(() => {
+        const id = figureIds()[selected()];
+        return id ? [id] : [];
+    });
+
+    const figureBrowserDialog = new Modal();
+    figureBrowserDialog.render(
         <Dialog
-            class={styles.AssetBrowserDialog}
-            onClose={() => assetBrowserDialog.hide()}
+            class={styles.FigureBrowserDialog}
+            onClose={() => figureBrowserDialog.hide()}
         >
-            <AssetBrowser
-                type={ASSET.FIGURE}
+            <FigureBrowser
+                selected={foo()}
                 onSelect={(ids: Id[]) => {
-                    setValue(ids);
+                    setFigureIds((prev) => [
+                        ...(prev[selected()] = ids[0], prev),
+                    ]);
                     input!.dispatchEvent(
                         new Event("change", {bubbles: true})
                     );
-                    assetBrowserDialog.hide();
+                    figureBrowserDialog.hide();
                 }}
-                multiple
             />
         </Dialog>
     );
@@ -57,16 +75,66 @@ export function FigureSelect(props: Props): JSX.Element {
                 ref={input}
                 name="figureIds"
                 type="hidden"
-                value={JSON.stringify(value())}
+                value={JSON.stringify(figureIds())}
                 data-type={DATA.ARRAY}
             />
             <div class={styles.Showcase}>
-                <button
-                    class={styles.Preview}
-                    onClick={() => {
-                        assetBrowserDialog.show();
+                <For each={figureIds()}>
+                    {(id, index) => {
+                        const asset = id
+                            ? storeCtx.store.asset.getById(id) ?? undefined
+                            : undefined;
+
+                        const src = asset && (asset.path || assetToSrc(asset));
+
+                        return (
+                            <div class={styles.Figure}>
+                                <div
+                                    class={styles.Preview}
+                                    onClick={() => {
+                                        setSelected(index());
+                                        figureBrowserDialog.show();
+                                    }}
+                                >
+                                    {src
+                                        ? <img src={src}/>
+                                        : <Icon svg={FigureIconSvg}/>
+                                    }
+                                </div>
+                                <div class={styles.Controls}>
+                                    <Button icon={PrevIconSvg}/>
+                                    <Button
+                                        icon={SaltireIconSvg}
+                                        onClick={() => {
+                                            setFigureIds((prev) =>
+                                                prev.filter((v, i) => i != index())
+                                            );
+                                            input!.dispatchEvent(
+                                                new Event("change", {bubbles: true})
+                                            );
+                                        }}
+                                    />
+                                    <Button icon={NextIconSvg}/>
+                                </div>
+                            </div>
+                        );
                     }}
-                >+</button>
+                </For>
+                <div class={styles.Figure}>
+                    <div class={styles.Preview}>
+                        <Button
+                            icon={PlusIconSvg}
+                            onClick={() => {
+                                setFigureIds((prev) => [...prev, null]);
+                                input!.dispatchEvent(
+                                    new Event("change", {bubbles: true})
+                                );
+                            }}
+                        />
+                    </div>
+                    <div class={styles.Controls}>
+                    </div>
+                </div>
             </div>
         </div>
     );

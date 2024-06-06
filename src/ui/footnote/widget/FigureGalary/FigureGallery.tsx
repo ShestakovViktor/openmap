@@ -1,28 +1,34 @@
 import styles from "./FigureGallery.module.scss";
 import NextIconSvg from "@res/svg/next.svg";
 import PrevIconSvg from "@res/svg/prev.svg";
+import FigureIconSvg from "@res/svg/figure.svg";
 
-import {Figure} from "@type";
-import {For, JSX, createSignal} from "solid-js";
+import {Figure, Id} from "@type";
+import {For, JSX, Show, createMemo, createSignal} from "solid-js";
 import {assetToSrc} from "@ui/app/utiliy";
-import {Button} from "@ui/widget";
+import {Button, Icon} from "@ui/widget";
+import {useStoreContext} from "@ui/app/context";
 
 type Props = {
-    figures: Figure[];
+    figureIds: (Id | null)[];
 };
 
 export function FigureGallery(props: Props): JSX.Element {
+    const storeCtx = useStoreContext();
     const [selected, setSelected] = createSignal(0);
 
-    const q = props.figures.length;
+    const q = createMemo((): number => props.figureIds.length);
 
     return (
         <div class={styles.FigureGallery}>
             <div class={styles.Showcase}>
-                <For each={props.figures}>
-                    {(figure, index) => {
-                        const src = figure.path || assetToSrc(figure);
+                <For each={props.figureIds}>
+                    {(id, index) => {
+                        const asset = id
+                            ? storeCtx.store.asset.getById(id) ?? undefined
+                            : undefined;
 
+                        const src = asset && (asset.path || assetToSrc(asset));
                         return (
                             <img
                                 class={styles.Figure}
@@ -38,11 +44,11 @@ export function FigureGallery(props: Props): JSX.Element {
             <div class={styles.Controls}>
                 <Button
                     icon={PrevIconSvg}
-                    onClick={() => setSelected(((selected() - 1) % q + q) % q)}
+                    onClick={() => setSelected(((selected() - 1) % q() + q()) % q())}
                 />
                 <Button
                     icon={NextIconSvg}
-                    onClick={() => setSelected(((selected() + 1) % q + q) % q)}
+                    onClick={() => setSelected(((selected() + 1) % q() + q()) % q())}
 
                 />
             </div>

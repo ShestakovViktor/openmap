@@ -36,19 +36,11 @@ export function FootnoteWidget(props: Props): JSX.Element {
 
     const text = createMemo(() => entity().text);
 
-    const figures = createMemo((): Figure[] => {
-        return entity().figureIds.map((id) => {
-            const figure = storeCtx.store.asset.getById<Figure>(id);
-            if (!figure) throw new Error();
-            return figure;
-        });
-    });
-
     return (
         <div class={styles.InfoPopup}>
             <p class={styles.Text} innerHTML={text()}></p>
-            <Show when={figures().length > 0}>
-                <FigureGallery figures={figures()}/>
+            <Show when={entity().figureIds.length > 0}>
+                <FigureGallery figureIds={entity().figureIds}/>
             </Show>
         </div>
     );

@@ -1,4 +1,5 @@
 import styles from "./MarkerWidget.module.scss";
+import MarkerIconSvg from "@res/svg/marker.svg";
 import {JSX, Show, createEffect, createMemo, createSignal, on} from "solid-js";
 import {Marker, Prop} from "@type";
 import {assetToSrc} from "@ui/app/utiliy";
