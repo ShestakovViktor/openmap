@@ -34,10 +34,7 @@ export function FigureSelect(props: Props): JSX.Element {
     const [figureIds, {mutate: setFigureIds}]
         = createResource<FigureIds, Entity | undefined>(
             () => props.entity(),
-            (entity) => {
-                console.log("qwe");
-                return entity ? entity.figureIds : [];
-            },
+            (entity) => entity ? entity.figureIds : [],
             {initialValue: []}
         );
 
