@@ -1,4 +1,5 @@
 import styles from "./InputKit.module.scss";
+import LoupeIconSvg from "@res/svg/loupe.svg";
 import CursorIconSvg from "@res/svg/cursor.svg";
 import MarkerIconSvg from "@res/svg/marker.svg";
 import DecorIconSvg from "@res/svg/decor.svg";
@@ -13,6 +14,16 @@ export function InputKit(): JSX.Element {
     const [pressed, setPressed] = createSignal(0);
 
     const buttons = [
+        {
+            icon: LoupeIconSvg,
+            onClick(): void {
+                const {input} = editorCtx.modes.default;
+                editorCtx.entityFocus.clear();
+                editorCtx.userInput.set(input);
+                editorCtx.toolKit.clear();
+                editorCtx.dockArea.clear();
+            },
+        },
         {
             icon: CursorIconSvg,
             onClick(): void {

@@ -28,6 +28,7 @@ import {
     AreaFormDockAreaMode,
     AreaInputMode,
 } from "@ui/area/mode";
+import {UserInputMode} from "@ui/editor/mode";
 
 type Props = {
     children: JSX.Element;
@@ -38,6 +39,9 @@ export function Editor(props: Props): JSX.Element {
 
     onMount(() => {
         editorCtx.modes = {
+            default: {
+                input: new UserInputMode(),
+            },
             entity: {
                 input: new EntityInputMode(),
                 toolKit: new EntityToolKitMode(),
@@ -62,15 +66,15 @@ export function Editor(props: Props): JSX.Element {
 
         viewer.addEventListener("pointerdown", (event: PointerEvent) => {
             editorCtx.userInput.active.onPointerDown(event);
-        });
+        }, {capture: true});
 
         viewer.addEventListener("pointermove", (event: PointerEvent) => {
             editorCtx.userInput.active.onPointerMove(event);
-        });
+        }, {capture: true});
 
         viewer.addEventListener("pointerup", (event: PointerEvent) => {
             editorCtx.userInput.active.onPointerUp(event);
-        });
+        }, {capture: true});
 
         const initialDialogModal = new Modal({background: true});
         initialDialogModal.render(

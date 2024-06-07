@@ -16,6 +16,9 @@ export type EditorContexType = {
     toolKit: ToolKit;
 
     modes: {
+        default: {
+            input: UserInputMode;
+        };
         entity: {
             input: UserInputMode;
             toolKit: ToolKitMode;

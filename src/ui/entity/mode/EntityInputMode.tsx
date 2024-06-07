@@ -72,8 +72,10 @@ export class EntityInputMode extends UserInputMode {
             this.editorCtx.toolKit.set(this.editorCtx.modes.entity.toolKit);
             return;
         }
+        else {
+            event.stopPropagation();
+        }
 
-        event.stopImmediatePropagation();
         this.selected = entityFocus.element;
 
         if (event.shiftKey) {
