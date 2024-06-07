@@ -6,6 +6,7 @@ import {assetToSrc} from "@ui/app/utiliy";
 import {EntityWidget} from "@ui/entity/widget";
 import {useStoreContext} from "@ui/app/context";
 import {useViewerContext} from "@ui/viewer/context";
+import {Icon} from "@ui/widget";
 
 type Props = {
     entity: Marker;
@@ -14,6 +15,7 @@ type Props = {
 export function MarkerWidget(props: Props): JSX.Element {
     const storeCtx = useStoreContext();
     const viewerCtx = useViewerContext();
+    let element: HTMLDivElement | undefined;
 
     const fetchEntity = (): Marker => {
         const entity = storeCtx.store.entity.getById<Marker>(props.entity.id);
@@ -51,38 +53,33 @@ export function MarkerWidget(props: Props): JSX.Element {
         };
     });
 
-    const src = createMemo((): string => {
+    const asset = createMemo((): Prop | null => {
         const propId = entity().propId;
 
-        if (!propId) {
-            return "./icon/marker.svg";
-        }
-        else {
-            const asset = storeCtx.store.asset
-                .getById<Prop>(propId);
-
-            if (!asset) throw new Error();
-
-            return asset.path || assetToSrc(asset);
-        }
+        return propId
+            ? storeCtx.store.asset.getById<Prop>(propId)
+            : null;
     });
 
-    // function hideListener(event: PointerEvent): void {
-    //     if (!ref.contains(event.target as HTMLElement)) {
-    //         setShow(false);
-    //     }
-    // }
-
-    // createEffect(on(show, (value) => {
-    //     if (value) {
-    //         window.addEventListener("pointerdown", hideListener);
-    //     }
-    //     else {
-    //         window.removeEventListener("pointerdown", hideListener);
-    //     }
-    // }));
-
     const [show, setShow] = createSignal(false);
+
+    const hideListener = (event: PointerEvent): void => {
+        if (
+            event.target instanceof Element
+            && !element?.contains(event.target)
+        ) {
+            setShow(false);
+        }
+    };
+
+    createEffect(on(show, (value) => {
+        if (value) {
+            window.addEventListener("pointerdown", hideListener);
+        }
+        else {
+            window.removeEventListener("pointerdown", hideListener);
+        }
+    }, {defer: true}));
 
     return (
         <div
@@ -90,20 +87,30 @@ export function MarkerWidget(props: Props): JSX.Element {
             data-entity-id={entity().id}
             style={{transform: transform()}}
             draggable={false}
+            ref={element}
         >
             <div
                 class={styles.Marker}
                 style={style()}
+                onPointerDown={() => setShow(true)}
             >
-                <img
-                    class={styles.Prop}
-                    src={src()}
-                    draggable={false}
-                    onclick={(event) => {
-                        setShow(!show());
-                        event.stopPropagation();
-                    }}
-                />
+                <Show
+                    when={asset()}
+                    fallback={(
+                        <Icon
+                            svg={MarkerIconSvg}
+                            class={styles.Prop}
+                        />
+                    )}
+                >
+                    {(asset) => (
+                        <img
+                            class={styles.Prop}
+                            src={asset().path || assetToSrc(asset())}
+                            draggable={false}
+                        />
+                    )}
+                </Show>
             </div>
 
             <Show when={show() && entity().footnoteId}>
