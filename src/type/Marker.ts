@@ -7,6 +7,5 @@ export type Marker = Entity & {
     height: number;
 
     propId: Id | null;
-
-    footnoteId: Id;
+    footnoteId: Id | null;
 };

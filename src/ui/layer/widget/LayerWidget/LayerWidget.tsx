@@ -42,7 +42,7 @@ export function LayerWidget(props: Props): JSX.Element {
                 transform: `translate3d(${x}px, ${y}px, 0px)`,
             };
         }
-        else if (name == LAYER.MAP) {
+        else if (name == LAYER.BACKGROUND) {
             const scale = viewerCtx.layout.scale;
             return {
                 transform: `scale(${scale})`,

@@ -25,11 +25,8 @@ export class AreaInputMode extends UserInputMode {
     }
 
     initArea(): Id {
-        const footnoteId = this.storeCtx.store.entity.add<Footnote>({
-            entityTypeId: ENTITY.FOOTNOTE,
-            text: "",
-            figureIds: [],
-        });
+        const overlay = this.storeCtx.store.entity
+            .getByParams<Layer>({name: LAYER.OVERLAY})[0];
 
         const areaId = this.storeCtx.store.entity.add<Area>({
             entityTypeId: ENTITY.AREA,
@@ -38,15 +35,24 @@ export class AreaInputMode extends UserInputMode {
             width: 0,
             height: 0,
             points: [],
-            footnoteId,
+            parentId: overlay.id,
+            footnoteId: null,
         });
 
-        const overlay = this.storeCtx.store.entity
-            .getByParams<Layer>({name: LAYER.OVERLAY})[0];
+        this.storeCtx.store.entity.set<Layer>({
+            id: overlay.id,
+            childIds: [...overlay.childIds, areaId],
+        });
 
-        overlay.childIds.push(areaId);
+        const footnoteId = this.storeCtx.store.entity.add<Footnote>({
+            entityTypeId: ENTITY.FOOTNOTE,
+            text: "",
+            figureIds: [],
+            parentId: areaId,
+        });
 
-        this.storeCtx.store.entity.set(overlay);
+        this.storeCtx.store.entity.set<Area>({id: areaId, footnoteId});
+
         this.storeCtx.update.entity.set(overlay.id);
 
         this.setEntityId(areaId);

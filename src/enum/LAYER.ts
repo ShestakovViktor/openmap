@@ -1,6 +1,6 @@
 export const LAYER = {
     ROOT: "root",
-    MAP: "map",
+    BACKGROUND: "background",
     OVERLAY: "overlay",
     STYLE: "style",
 };

@@ -20,11 +20,8 @@ export class MarkerInputMode extends UserInputMode {
     }
 
     initMarker({x, y}: {x: number; y: number}): Id {
-        const footnoteId = this.storeCtx.store.entity.add<Footnote>({
-            entityTypeId: ENTITY.FOOTNOTE,
-            text: "",
-            figureIds: [],
-        });
+        const overlay = this.storeCtx.store.entity
+            .getByParams<Layer>({name: LAYER.OVERLAY})[0];
 
         const markerId = this.storeCtx.store.entity.add<Marker>({
             entityTypeId: ENTITY.MARKER,
@@ -33,15 +30,24 @@ export class MarkerInputMode extends UserInputMode {
             width: 64,
             height: 64,
             propId: null,
-            footnoteId,
+            parentId: overlay.id,
+            footnoteId: null,
         });
 
-        const overlay = this.storeCtx.store.entity
-            .getByParams<Layer>({name: LAYER.OVERLAY})[0];
+        this.storeCtx.store.entity.set<Layer>({
+            id: overlay.id,
+            childIds: [...overlay.childIds, markerId],
+        });
 
-        overlay.childIds.push(markerId);
+        const footnoteId = this.storeCtx.store.entity.add<Footnote>({
+            entityTypeId: ENTITY.FOOTNOTE,
+            text: "",
+            figureIds: [],
+            parentId: markerId,
+        });
 
-        this.storeCtx.store.entity.set(overlay);
+        this.storeCtx.store.entity.set<Marker>({id: markerId, footnoteId});
+
         this.storeCtx.update.entity.set(overlay.id);
 
         return markerId;

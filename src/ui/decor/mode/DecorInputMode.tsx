@@ -20,6 +20,9 @@ export class DecorInputMode extends UserInputMode{
     }
 
     initEntity({x, y}: {x: number; y: number}): number {
+        const overlay = this.storeCtx.store.entity
+            .getByParams<Layer>({name: LAYER.OVERLAY})[0];
+
         const decorId = this.storeCtx.store.entity.add<Decor>({
             entityTypeId: ENTITY.DECOR,
             x,
@@ -28,14 +31,14 @@ export class DecorInputMode extends UserInputMode{
             height: 64,
             propId: null,
             motionId: null,
+            parentId: overlay.id,
         });
 
-        const overlay = this.storeCtx.store.entity
-            .getByParams<Layer>({name: LAYER.OVERLAY})[0];
+        this.storeCtx.store.entity.set<Layer>({
+            id: overlay.id,
+            childIds: [...overlay.childIds, decorId],
+        });
 
-        overlay.childIds.push(decorId);
-
-        this.storeCtx.store.entity.set(overlay);
         this.storeCtx.update.entity.set(overlay.id);
 
         return decorId;

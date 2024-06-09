@@ -36,8 +36,8 @@ export class Core {
             },
         });
 
-        const map = this.store.entity
-            .getByParams<Layer>({name: LAYER.MAP})[0];
+        const parent = this.store.entity
+            .getByParams<Layer>({name: LAYER.BACKGROUND})[0];
 
         const tileIds = tiles.map((tile, index) => {
             const imageId = this.store.asset.add<Image>({
@@ -56,12 +56,13 @@ export class Core {
                 y: tile.y,
                 width: tile.width,
                 height: tile.height,
+                parentId: parent.id,
                 imageId,
             });
 
             return tileId;
         });
 
-        this.store.entity.set<Layer>({id: map.id, childIds: tileIds});
+        this.store.entity.set<Layer>({id: parent.id, childIds: tileIds});
     }
 }

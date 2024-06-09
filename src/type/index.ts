@@ -15,3 +15,4 @@ export * from "./Image";
 export * from "./Prop";
 export * from "./Figure";
 export * from "./Layout";
+export * from "./Parent";
