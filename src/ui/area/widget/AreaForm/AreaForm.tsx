@@ -4,7 +4,7 @@ import en from "./string/en.json";
 
 import i18next from "i18next";
 import {JSX, Accessor, createResource, createEffect, on} from "solid-js";
-import {Area, Id} from "@type";
+import {Area, Footnote, Id, Parent} from "@type";
 import {
     EntityForm,
     PositionSection,
@@ -31,11 +31,44 @@ export function AreaForm(props: Props): JSX.Element {
         {defer: true}
     ));
 
+    function handleDelete(id: Id): void {
+        const area = storeCtx.store.entity
+            .getById<Area>(id);
+
+        if (!area) throw new Error();
+
+        if (area.footnoteId) {
+            const footnote = storeCtx.store.entity
+                .getById<Footnote>(area.footnoteId);
+
+            if (!footnote) throw new Error();
+
+            storeCtx.store.entity.del(footnote.id);
+        }
+
+        if (area.parentId) {
+            const parent = storeCtx.store.entity
+                .getById<Parent>(area.parentId);
+
+            if (!parent) throw new Error();
+
+            storeCtx.store.entity.set<Parent>({
+                id: parent.id,
+                childIds: parent.childIds.filter(id => id != area.id),
+            });
+
+            storeCtx.update.entity.set(area.parentId);
+        }
+
+        storeCtx.store.entity.del(area.id);
+    }
+
     return (
         <NamespaceProvider namespace={"AreaForm"}>
             <EntityForm
                 entityId={props.entityId}
                 class={styles.AreaForm}
+                onDelete={handleDelete}
             >
                 <Accordion>
                     <SystemSection entity={entity}/>

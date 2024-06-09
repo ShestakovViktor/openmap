@@ -6,6 +6,7 @@ import {Entity, Id} from "@type";
 import i18next from "i18next";
 import {DATA} from "@enum";
 import {useStoreContext} from "@ui/app/context";
+import {useEditorContext} from "@ui/editor/context";
 
 i18next.addResourceBundle("en", "entity", {EntityForm: en}, true, true);
 
@@ -13,11 +14,12 @@ type Props = {
     entityId: Accessor<Id | null>;
     children?: JSX.Element | JSX.Element[];
     class?: string;
-    onDelete?: () => void;
+    onDelete?: (id: Id) => void;
 };
 
 export function EntityForm(props: Props): JSX.Element {
     const storeCtx = useStoreContext();
+    const editorCtx = useEditorContext();
 
     function handleChange(event: Event): void {
         const input = event.target as HTMLInputElement;
@@ -45,30 +47,17 @@ export function EntityForm(props: Props): JSX.Element {
         storeCtx.update.entity.set(id);
     }
 
-    function handleDelete(event: SubmitEvent): void {
+    function handleSubmit(event: SubmitEvent): void {
         event.preventDefault();
-        const submit = event.submitter as HTMLInputElement;
-        if (submit.name != "delete") return;
-        if (props.onDelete) props.onDelete();
 
-        // const form = event.currentTarget as HTMLFormElement;
-        // const idInput = form.querySelector("input[name=\"id\"]") as HTMLInputElement;
-        // const id = Number(idInput.value);
+        if (event.submitter instanceof HTMLButtonElement) {
+            if (event.submitter.name == "delete" && props.onDelete) {
+                const entityId = props.entityId();
+                if (entityId) props.onDelete(entityId);
 
-        // editorCtx.store.entity.del(id);
-
-        // const overlay = editorCtx.store.entity
-        //     .getByParams<Layer>({name: LAYER.OVERLAY})[0];
-
-        // const index = overlay.childIds.indexOf(id);
-        // if (index > -1) {
-        //     overlay.childIds.splice(index, 1);
-        // }
-
-        // editorCtx.store.entity.set(overlay);
-
-        // form.reset();
-        // viewerCtx.reRender();
+                editorCtx.dockArea.clear();
+            }
+        }
     }
 
     return (
@@ -76,19 +65,9 @@ export function EntityForm(props: Props): JSX.Element {
             class={styles.EntityForm}
             classList={{[props.class ?? ""]: "class" in props}}
             onChange={handleChange}
-            onSubmit={handleDelete}
+            onSubmit={handleSubmit}
         >
             {props.children}
-            <Show when={props.onDelete}>
-                <input
-                    type="submit"
-                    name="delete"
-                    value={i18next.t(
-                        "entity:EntityForm.delete",
-                        {postProcess: ["capitalize"]}
-                    )}
-                />
-            </Show>
         </form>
     );
 }

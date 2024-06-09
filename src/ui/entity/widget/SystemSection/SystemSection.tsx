@@ -1,8 +1,9 @@
 import styles from "./SystemSection.module.scss";
 import en from "./string/en.json";
 import i18next from "i18next";
+import TrasIconSvg from "@res/svg/trash.svg";
 
-import {Section} from "@ui/widget";
+import {Button, Section, Toolbar} from "@ui/widget";
 import {JSX, Resource} from "solid-js";
 import {IdField, EntityTypeIdField} from "@ui/entity/widget";
 
@@ -23,6 +24,12 @@ export function SystemSection(props: Props): JSX.Element {
                 )
             }
         >
+            <Toolbar>
+                <Button
+                    icon={TrasIconSvg}
+                    name={"delete"}
+                />
+            </Toolbar>
             <IdField entity={props.entity}/>
             <EntityTypeIdField entity={props.entity}/>
         </Section>

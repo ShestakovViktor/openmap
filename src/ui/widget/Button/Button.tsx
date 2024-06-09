@@ -9,6 +9,7 @@ type Props = {
     label?: string;
     tooltip?: string;
     icon?: string;
+    name?: string;
 
     onClick?: (event?: MouseEvent) => void;
 };
@@ -23,6 +24,7 @@ export function Button(props: Props): JSX.Element {
             }}
             title={props.tooltip}
             onClick={props.onClick}
+            name={props.name}
         >
             <Show when={props.icon}>
                 <Icon class={styles.Icon} svg={props.icon!}/>

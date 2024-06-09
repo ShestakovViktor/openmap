@@ -4,7 +4,7 @@ import en from "./string/en.json";
 
 import i18next from "i18next";
 import {JSX, Accessor, createResource, createEffect, on} from "solid-js";
-import {Decor, Id} from "@type";
+import {Decor, Id, Parent} from "@type";
 import {
     PropSection,
     EntityForm,
@@ -32,9 +32,36 @@ export function DecorForm(props: Props): JSX.Element {
         {defer: true}
     ));
 
+    function handleDelete(id: Id): void {
+        const decor = storeCtx.store.entity
+            .getById<Decor>(id);
+
+        if (!decor) throw new Error();
+
+        if (decor.parentId) {
+            const parent = storeCtx.store.entity
+                .getById<Parent>(decor.parentId);
+
+            if (!parent) throw new Error();
+
+            storeCtx.store.entity.set<Parent>({
+                id: parent.id,
+                childIds: parent.childIds.filter(id => id != decor.id),
+            });
+
+            storeCtx.update.entity.set(decor.parentId);
+        }
+
+        storeCtx.store.entity.del(decor.id);
+    }
+
     return (
         <NamespaceProvider namespace={"DecorForm"}>
-            <EntityForm entityId={props.entityId} class={styles.DecorForm}>
+            <EntityForm
+                entityId={props.entityId}
+                class={styles.DecorForm}
+                onDelete={handleDelete}
+            >
                 <Accordion>
                     <SystemSection entity={entity}/>
                     <PositionSection entity={entity}/>
