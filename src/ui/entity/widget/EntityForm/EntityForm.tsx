@@ -1,12 +1,12 @@
-import styles from "./EntityForm.module.scss";
 import en from "./string/en.json";
 
-import {JSX, Accessor, Show} from "solid-js";
+import {JSX, Accessor} from "solid-js";
 import {Entity, Id} from "@type";
 import i18next from "i18next";
 import {DATA} from "@enum";
 import {useStoreContext} from "@ui/app/context";
 import {useEditorContext} from "@ui/editor/context";
+import {Form} from "@ui/widget";
 
 i18next.addResourceBundle("en", "entity", {EntityForm: en}, true, true);
 
@@ -61,13 +61,12 @@ export function EntityForm(props: Props): JSX.Element {
     }
 
     return (
-        <form
-            class={styles.EntityForm}
+        <Form
             classList={{[props.class ?? ""]: "class" in props}}
             onChange={handleChange}
             onSubmit={handleSubmit}
         >
             {props.children}
-        </form>
+        </Form>
     );
 }

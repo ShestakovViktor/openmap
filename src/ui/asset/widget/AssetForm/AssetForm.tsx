@@ -1,4 +1,3 @@
-import styles from "./AssetForm.module.scss";
 import en from "./string/en.json";
 
 import {JSX} from "solid-js";
@@ -7,6 +6,7 @@ import {Asset, Id} from "@type";
 import {readFile} from "@ui/app/utiliy";
 import {DATA} from "@enum";
 import {useStoreContext} from "@ui/app/context";
+import {Form} from "@ui/widget";
 
 i18next.addResourceBundle("en", "asset", {AssetForm: en}, true, true);
 
@@ -60,9 +60,7 @@ export function AssetForm(props: Props): JSX.Element {
     }
 
     return (
-        <form
-            id={props.id}
-            class={styles.Form}
+        <Form
             classList={{[props.class ?? ""]: "class" in props}}
             onChange={handleChange}
             onSubmit={handleSubmit}
@@ -75,6 +73,6 @@ export function AssetForm(props: Props): JSX.Element {
                     {postProcess: ["capitalize"]}
                 )}
             />
-        </form>
+        </Form>
     );
 }

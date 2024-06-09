@@ -4,19 +4,17 @@ import styles from "./Form.module.scss";
 type Props = {
     children?: JSX.Element | JSX.Element[];
     class?: string;
-    onSubmit?: (event: SubmitEvent) => void;
+    classList?: JSX.CustomAttributes<HTMLFormElement>;
     onChange?: (event: Event) => void;
+    onSubmit?: (event: SubmitEvent) => void;
 };
-
 export function Form(props: Props): JSX.Element {
     return (
         <form
             class={styles.Form}
-            classList={{
-                [props.class ?? ""]: Boolean(props.class),
-            }}
-            onSubmit={props.onSubmit}
+            classList={{[props.class ?? ""]: "class" in props}}
             onChange={props.onChange}
+            onSubmit={props.onSubmit}
         >
             {props.children}
         </form>
