@@ -1,6 +1,6 @@
 import styles from "./FigureSelect.module.scss";
 import en from "./string/en.json";
-import FigureIconSvg from "@res/svg/figure.svg";
+import FigureIconSvg from "@res/svg/image.svg";
 import NextIconSvg from "@res/svg/next.svg";
 import PrevIconSvg from "@res/svg/prev.svg";
 import PlusIconSvg from "@res/svg/plus.svg";

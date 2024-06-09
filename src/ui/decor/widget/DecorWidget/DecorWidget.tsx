@@ -1,10 +1,12 @@
 import styles from "./DecorWidget.module.scss";
-import {JSX, createEffect, createMemo, createSignal, on} from "solid-js";
+import ImageIconSvg from "@res/svg/image.svg";
+import {JSX, Show, createEffect, createMemo, createSignal, on} from "solid-js";
 import {useViewerContext} from "@ui/viewer/context";
 
-import {Decor, Asset, Motion} from "@type";
+import {Decor, Asset, Motion, Prop} from "@type";
 import {assetToSrc} from "@ui/app/utiliy";
 import {useStoreContext} from "@ui/app/context";
+import {Icon} from "@ui/widget";
 
 type Props = {
     entity: Decor;
@@ -15,9 +17,9 @@ export function DecorWidget(props: Props): JSX.Element {
     const viewerCtx = useViewerContext();
 
     const fetchEntity = (): Decor => {
-        const tile = storeCtx.store.entity.getById<Decor>(props.entity.id);
-        if (!tile) throw new Error(`Entity does not exists ${props.entity.id}`);
-        return tile;
+        const entity = storeCtx.store.entity.getById<Decor>(props.entity.id);
+        if (!entity) throw new Error();
+        return entity;
     };
 
     const equals = (prev: Decor, next: Decor): boolean => {
@@ -43,20 +45,12 @@ export function DecorWidget(props: Props): JSX.Element {
         return `translate3d(${x}px, ${y}px, 0px)`;
     });
 
-    const src = createMemo((): string => {
+    const asset = createMemo((): Prop | null => {
         const propId = entity().propId;
 
-        if (!propId) {
-            return "./icon/decor.svg";
-        }
-        else {
-            const asset = storeCtx.store.asset
-                .getById<Asset>(propId);
-
-            if (!asset) throw new Error();
-
-            return assetToSrc(asset);
-        }
+        return propId
+            ? storeCtx.store.asset.getById<Prop>(propId)
+            : null;
     });
 
     const motionStyle = createMemo((): string => {
@@ -83,14 +77,31 @@ export function DecorWidget(props: Props): JSX.Element {
         >
             <div
                 class={styles.Decor}
+
             >
-                <img
-                    classList={{
-                        [motionStyle()]: Boolean(motionStyle()),
-                    }}
-                    src={src()}
-                    draggable={false}
-                />
+                <Show
+                    when={asset()}
+                    fallback={(
+                        <Icon
+                            svg={ImageIconSvg}
+                            class={styles.Prop}
+                            classList={{
+                                [motionStyle()]: Boolean(motionStyle()),
+                            }}
+                        />
+                    )}
+                >
+                    {(asset) => (
+                        <img
+                            class={styles.Prop}
+                            classList={{
+                                [motionStyle()]: Boolean(motionStyle()),
+                            }}
+                            src={asset().path || assetToSrc(asset())}
+                            draggable={false}
+                        />
+                    )}
+                </Show>
             </div>
         </div>
     );

@@ -6,11 +6,10 @@ import i18next from "i18next";
 import {JSX, Accessor, createResource, createEffect, on} from "solid-js";
 import {Decor, Id, Parent} from "@type";
 import {
-    PropSection,
+    AppearanceSection,
     EntityForm,
     PositionSection,
     SystemSection,
-    MotionSection,
     SizeSection,
 } from "@ui/entity/widget";
 import {NamespaceProvider, useStoreContext} from "@ui/app/context";
@@ -66,8 +65,7 @@ export function DecorForm(props: Props): JSX.Element {
                     <SystemSection entity={entity}/>
                     <PositionSection entity={entity}/>
                     <SizeSection entity={entity}/>
-                    <PropSection entity={entity}/>
-                    <MotionSection entity={entity}/>
+                    <AppearanceSection entity={entity} motion/>
                 </Accordion>
             </EntityForm>
         </NamespaceProvider>

@@ -9,7 +9,7 @@ import {
     EntityForm,
     PositionSection,
     SystemSection,
-    PropSection,
+    AppearanceSection,
     SizeSection,
     FootnoteSection,
 } from "@ui/entity/widget";
@@ -78,7 +78,7 @@ export function MarkerForm(props: Props): JSX.Element {
                     <SystemSection entity={entity}/>
                     <PositionSection entity={entity}/>
                     <SizeSection entity={entity}/>
-                    <PropSection entity={entity}/>
+                    <AppearanceSection entity={entity}/>
                     <FootnoteSection entity={entity}/>
                 </Accordion>
             </EntityForm>

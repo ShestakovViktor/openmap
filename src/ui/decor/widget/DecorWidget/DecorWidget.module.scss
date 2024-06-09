@@ -20,7 +20,7 @@
 
     &:global(.Selected) > .Decor {
         box-sizing: content-box;
-        border: 3px dashed blue;
+        border: 3px dashed var(--theme);
     }
     
 
