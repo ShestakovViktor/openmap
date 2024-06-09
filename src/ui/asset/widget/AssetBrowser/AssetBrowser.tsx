@@ -103,6 +103,7 @@ export function AssetBrowser(props: Props): JSX.Element {
                                                 icon={SaltireIconSvg}
                                                 onClick={() => {
                                                     if (props.onDelete) props.onDelete([asset.id]);
+                                                    storeCtx.update.asset.set();
                                                 }}
                                             />
                                         </Show>
