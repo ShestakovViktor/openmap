@@ -1,27 +1,26 @@
 import {Id, Layer, Footnote, Area} from "@type";
-import {UserInputMode} from "@ui/editor/mode";
+import {EntityFocusMode, UserInputMode} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
-import {ENTITY, LAYER} from "@enum";
-import {Accessor, Setter, createSignal} from "solid-js";
+import {ENTITY, LAYER, MOUSE} from "@enum";
 import {pushAreaPoint} from "@ui/area/utility/pushAreaPoint";
 import {StoreContextType, useStoreContext} from "@ui/app/context";
+import {EditorContexType, useEditorContext} from "@ui/editor/context";
 
 export class AreaInputMode extends UserInputMode {
-    private getEntityId: Accessor<Id | undefined>;
-
-    private setEntityId: Setter<Id | undefined>;
-
     private storeCtx: StoreContextType;
 
     private viewerCtx: ViewerContextType;
+
+    private editorCtx: EditorContexType;
+
+    private areaId?: Id;
 
     constructor() {
         super();
         this.storeCtx = useStoreContext();
         this.viewerCtx = useViewerContext();
+        this.editorCtx = useEditorContext();
 
-        const signal = createSignal<number>();
-        [this.getEntityId, this.setEntityId] = signal;
     }
 
     initArea(): Id {
@@ -55,12 +54,11 @@ export class AreaInputMode extends UserInputMode {
 
         this.storeCtx.update.entity.set(overlay.id);
 
-        this.setEntityId(areaId);
-
         return areaId;
     }
 
     onPointerDown(event: MouseEvent): void {
+        event.stopPropagation();
         const click = {
             x: (event.x - this.viewerCtx.layout.x)
                 / this.viewerCtx.layout.scale,
@@ -68,24 +66,32 @@ export class AreaInputMode extends UserInputMode {
                 / this.viewerCtx.layout.scale,
         };
 
-        let entityId = this.getEntityId();
+        if (event.buttons == MOUSE.LEFT) {
+            if (!this.areaId) this.areaId = this.initArea();
 
-        if (!entityId) entityId = this.initArea();
+            this.editorCtx.modes.area.form.set(this.areaId);
 
-        // this.editorCtx.formMode?.set(ENTITY.AREA.id, areaId);
+            const area = this.storeCtx.store.entity
+                .getById<Area>(this.areaId);
 
-        const area = this.storeCtx.store.entity
-            .getById<Area>(entityId);
+            if (!area) throw new Error();
 
-        if (!area) throw new Error();
+            pushAreaPoint(area, click);
 
-        pushAreaPoint(area, click);
+            this.storeCtx.store.entity.set(area);
+            this.storeCtx.update.entity.set(this.areaId);
+        }
+        else if (event.buttons == MOUSE.RIGHT) {
+            if (this.areaId) {
+                const focusMode = new EntityFocusMode(this.areaId);
+                this.editorCtx.entityFocus.set(focusMode);
+                this.areaId = undefined;
+            }
+            this.editorCtx.modes.area.form.set(null);
+        }
+    }
 
-        this.storeCtx.store.entity.set(area);
-
-        // this.editorCtx.focusMode[1]((prev) => {
-        //     prev.forEach(entity => entity.clear());
-        //     return [new FocusMode(entityId)];
-        // });
+    onPointerMove(event: PointerEvent): void {
+        event.stopPropagation();
     }
 }

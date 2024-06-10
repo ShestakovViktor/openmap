@@ -76,6 +76,10 @@ export function Editor(props: Props): JSX.Element {
             editorCtx.userInput.active.onPointerUp(event);
         }, {capture: true});
 
+        viewer.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
+        }, {capture: true});
+
         const initialDialogModal = new Modal({background: true});
         initialDialogModal.render(
             <InitialDialog onComplete={() => initialDialogModal.hide()}/>
@@ -84,7 +88,10 @@ export function Editor(props: Props): JSX.Element {
     });
 
     return (
-        <div id={IDS.EDITOR} class={styles.Editor}>
+        <div
+            id={IDS.EDITOR}
+            class={styles.Editor}
+        >
             <WorkSpace>
                 {props.children}
                 <ToolKit/>

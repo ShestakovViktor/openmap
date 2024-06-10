@@ -112,9 +112,9 @@ export function AreaWidget(props: Props): JSX.Element {
                 {helpers()}
             </svg>
 
-            {/* <Show when={entity().footnoteId}>
+            <Show when={show() && entity().footnoteId}>
                 {id => <EntityWidget entityId={id()}/>}
-            </Show> */}
+            </Show>
         </div>
     );
 }

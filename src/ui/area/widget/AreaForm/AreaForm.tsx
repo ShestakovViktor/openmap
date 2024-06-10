@@ -7,6 +7,7 @@ import {JSX, Accessor, createResource, createEffect, on} from "solid-js";
 import {Area, Footnote, Id, Parent} from "@type";
 import {
     EntityForm,
+    FootnoteSection,
     PositionSection,
     SystemSection,
 } from "@ui/entity/widget";
@@ -73,6 +74,7 @@ export function AreaForm(props: Props): JSX.Element {
                 <Accordion>
                     <SystemSection entity={entity}/>
                     <PositionSection entity={entity}/>
+                    <FootnoteSection entity={entity}/>
                 </Accordion>
             </EntityForm>
         </NamespaceProvider>
