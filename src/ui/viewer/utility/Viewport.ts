@@ -1,294 +1,445 @@
-import {MOUSE} from "@enum";
-import {useViewerContext} from "@ui/viewer/context";
-
-const LMB = 1;
-
-//LERP and animation loop with speed
-
-function throttleRAF(): (...args: any) => void {
-    let queuedCallback: ((...args: any) => void) | undefined;
-
-    return function (callback: (...args: any) => void): void {
-        if (!queuedCallback) {
-            requestAnimationFrame(() => {
-                const cb = queuedCallback as ((...args: any) => void);
-                queuedCallback = undefined;
-                cb();
-            });
-        }
-        queuedCallback = callback;
-    };
-}
-
-type Vector = {x: number; y: number};
-
-type PointerDownState = {
-    layout: Vector;
-    centroid: Vector;
-    perimeter: number;
-};
-
 export class Viewport {
-    private viewerCtx = useViewerContext();
+    x = 0;
 
-    private pointerDownState?: PointerDownState;
+    y = 0;
 
-    private pointerMoveEvents: {[key: string]: PointerEvent} | never = {};
+    width = 0;
 
-    private throttlePointerMove: (...args: any) => void;
+    height = 0;
 
-    private throttleMouseWheel: (...args: any) => void;
+    scale = 1;
 
-    constructor(private viewer: HTMLElement) {
-        this.throttlePointerMove = throttleRAF();
-        this.throttleMouseWheel = throttleRAF();
+    updateId?: number;
+
+    private maxScale = 1 * 2;
+
+    private minScale = 1 / 2;
+
+    private inertia = {x: 0, y: 0};
+
+    private frame: DOMRect;
+
+    private attorMag = 0.3;
+
+    private bndryMag = 0.8;
+
+    private frictMag = 0.95;
+
+    private posBndryMag = 0.08;
+
+    private negBndryMag = 0.01;
+
+    private dragZoom = false;
+
+    private moveTransition?: {
+        from: {x: number; y: number};
+        to: {x: number; y: number};
+    };
+
+    private scaleTransition?: {
+        from: number;
+        to: number;
+        timeStamp: number;
+        timeDelta: number;
+        shift: {x: number; y: number};
+    };
+
+    private mouseDown?: {
+        pointer: {x: number; y: number};
+    };
+
+    private mouseMove?: {
+        pointer: {x: number; y: number};
+    };
+
+    private touchStart?: {
+        centroid: {x: number; y: number};
+        perimeter: number;
+        timeStamp: number;
+    };
+
+    private touchMove?: {
+        centroid: {x: number; y: number};
+        perimeter: number;
+    };
+
+    constructor(
+        private viewerEl: HTMLElement,
+        private canvasEl: HTMLElement
+    ) {
+        this.frame = viewerEl.getBoundingClientRect();
+
+        viewerEl.addEventListener("mousedown", (event) => this.handleMouseDown(event));
+        viewerEl.addEventListener("mousemove", (event) => this.handleMouseMove(event));
+        viewerEl.addEventListener("mouseup", () => this.handleMouseUp());
+        viewerEl.addEventListener("mouseleave", () => this.handleMouseUp());
+        viewerEl.addEventListener("wheel", (event) => this.handleMouseWheel(event));
+
+        viewerEl.addEventListener("touchstart", (event) => this.handleTouchStart(event));
+        viewerEl.addEventListener("touchmove", (event) => this.handleTouchMove(event));
+        viewerEl.addEventListener("touchend", (event) => this.handleTouchEnd(event));
     }
 
-    onPointerDown(event: PointerEvent): void {
-        this.pointerMoveEvents[event.pointerId] = event;
+    handleMouseDown(event: MouseEvent): void {
+        this.frame = this.viewerEl.getBoundingClientRect();
 
-        const pointerMoveEvents = Object.values(this.pointerMoveEvents);
-        this.pointerDownState = {
-            layout: {
-                x: this.viewerCtx.layout.x,
-                y: this.viewerCtx.layout.y,
-            },
-            centroid: this.getCentroid(pointerMoveEvents),
-            perimeter: this.getPerimeter(pointerMoveEvents),
+        this.moveTransition = {
+            from: {x: this.x, y: this.y},
+            to: {x: this.x, y: this.y},
         };
+
+        this.mouseDown = {pointer: {x: event.clientX, y: event.clientY}};
+        this.mouseMove = {pointer: {x: event.clientX, y: event.clientY}};
     }
 
-    onPointerMove(event: PointerEvent): void {
-        if (event.pointerType == "mouse" && event.buttons != MOUSE.LEFT) return;
+    handleMouseMove(event: MouseEvent): void {
+        if (event.buttons != 1) return;
+        if (!this.mouseDown || !this.mouseMove) return;
 
-        this.pointerMoveEvents[event.pointerId] = event;
+        if (this.moveTransition) {
+            this.mouseMove.pointer = {x: event.clientX, y: event.clientY};
 
-        this.throttlePointerMove(() => {
-            if (!this.pointerDownState) return;
-            this.handlePinchGesture(this.pointerDownState);
-            this.handleGrabGesture(this.pointerDownState);
-        });
-    }
-
-    onPointerUp(event: PointerEvent): void {
-        delete this.pointerMoveEvents[event.pointerId];
-
-        if (Object.values(this.pointerMoveEvents).length == 0) {
-            this.pointerDownState = undefined;
-        }
-        else if (this.pointerDownState) {
-            const pointerEvents = Object.values(this.pointerMoveEvents);
-            this.pointerDownState = {
-                layout: {
-                    x: this.viewerCtx.layout.x,
-                    y: this.viewerCtx.layout.y,
-                },
-                centroid: this.getCentroid(pointerEvents),
-                perimeter: this.getPerimeter(pointerEvents),
-            };
+            this.moveTransition.to.x = this.moveTransition.from.x
+                + this.mouseMove.pointer.x - this.mouseDown.pointer.x;
+            this.moveTransition.to.y = this.moveTransition.from.y
+                + this.mouseMove.pointer.y - this.mouseDown.pointer.y;
         }
 
-        this.correct();
+        this.launch();
     }
 
-    onPointerLeave(event: PointerEvent): void {
-        delete this.pointerMoveEvents[event.pointerId];
-
-        if (Object.values(this.pointerMoveEvents).length == 0) {
-            this.pointerDownState = undefined;
-        }
-        else if (this.pointerDownState) {
-            const pointerEvents = Object.values(this.pointerMoveEvents);
-            this.pointerDownState = {
-                layout: {
-                    x: this.viewerCtx.layout.x,
-                    y: this.viewerCtx.layout.y,
-                },
-                centroid: this.getCentroid(pointerEvents),
-                perimeter: this.getPerimeter(pointerEvents),
-            };
-        }
-
-        this.correct();
+    handleMouseUp(): void {
+        this.moveTransition = undefined;
+        this.mouseDown = undefined;
+        this.mouseMove = undefined;
     }
 
-    onPointerCancel(): void {
-        console.log("cancel");
+    isValidScale(scale: number): boolean {
+        return this.minScale < scale  && scale < this.maxScale;
     }
 
-    onWheel(event: WheelEvent): void {
+    handleMouseWheel(event: WheelEvent): void {
         event.preventDefault();
 
-        this.throttleMouseWheel(() => {
-            const direction = -Math.sign(event.deltaY);
-            const intensity = 0.1;
-            const delta = direction * intensity;
+        this.frame = this.viewerEl.getBoundingClientRect();
+        const zoomDir = -Math.sign(event.deltaY);
+        const zoomMag = 0.5;
+        const delta = Math.exp(zoomDir * zoomMag);
+        const newScale = this.scale * delta;
 
-            this.zoom(delta, event.x, event.y);
-        });
+        if (this.isValidScale(newScale)) {
+            this.scaleTransition = {
+                from: this.scale,
+                to: newScale,
+                timeStamp: event.timeStamp,
+                timeDelta: 0,
+                shift: {
+                    x: (event.clientX - this.frame.x - this.x) * (delta - 1),
+                    y: (event.clientY - this.frame.y - this.y) * (delta - 1),
+                },
+            };
+        }
+        this.launch();
     }
 
-    handleGrabGesture(pointerDownState: PointerDownState): void {
-        const centroid = this.getCentroid(
-            Object.values(this.pointerMoveEvents)
-        );
+    isDoubleTap(event: TouchEvent): boolean {
+        return this.touchStart != undefined
+            && event.touches.length == 1
+            && event.timeStamp - this.touchStart.timeStamp < 300;
+    }
 
-        const shift = {
-            x: centroid.x - pointerDownState.centroid.x,
-            y: centroid.y - pointerDownState.centroid.y,
+    handleTouchStart(event: TouchEvent): void {
+        event.preventDefault();
+
+        this.frame = this.viewerEl.getBoundingClientRect();
+
+        this.dragZoom =  this.isDoubleTap(event);
+
+        this.moveTransition = {
+            from: {x: this.x, y: this.y},
+            to: {x: this.x, y: this.y},
         };
 
-        const viewer = this.viewer.getBoundingClientRect();
-        const {layout: map} = this.viewerCtx;
+        this.touchStart = {
+            centroid: this.getCentroid(event),
+            perimeter: this.getPerimeter(event),
+            timeStamp: event.timeStamp,
+        };
 
-        const widthGap = -Math.abs(viewer.width - map.width * map.scale);
-        const heightGap = -Math.abs(viewer.height - map.height * map.scale);
+        this.touchMove = {
+            centroid: this.getCentroid(event),
+            perimeter: this.getPerimeter(event),
+        };
 
-        const newMapX = this.foo(pointerDownState.layout.x, shift.x, widthGap);
-        const newMapY = this.foo(pointerDownState.layout.y, shift.y, heightGap);
-
-        this.move(Math.round(newMapX), Math.round(newMapY));
+        this.launch();
     }
 
-    handlePinchGesture(pointerDownState: PointerDownState): void {
-        if (!this.pointerDownState) return;
+    handleTouchMove(event: TouchEvent): void {
+        event.preventDefault();
+        if (!this.moveTransition || !this.touchStart || !this.touchMove) return;
 
-        const perimeter = this.getPerimeter(
-            Object.values(this.pointerMoveEvents)
-        );
+        if (this.dragZoom) {
+            const centroid = this.getCentroid(event);
+            const delta = (centroid.y - this.touchMove.centroid.y) * 0.1;
+            const scaleDela = Math.exp(delta);
+            const newScale = this.scale * scaleDela;
 
-        const delta = (this.pointerDownState.perimeter - perimeter) / -1000;
-        const centroid = this.getCentroid(
-            Object.values(this.pointerMoveEvents)
-        );
+            if (this.isValidScale(newScale)) {
+                this.scaleTransition = {
+                    from: this.scale,
+                    to: newScale,
+                    timeStamp: event.timeStamp,
+                    timeDelta: 0,
+                    shift: {
+                        x: (this.touchStart.centroid.x - this.frame.x - this.x)
+                        * (scaleDela - 1),
+                        y: (this.touchStart.centroid.y - this.frame.y - this.y)
+                        * (scaleDela - 1),
+                    },
+                };
+            }
 
-        if (delta) this.zoom(delta, centroid.x, centroid.y);
+            this.touchMove.centroid = centroid;
+        }
+        else {
+            this.frame = this.viewerEl.getBoundingClientRect();
+            const centroid = this.getCentroid(event);
+            const perimeter = this.getPerimeter(event);
 
-        this.pointerDownState.perimeter = perimeter;
+            this.moveTransition.to.x = this.moveTransition.from.x
+                + (centroid.x - this.touchStart.centroid.x);
+            this.moveTransition.to.y = this.moveTransition.from.y
+                + (centroid.y - this.touchStart.centroid.y);
+
+            const delta = (perimeter - this.touchMove.perimeter) * 0.05;
+            const scaleDelta = Math.exp(delta);
+            const newScale = this.scale * scaleDelta;
+
+            if (Math.abs(delta) > 0 && this.isValidScale(newScale)) {
+                this.scaleTransition = {
+                    from: this.scale,
+                    to: newScale,
+                    timeStamp: event.timeStamp,
+                    timeDelta: 0,
+                    shift: {
+                        x: (this.touchStart.centroid.x - this.frame.x - this.x)
+                        * (scaleDelta - 1),
+                        y: (this.touchStart.centroid.y - this.frame.y - this.y)
+                        * (scaleDelta - 1),
+                    },
+                };
+            }
+
+            this.touchMove.perimeter = perimeter;
+            this.touchMove.centroid = centroid;
+
+            this.launch();
+        }
     }
 
-    getCentroid(events: PointerEvent[]): {x: number; y: number} {
+    handleTouchEnd(event: TouchEvent): void {
+        if (event.touches.length == 0) {
+            delete this.moveTransition;
+            delete this.scaleTransition;
+            this.dragZoom = false;
+        }
+        else {
+            this.frame = this.viewerEl.getBoundingClientRect();
+
+            this.moveTransition = {
+                from: {x: this.x, y: this.y},
+                to: {x: this.x, y: this.y},
+            };
+
+            this.touchStart = {
+                centroid: this.getCentroid(event),
+                perimeter: this.getPerimeter(event),
+                timeStamp: event.timeStamp,
+            };
+        }
+    }
+
+    getCentroid(event: TouchEvent): {x: number; y: number} {
         const centroid = {x: 0, y: 0};
 
-        for (const event of events) {
-            centroid.x += event.x;
-            centroid.y += event.y;
+        for (const touch of event.touches) {
+            centroid.x += touch.clientX;
+            centroid.y += touch.clientY;
         }
 
-        centroid.x = centroid.x / events.length;
-        centroid.y = centroid.y / events.length;
+        centroid.x = centroid.x / event.touches.length;
+        centroid.y = centroid.y / event.touches.length;
 
         return centroid;
     }
 
-    getPerimeter(points: Vector[]): number {
-        let res = 0;
-        let prev = points[points.length - 1];
-        for (const point of points) {
-            res += Math.sqrt(
-                Math.pow(point.x - prev.x, 2) + Math.pow(point.y - prev.y, 2)
+    getPerimeter(event: TouchEvent): number {
+        let result = 0;
+        let prev = event.touches[event.touches.length - 1];
+        for (const point of event.touches) {
+            result += Math.hypot(
+                point.clientX - prev.clientX,
+                point.clientY - prev.clientY
             );
             prev = point;
         }
-        return res;
+
+        return result;
     }
 
-    zoom(delta: number, clientX: number, clientY: number): void {
-        const viewCtx = this.viewer.getBoundingClientRect();
-        const {layout: mapCtx, setLayout: setMapCtx} = this.viewerCtx;
-        let deltaScale = Math.exp(delta);
-
-        let newScale = mapCtx.scale * deltaScale;
-
-        if (mapCtx.height * newScale < viewCtx.height) {
-            newScale = viewCtx.height / mapCtx.height;
-            deltaScale = newScale / mapCtx.scale;
-        }
-        else if (mapCtx.width * newScale < viewCtx.width) {
-            newScale = viewCtx.width / mapCtx.width;
-            deltaScale = newScale / mapCtx.scale;
-        }
-
-        newScale = Math.floor(512 * newScale) / 512;
-
-        const mouseX = clientX - viewCtx.x - mapCtx.x;
-        const mouseY = clientY - viewCtx.y - mapCtx.y;
-
-        if (this.pointerDownState) {
-            this.pointerDownState.layout = {
-                x: this.pointerDownState.layout.x - mouseX * (deltaScale - 1),
-                y: this.pointerDownState.layout.y - mouseY * (deltaScale - 1),
-            };
-        }
-
-        setMapCtx({
-            x: Math.round(mapCtx.x - mouseX * (deltaScale - 1)),
-            y: Math.round(mapCtx.y - mouseY * (deltaScale - 1)),
-            scale: newScale,
-        });
-
-        this.correct();
+    launch(): void {
+        if (!this.updateId) requestAnimationFrame((time) => this.update(time));
     }
 
-    move(shiftX: number, shiftY: number): void {
-        this.viewerCtx.setLayout({x: shiftX, y: shiftY});
-    }
-
-    foo(coord: number, shift: number, gap: number): number {
-        const left = gap;
-        const right = 0;
-
-        let newCoord = coord;
-        const realCoord = coord;
-        const leftGap = realCoord - left;
-        const shiftedLeftGap = leftGap + shift;
-        const rightGap = realCoord - right;
-        const shiftedRightGap = rightGap + shift;
-        const factor = 5;
-
-        if (leftGap < 0) {
-            const shiftedMathCoord = -Math.pow(leftGap, 2) + shift;
-
-            newCoord = left + (shiftedMathCoord < 0
-                ? Math.sign(shiftedMathCoord)
-                    * Math.sqrt(Math.abs(shiftedMathCoord)) * factor
-                : shiftedMathCoord);
+    getBoundryForce(
+        offset: number,
+        canvas: number,
+        frame: number
+    ): number {
+        if (canvas > frame ? offset > 0 : offset < 0) {
+            return -offset;
         }
-        else if (rightGap > 0) {
-            const shiftedMathCoord = Math.pow(rightGap, 2) + shift;
-
-            newCoord = right + (shiftedMathCoord > 0
-                ? Math.sign(shiftedMathCoord)
-                    * Math.sqrt(Math.abs(shiftedMathCoord)) * factor
-                : shiftedMathCoord);
-        }
-        else if (shiftedRightGap > 0) {
-            newCoord = right + Math.sign(shiftedRightGap)
-                * Math.sqrt(Math.abs(shiftedRightGap)) * factor;
-        }
-        else if (shiftedLeftGap < 0) {
-            newCoord = left + Math.sign(shiftedLeftGap)
-                * Math.sqrt(Math.abs(shiftedLeftGap)) * factor;
+        else if (
+            canvas > frame
+                ? offset + canvas < frame
+                : offset + canvas > frame
+        ) {
+            return frame - (offset + canvas);
         }
         else {
-            newCoord = realCoord + shift;
+            return 0;
         }
-
-        return newCoord;
     }
 
-    correct(): void {
-        const viewer = this.viewer.getBoundingClientRect();
-        const {layout: map, setLayout: setMapCtx} = this.viewerCtx;
+    needUpdatePosition(): boolean {
+        return Boolean(this.moveTransition)
+            || Math.abs(this.inertia.x) > .1
+            || Math.abs(this.inertia.y) > .1;
+    }
 
-        if (map.x > 0) this.viewerCtx.setLayout({x: 0});
-        else if (map.x + map.width * map.scale < viewer.width) {
-            setMapCtx({x: Math.round(viewer.width - map.width * map.scale)});
+    updatePosition(): void {
+        const bndryDirX = this.getBoundryForce(
+            this.x,
+            this.width * this.scale,
+            this.frame.width
+        );
+        const bndryDirY = this.getBoundryForce(
+            this.y,
+            this.height * this.scale,
+            this.frame.height
+        );
+
+        if (this.moveTransition) {
+            const attorDirX = this.moveTransition.to.x - this.x;
+            const attorDirY = this.moveTransition.to.y - this.y;
+
+            this.inertia.x = attorDirX * 0.3
+                + bndryDirX * this.bndryMag;
+            this.inertia.y = attorDirY * 0.3
+                + bndryDirY * this.bndryMag;
+        }
+        else {
+            if (Math.sign(this.inertia.x) == Math.sign(bndryDirX)) {
+                this.inertia.x = bndryDirX * this.posBndryMag;
+            }
+            else {
+                this.inertia.x = (
+                    this.inertia.x + bndryDirX * this.negBndryMag
+                ) * this.frictMag;
+            }
+
+            if (Math.sign(this.inertia.y) == Math.sign(bndryDirY)) {
+                this.inertia.y = bndryDirY * this.posBndryMag;
+            }
+            else {
+                this.inertia.y = (
+                    this.inertia.y + bndryDirY * this.negBndryMag
+                ) * this.frictMag;
+            }
         }
 
-        if (map.y > 0) setMapCtx({y: 0});
-        else if (map.y + map.height * map.scale < viewer.height) {
-            setMapCtx({y: Math.round(viewer.height - map.height * map.scale)});
+        this.x += this.inertia.x;
+        this.y += this.inertia.y;
+    }
+
+    set(width: number, height: number): void {
+        this.width = width;
+        this.height = height;
+    }
+
+    getScale(): number {
+        return this.scale;
+    }
+
+    getCanvas(): HTMLElement {
+        return this.canvasEl;
+    }
+
+    lerp(v0: number, v1: number, t: number): number {
+        return (1 - t) * v0 + t * v1;
+    }
+
+    needUpdateScale(): boolean {
+        return Boolean(this.scaleTransition);
+    }
+
+    updateScale(timeStamp: number): void {
+        if (!this.scaleTransition) return;
+
+        const timeDelta
+            = Math.min((timeStamp - this.scaleTransition.timeStamp) / 300, 1);
+
+        this.scale = this.lerp(
+            this.scaleTransition.from,
+            this.scaleTransition.to,
+            timeDelta
+        );
+
+        const {shift} = this.scaleTransition;
+
+        const corrX
+            = this.lerp(0, this.scaleTransition.shift.x, timeDelta)
+            - this.lerp(0, this.scaleTransition.shift.x, this.scaleTransition.timeDelta);
+
+        const corrY
+            = this.lerp(0, this.scaleTransition.shift.y, timeDelta)
+            - this.lerp(0, this.scaleTransition.shift.y, this.scaleTransition.timeDelta);
+
+        this.x -= corrX;
+        this.y -= corrY;
+
+        if (this.moveTransition) {
+            this.moveTransition.from.x -= corrX;
+            this.moveTransition.from.y -= corrY;
+
+            this.moveTransition.to.x -= corrX;
+            this.moveTransition.to.y -= corrY;
+        }
+
+        this.scaleTransition.timeDelta = timeDelta;
+
+        if (this.scaleTransition.timeDelta == 1) {
+            delete this.scaleTransition;
+        }
+    }
+
+    update(timeStamp: DOMHighResTimeStamp): void {
+        this.updatePosition();
+        this.updateScale(timeStamp);
+
+        this.canvasEl.style.transform = `
+            translate3d(
+                ${Math.floor(this.x)}px, 
+                ${Math.floor(this.y)}px, 
+            0) 
+            scale(${this.scale})
+        `;
+
+        if (this.needUpdatePosition() || this.needUpdateScale()) {
+            this.updateId = requestAnimationFrame((time) => this.update(time));
+        }
+        else {
+            this.updateId = undefined;
         }
     }
 }

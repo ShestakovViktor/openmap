@@ -1,10 +1,8 @@
-import {For, JSX, createEffect, createMemo, createSignal, on} from "solid-js";
+import {For, JSX, createEffect, createSignal, on} from "solid-js";
 import styles from "./LayerWidget.module.scss";
 import {Layer} from "@type";
-import {LAYER} from "@enum";
 import {EntityWidget} from "@ui/entity/widget";
 import {useStoreContext} from "@ui/app/context";
-import {useViewerContext} from "@ui/viewer/context";
 
 type Props = {
     entity: Layer;
@@ -12,7 +10,6 @@ type Props = {
 
 export function LayerWidget(props: Props): JSX.Element {
     const storeCtx = useStoreContext();
-    const viewerCtx = useViewerContext();
 
     const fetchEntity = (): Layer => {
         const entity = storeCtx.store.entity.getById<Layer>(props.entity.id);
@@ -32,32 +29,10 @@ export function LayerWidget(props: Props): JSX.Element {
         {defer: true}
     ));
 
-    const style = createMemo((): JSX.CSSProperties => {
-        const name = entity().name;
-
-        if (name == LAYER.ROOT) {
-            const x = viewerCtx.layout.x;
-            const y = viewerCtx.layout.y;
-            return {
-                transform: `translate3d(${x}px, ${y}px, 0px)`,
-            };
-        }
-        else if (name == LAYER.BACKGROUND) {
-            const scale = viewerCtx.layout.scale;
-            return {
-                transform: `scale(${scale})`,
-            };
-        }
-        else {
-            return {};
-        }
-    });
-
     return (
         <div
             class={styles.Layer}
             data-entity-id={entity().id}
-            style={style()}
         >
             <For each={entity().childIds}>
                 {id => <EntityWidget entityId={id}/>}

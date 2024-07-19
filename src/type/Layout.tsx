@@ -1,4 +1,4 @@
-export type Layout = {
+export type Canvas = {
     x: number;
     y: number;
     width: number;

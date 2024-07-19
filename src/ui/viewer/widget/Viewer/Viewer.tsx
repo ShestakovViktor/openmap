@@ -2,7 +2,6 @@ import styles from "./Viewer.module.scss";
 import {
     JSX,
     For,
-    Show,
     createEffect,
     createResource,
     on,
@@ -22,7 +21,9 @@ import {useStoreContext} from "@ui/app/context";
 export function Viewer(): JSX.Element {
     const storeCtx = useStoreContext();
     const viewerCtx = useViewerContext();
-    let viewerEl: HTMLDivElement;
+
+    let viewer: HTMLDivElement;
+    let canvas: HTMLDivElement;
 
     const [root, {refetch: refetchRoot}] = createResource(
         () => storeCtx.store.entity.getByParams<Entity>({name:"root"})[0]
@@ -33,23 +34,15 @@ export function Viewer(): JSX.Element {
         {initialValue: []}
     );
 
-    createEffect(on(
-        storeCtx.initializing,
-        refetchAsset,
-        {defer: true}
-    ));
+    createEffect(on(storeCtx.initializing, refetchRoot, {defer: true}));
 
-    createEffect(on(
-        storeCtx.update.asset.get,
-        refetchAsset,
-        {defer: true}
-    ));
+    createEffect(on(storeCtx.initializing, refetchAsset, {defer: true}));
 
-    createEffect(on(
-        storeCtx.initializing,
-        refetchRoot,
-        {defer: true}
-    ));
+    createEffect(on(storeCtx.update.asset.get, refetchAsset, {defer: true}));
+
+    onMount((): void => {
+        viewerCtx.viewport = new Viewport(viewer, canvas);
+    });
 
     createEffect(on(storeCtx.initializing, () => {
         const {value: width} = storeCtx.store.config
@@ -57,55 +50,26 @@ export function Viewer(): JSX.Element {
         const {value: height} = storeCtx.store.config
             .getByParams({name: "height"})[0];
 
-        viewerCtx.setLayout({
-            x: 0,
-            y: 0,
-            width: Number(width),
-            height: Number(height),
-            scale: 1,
-        });
-    }, {defer: true}));
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
 
-    onMount((): void => {
-        const viewport = new Viewport(viewerEl);
-        viewerEl.addEventListener(
-            "pointerdown",
-            (e) => viewport.onPointerDown(e)
-        );
-        viewerEl.addEventListener(
-            "pointermove",
-            (e) => viewport.onPointerMove(e)
-        );
-        viewerEl.addEventListener(
-            "pointerup",
-            (e) => viewport.onPointerUp(e)
-        );
-        viewerEl.addEventListener(
-            "pointerleave",
-            (e) => viewport.onPointerLeave(e)
-        );
-        viewerEl.addEventListener(
-            "pointercancel",
-            (e) => viewport.onPointerCancel()
-        );
-        viewerEl.addEventListener(
-            "wheel",
-            (e) => viewport.onWheel(e)
-        );
-    });
+        viewerCtx.viewport.set(Number(width), Number(height));
+    }));
 
     return (
-        <div id={IDS.VIEWER} class={styles.Viewer} ref={viewerEl!}>
-            <For each={motions()}>
-                {(motion) =>
-                    <Portal mount={document.querySelector("head")!}>
-                        <link href={assetToSrc(motion)} rel="stylesheet"/>
-                    </Portal>
-                }
-            </For>
-            <Suspense>
-                <EntityWidget entityId={root()!.id}/>
-            </Suspense>
+        <div id={IDS.VIEWER} class={styles.Viewer} ref={viewer!} draggable="false">
+            <div id={IDS.CANVAS} class={styles.Canvas} ref={canvas!} >
+                <For each={motions()}>
+                    {(motion) =>
+                        <Portal mount={document.querySelector("head")!}>
+                            <link href={assetToSrc(motion)} rel="stylesheet"/>
+                        </Portal>
+                    }
+                </For>
+                <Suspense>
+                    <EntityWidget entityId={root()!.id}/>
+                </Suspense>
+            </div>
         </div>
     );
 }

@@ -1,20 +1,18 @@
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
-html {
+html, body {
     width: 100%;
     height: 100%;
-    touch-action: none;
+    touch-action: pan-down;
+    overscroll-behavior: none;
 }
 
 body {
-    width: 100%;
-    height: 100%;
     font-family: Inter;
     color: var(--grey-30);
+    margin: 0;
 }
 
 label {

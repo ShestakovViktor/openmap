@@ -41,20 +41,20 @@ export function AreaWidget(props: Props): JSX.Element {
         {defer: true}
     ));
 
-    const factor = createMemo((): number => 5 / viewerCtx.layout.scale);
+    const factor = createMemo((): number => 5 / viewerCtx.viewport.getScale());
 
     const transform = createMemo((): string => {
-        const x = entity().x * viewerCtx.layout.scale;
-        const y = entity().y * viewerCtx.layout.scale;
+        const x = entity().x * viewerCtx.viewport.getScale();
+        const y = entity().y * viewerCtx.viewport.getScale();
         return `translate3d(${x}px, ${y}px, 0px)`;
     });
 
     const width = createMemo((): string => {
-        return entity().width * viewerCtx.layout.scale + "px";
+        return entity().width * viewerCtx.viewport.getScale() + "px";
     });
 
     const height = createMemo((): string => {
-        return entity().height * viewerCtx.layout.scale + "px";
+        return entity().height * viewerCtx.viewport.getScale() + "px";
     });
 
     const viewBox = createMemo((): string => {

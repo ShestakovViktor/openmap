@@ -1,10 +1,8 @@
 import {createContext, useContext} from "solid-js";
-import {SetStoreFunction} from "solid-js/store";
-import {Layout} from "@type";
+import {Viewport} from "@ui/viewer/utility";
 
 export type ViewerContextType = {
-    layout: Layout;
-    setLayout: SetStoreFunction<Layout>;
+    viewport: Viewport;
 };
 
 export const ViewerContext = createContext<ViewerContextType | undefined>();

@@ -31,14 +31,14 @@ export class Collection<U extends {id: Id}> {
 
     getById<T extends U = U>(id: Id): T | null {
         const entity = this.data[id] as T | undefined;
-        return entity ? structuredClone(entity) : null;
+        return entity ? entity : null;
     }
 
     getAll<T extends U = U>(): T[] {
         const result: T[] = [];
         for (const itemId in this.data) {
             const item = this.data[itemId];
-            result.push(structuredClone(item) as T);
+            result.push(item as T);
         }
 
         return result;
@@ -52,7 +52,7 @@ export class Collection<U extends {id: Id}> {
             for (const prop in params) {
                 if (!(prop in item)) break;
                 if (params[prop] == (item as any)[prop]) {
-                    result.push(structuredClone(item) as T);
+                    result.push(item as T);
                 }
             }
         }

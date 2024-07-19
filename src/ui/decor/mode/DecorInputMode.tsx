@@ -45,11 +45,14 @@ export class DecorInputMode extends UserInputMode{
     }
 
     onPointerDown(event: MouseEvent): void {
+        const canvas = this.viewerCtx.viewport.getCanvas();
+        const rect = canvas.getBoundingClientRect();
+
         const click = {
-            x: (event.x - this.viewerCtx.layout.x)
-                / this.viewerCtx.layout.scale,
-            y: (event.y - this.viewerCtx.layout.y)
-                / this.viewerCtx.layout.scale,
+            x: (event.x - rect.x)
+                / this.viewerCtx.viewport.getScale(),
+            y: (event.y - rect.y)
+                / this.viewerCtx.viewport.getScale(),
         };
 
         const entityId = this.initEntity(click);

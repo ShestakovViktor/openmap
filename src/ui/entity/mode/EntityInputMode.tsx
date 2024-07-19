@@ -23,8 +23,10 @@ export class EntityInputMode extends UserInputMode {
     }
 
     onPointerMove(event: PointerEvent): void {
-        const x = event.x - this.viewerCtx.layout.x;
-        const y = event.y - this.viewerCtx.layout.y;
+        const canvas = this.viewerCtx.viewport.getCanvas();
+        const rect = canvas.getBoundingClientRect();
+        const x = event.x - rect.x;
+        const y = event.y - rect.y;
 
         if (this.selected) {
             const id = Number(this.selected.getAttribute("data-entity-id"));
@@ -32,8 +34,8 @@ export class EntityInputMode extends UserInputMode {
             if (!entity) return;
 
             this.selected.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-            entity.x = Math.floor(x / this.viewerCtx.layout.scale);
-            entity.y = Math.floor(y / this.viewerCtx.layout.scale);
+            entity.x = Math.floor(x / this.viewerCtx.viewport.getScale());
+            entity.y = Math.floor(y / this.viewerCtx.viewport.getScale());
 
             this.storeCtx.store.entity.set(entity);
             this.storeCtx.update.entity.set(id);

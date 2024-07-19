@@ -40,8 +40,8 @@ export function DecorWidget(props: Props): JSX.Element {
     ));
 
     const transform = createMemo((): string => {
-        const x = entity().x * viewerCtx.layout.scale;
-        const y = entity().y * viewerCtx.layout.scale;
+        const x = entity().x * viewerCtx.viewport.getScale();
+        const y = entity().y * viewerCtx.viewport.getScale();
         return `translate3d(${x}px, ${y}px, 0px)`;
     });
 
