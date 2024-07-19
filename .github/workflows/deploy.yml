@@ -23,8 +23,8 @@ jobs:
         node-version: "18"
         cache: "npm"
     - run: npm install
-    - run: npm run build-editor
-    - run: npm run build-viewer
+    - run: npm run editor-build
+    - run: npm run viewer-build
     - uses: actions/configure-pages@main
     - uses: actions/upload-pages-artifact@main
       with:

@@ -2,28 +2,21 @@
 <html>
 
 <head>
-    <title>OpenMap</title>
+    <title>Viewer</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />
+    <meta name="viewport"
+        content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800" rel="stylesheet" />
-
-    <script type="module">
-        import render from "./viewer.js";
-
-        await render("./project", document.querySelector("#container"));
-    </script>
-
     <style>
-        #container {
+        #viewer {
             width: 100%;
             height: 100%;
         }
     </style>
 </head>
 
-
 <body>
-    <div id="container"></div>
+    <div id="viewer" data-src="/test"></div>
 </body>
 
 </html>

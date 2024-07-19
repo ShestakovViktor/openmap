@@ -3,16 +3,20 @@ import "@res/style/colors.scss";
 import "@res/style/global.scss";
 
 import {render} from "solid-js/web";
-import {ViewerProvider} from "@ui/viewer/context";
 import {Viewer} from "@src/ui/viewer/widget";
+import {ViewerProvider} from "@ui/viewer/context";
 import {Store} from "@core";
 import {StoreProvider} from "@ui/app/context";
 
-export default async function show(
-    path: string,
-    container: HTMLElement
-): Promise<void> {
+(async(): Promise<void> => {
+    const container = document.querySelector("#viewer[data-src]");
+
+    if (!container) return;
+
+    const path = container.getAttribute("data-src");
+
     const response = await fetch(path + "/data.json");
+
     const data = await response.json();
 
     render(() => {
@@ -24,4 +28,4 @@ export default async function show(
             </StoreProvider>
         );
     }, container);
-}
+})();

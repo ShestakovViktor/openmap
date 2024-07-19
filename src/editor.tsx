@@ -11,7 +11,7 @@ import {Editor} from "./ui/editor/widget";
 import {EditorProvider} from "@ui/editor/context";
 import {CoreProvider, NamespaceProvider, StoreProvider} from "@ui/app/context";
 
-const container = document.querySelector("#openmap");
+const container = document.querySelector("#editor");
 if (!container) throw new Error("There is no container element");
 
 const store = new Store();

@@ -3,10 +3,11 @@
     "version": "0.0.1",
     "description": "",
     "scripts": {
-        "dev": "ts-node node_modules/.bin/webpack-dev-server --config webpack.dev.ts",
-        "build-editor": "ts-node node_modules/.bin/webpack --config webpack.build.editor.ts",
-        "build-viewer": "ts-node node_modules/.bin/webpack --config webpack.build.viewer.ts",
-        "build": "npm run build-editor && npm run build-viewer",
+        "editor-dev": "ts-node node_modules/.bin/webpack-dev-server --config webpack.editor.dev.ts",
+        "editor-build": "ts-node node_modules/.bin/webpack --config webpack.editor.build.ts",
+        "viewer-dev": "ts-node node_modules/.bin/webpack-dev-server --config webpack.viewer.dev.ts",
+        "viewer-build": "ts-node node_modules/.bin/webpack --config webpack.viewer.build.ts",
+        "build": "npm run editor-build && npm run viewer-build",
         "test": "ts-node node_modules/.bin/mocha --require tsconfig-paths/register ./src/**/*.spec.ts"
     },
     "author": "",

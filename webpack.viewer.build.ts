@@ -8,17 +8,16 @@ import common from "./webpack.config";
 export default merge<Configuration>(common, {
     mode: "production",
     entry: {
-        editor: "./src/editor.tsx",
+        viewer: "./src/viewer.tsx",
     },
     output: {
         filename: "[name].js",
         path: path.resolve(__dirname, "./build"),
-        publicPath: "./",
-        clean: true,
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./res/html/editor.html",
+            template: "./res/html/viewer.html",
+            filename: "viewer.html",
             minify: false,
         }),
     ],
