@@ -8,6 +8,7 @@ import {
     ModalLayer,
     DockArea,
     WorkSpace,
+    SidePanel,
     ToolKit,
     CommandKit,
 } from "@src/ui/editor/widget";
@@ -96,8 +97,10 @@ export function Editor(props: Props): JSX.Element {
                 {props.children}
                 <ToolKit/>
             </WorkSpace>
-            <CommandKit/>
-            <DockArea/>
+            <SidePanel>
+                <CommandKit/>
+                <DockArea/>
+            </SidePanel>
             <ModalLayer/>
         </div>
     );

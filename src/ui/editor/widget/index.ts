@@ -1,4 +1,5 @@
 export * from "./WorkSpace";
+export * from "./SidePanel";
 export * from "./ModalLayer";
 export * from "./DockArea";
 export * from "./ToolKit";

@@ -4,22 +4,12 @@
     height: 100%;
 
     background-color: hsla(0, 0%, 97%, 1);
-    display: grid;
-    grid-template-columns: auto 300px;
-    grid-template-rows: min-content auto;
-    grid-template-areas: 
-        "ViewPort CommandKit"
-        "ViewPort DockArea";
+
+    display: flex;
+    flex-direction: row;
+
 
     > :nth-child(1) {
-        grid-area: ViewPort;
-    }
-
-    > :nth-child(2) {
-        grid-area: CommandKit;
-    }
-
-    > :nth-child(3) {
-        grid-area: DockArea;
+        flex: 1 1 auto;
     }
 }
