@@ -4,9 +4,9 @@ import {JSX, Accessor} from "solid-js";
 import {Entity, Id} from "@type";
 import i18next from "i18next";
 import {DATA} from "@enum";
-import {useStoreContext} from "@ui/app/context";
-import {useEditorContext} from "@ui/editor/context";
 import {Form} from "@ui/widget";
+import {useEditorContext} from "@ui/editor/context";
+import {useSignalContext} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "entity", {EntityForm: en}, true, true);
 
@@ -18,8 +18,8 @@ type Props = {
 };
 
 export function EntityForm(props: Props): JSX.Element {
-    const storeCtx = useStoreContext();
-    const editorCtx = useEditorContext();
+    const {signal} = useSignalContext();
+    const {dockArea} = useEditorContext();
 
     function handleChange(event: Event): void {
         const input = event.target as HTMLInputElement;
@@ -43,8 +43,7 @@ export function EntityForm(props: Props): JSX.Element {
             data = {id, [input.name]: String(input.value)};
         }
 
-        storeCtx.store.entity.set<Entity>(data);
-        storeCtx.update.entity.set(id);
+        signal.entity.setUpdateById(id);
     }
 
     function handleSubmit(event: SubmitEvent): void {
@@ -55,7 +54,7 @@ export function EntityForm(props: Props): JSX.Element {
                 const entityId = props.entityId();
                 if (entityId) props.onDelete(entityId);
 
-                editorCtx.dockArea.clear();
+                dockArea.clear();
             }
         }
     }

@@ -1,6 +1,6 @@
 import {Id} from "@type";
 
-export class Collection<U extends {id: Id}> {
+export class Catalog<U extends {id: Id}> {
     constructor(private data: {[key: Id]: U}) {}
 
     private genId(): Id {
@@ -15,17 +15,14 @@ export class Collection<U extends {id: Id}> {
     //         + Math.random().toString(36).substring(2, 12).padStart(12, "0");
     // }
 
-    add<T extends U = U>(data: Omit<T, "id">): Id {
+    create<T extends U = U>(data: Omit<T, "id">): T {
         const id = this.genId();
-        this.data[id] = {...data, id} as T;
-        return id;
+        const item = {...data, id} as T;
+        this.data[id] = item;
+        return item;
     }
 
-    set<T extends U = U>(data: Partial<T> & {id: Id}): void {
-        Object.assign(this.data[data.id], data);
-    }
-
-    del(id: Id): void {
+    delete(id: Id): void {
         delete this.data[id];
     }
 

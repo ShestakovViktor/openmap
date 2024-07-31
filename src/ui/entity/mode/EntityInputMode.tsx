@@ -1,6 +1,6 @@
 import {ENTITY, MOUSE} from "@enum";
 import {Entity, Marker} from "@type";
-import {StoreContextType, useStoreContext} from "@ui/app/context";
+import {SignalContextType, StoreContextType, useSignalContext, useStoreContext} from "@ui/app/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {EntityFocusMode, UserInputMode} from "@ui/editor/mode";
 import {getEntity} from "@ui/editor/utility";
@@ -8,6 +8,8 @@ import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 
 export class EntityInputMode extends UserInputMode {
     private storeCtx: StoreContextType;
+
+    private signalCtx: SignalContextType;
 
     private editorCtx: EditorContexType;
 
@@ -18,12 +20,16 @@ export class EntityInputMode extends UserInputMode {
     constructor() {
         super();
         this.storeCtx = useStoreContext();
+        this.signalCtx = useSignalContext();
         this.editorCtx = useEditorContext();
         this.viewerCtx = useViewerContext();
     }
 
-    onPointerMove(event: PointerEvent): void {
-        const canvas = this.viewerCtx.viewport.getCanvas();
+    onMouseMove(event: PointerEvent): void {
+        const {viewport} = this.viewerCtx;
+        const {signal} = this.signalCtx;
+
+        const canvas = viewport.getCanvas();
         const rect = canvas.getBoundingClientRect();
         const x = event.x - rect.x;
         const y = event.y - rect.y;
@@ -37,16 +43,15 @@ export class EntityInputMode extends UserInputMode {
             entity.x = Math.floor(x / this.viewerCtx.viewport.getScale());
             entity.y = Math.floor(y / this.viewerCtx.viewport.getScale());
 
-            this.storeCtx.store.entity.set(entity);
-            this.storeCtx.update.entity.set(id);
+            signal.entity.setUpdateById(id);
         }
     }
 
-    onPointerUp(event: PointerEvent): void {
+    onMouseUp(event: PointerEvent): void {
         this.selected = null;
     }
 
-    onPointerDown(event: MouseEvent): void {
+    onMouseDown(event: MouseEvent): void {
         if (event.buttons != MOUSE.LEFT) return;
         const element = getEntity(event.target as HTMLElement);
 

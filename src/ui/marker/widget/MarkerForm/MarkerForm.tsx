@@ -2,7 +2,7 @@ import styles from "./MarkerForm.module.scss";
 import en from "./string/en.json";
 import i18next from "i18next";
 
-import {Entity, Footnote, Id, Marker, Parent} from "@type";
+import {Footnote, Id, Marker, Parent} from "@type";
 import {Accessor, JSX, createEffect, createResource, on} from "solid-js";
 import {Accordion} from "@ui/widget";
 import {
@@ -14,7 +14,11 @@ import {
     FootnoteSection,
 } from "@ui/entity/widget";
 
-import {NamespaceProvider, useStoreContext} from "@ui/app/context";
+import {
+    NamespaceProvider,
+    useSignalContext,
+    useStoreContext,
+} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "marker", {MarkerForm: en}, true, true);
 
@@ -23,48 +27,44 @@ type Props = {
 };
 
 export function MarkerForm(props: Props): JSX.Element {
-    const storeCtx = useStoreContext();
+    const {store} = useStoreContext();
+    const {signal} = useSignalContext();
 
     const [entity, {refetch}] = createResource(props.entityId, (entityId) =>
-        storeCtx.store.entity.getById<Marker>(entityId) ?? undefined
+        store.entity.getById<Marker>(entityId) ?? undefined
     );
 
     createEffect(on(
-        storeCtx.update.entity.get,
-        async (id) => id == props.entityId() && await refetch(),
+        signal.entity.getUpdateById,
+        async (id) => id == props.entityId() && refetch(),
         {defer: true}
     ));
 
     function handleDelete(id: Id): void {
-        const marker = storeCtx.store.entity
+        const marker = store.entity
             .getById<Marker>(id);
 
         if (!marker) throw new Error();
 
         if (marker.footnoteId) {
-            const footnote = storeCtx.store.entity
-                .getById<Footnote>(marker.footnoteId);
+            const footnote = store.entity.getById<Footnote>(marker.footnoteId);
 
             if (!footnote) throw new Error();
 
-            storeCtx.store.entity.del(footnote.id);
+            store.entity.delete(footnote.id);
         }
 
         if (marker.parentId) {
-            const parent = storeCtx.store.entity
-                .getById<Parent>(marker.parentId);
+            const parent = store.entity.getById<Parent>(marker.parentId);
 
             if (!parent) throw new Error();
 
-            storeCtx.store.entity.set<Parent>({
-                id: parent.id,
-                childIds: parent.childIds.filter(id => id != marker.id),
-            });
+            parent.childIds = parent.childIds.filter(id => id != marker.id);
 
-            storeCtx.update.entity.set(marker.parentId);
+            signal.entity.setUpdateById(marker.parentId);
         }
 
-        storeCtx.store.entity.del(marker.id);
+        store.entity.delete(marker.id);
     }
 
     return (

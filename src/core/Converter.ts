@@ -2,27 +2,22 @@ import template from "@res/html/viewer.html";
 import {Media} from "@core";
 import {ArchiveDriver} from "@src/interface";
 import {Asset, Data, Id} from "@type";
-import {Store} from "@core";
 
 type Blobs = {[key: string]: Blob};
 
 export class Converter {
     private media: Media;
 
-    constructor(
-        private store: Store,
-        private archiveDriver: ArchiveDriver
-    ) {
+    constructor(private archiveDriver: ArchiveDriver) {
         this.media = new Media();
     }
 
-    async exportAsFile(): Promise<Blob> {
-        const blobs = this.exportData();
+    async exportAsFile(data: Data): Promise<Blob> {
+        const blobs = this.exportData(data);
         return await this.archiveDriver.archive(blobs);
     }
 
-    private exportData(): {[key: string]: Blob} {
-        const projectData = this.store.getData();
+    private exportData(projectData: Data): {[key: string]: Blob} {
         const [asset, blobs] = this.splitAssetToBase64(projectData.asset);
         const data = {...projectData, asset};
 
@@ -53,14 +48,10 @@ export class Converter {
         return [records, blobs];
     }
 
-    loadProject(data: Data): void {
-        this.store.setData(data);
-    }
-
-    async importProject(blob: Blob): Promise<void> {
+    async importProject(blob: Blob): Promise<Data> {
         const files = await this.archiveDriver.extract(blob);
         const data = await this.importData(files);
-        this.store.setData(data);
+        return data;
     }
 
     private async importData(files: Blobs): Promise<Data> {
@@ -77,28 +68,30 @@ export class Converter {
         return data;
     }
 
-    async exportAsSite(): Promise<Blob> {
-        const blobs = await this.exportStatic(this.store);
+    async exportAsSite(data: Data, props: {name: string}): Promise<Blob> {
+        const blobs = await this.exportStatic(data, props);
         return await this.archiveDriver.archive(blobs);
     }
 
-    private async exportStatic(store: Store): Promise<Blobs> {
-        const data = store.getData();
-        const [asset, blobs] = this.splitAssetsToFiles(data.asset);
+    private async exportStatic(
+        data: Data,
+        props: {name: string}
+    ): Promise<Blobs> {
+        const [asset, blobs] = this.splitAssetsToFiles(data.asset, props);
 
         return {
-            ...await this.getTemplateBlob(),
             ...await this.getBundleBlob(),
-            ...this.getDataBlob({...data, asset}),
+            ...this.getTemplateBlob(props),
+            ...this.getDataBlob({...data, asset}, props),
             ...blobs,
         };
     }
 
-    private splitAssetsToFiles(input: {[key: Id]: Asset}): [
-        {[key: Id]: Asset},
-        {[key: Id]: Blob},
-    ] {
-        const {value: name} = this.store.config.getByParams({name: "name"})[0];
+    private splitAssetsToFiles(
+        input: {[key: Id]: Asset},
+        props: {name: string}
+    ): [{[key: Id]: Asset}, {[key: Id]: Blob}] {
+
         const output: {[key: Id]: Asset} = {};
         const blobs: Blobs = {};
 
@@ -108,7 +101,7 @@ export class Converter {
             const assetDataBytes = this.base64toBytes(asset.data);
             const extension = this.media.typeToExtension(asset.media);
 
-            const path = `${name}/${id}.${extension}`;
+            const path = `${props.name}/${id}.${extension}`;
             output[id] = {
                 ...asset,
                 path,
@@ -134,13 +127,11 @@ export class Converter {
         return byteArray;
     }
 
-    private getTemplateBlob(): Blobs {
-        const {value: name} = this.store.config.getByParams({name: "name"})[0];
-
-        const website = template.replace("./project", "./" + String(name));
+    private getTemplateBlob(props: {name: string}): Blobs {
+        const website = template.replace("./project", "./" + String(props.name));
         const blob = new Blob([website], {type: "text/html"});
 
-        return {[name + ".html"]: blob};
+        return {[props.name + ".html"]: blob};
     }
 
     private async getBundleBlob(): Promise<Blobs> {
@@ -151,14 +142,12 @@ export class Converter {
         return {["viewer.js"]: viewerBundle};
     }
 
-    private getDataBlob(data: Data): Blobs {
+    private getDataBlob(data: Data, props: {name: string}): Blobs {
         const dataString = JSON.stringify(data, null, 4);
         //const dataTemplate = `const OPEN_MAP_DATA = String.raw\`${dataString}\`;`;
 
         const dataBlob = new Blob([dataString], {type: "application/json"});
 
-        const {value: name} = this.store.config.getByParams({name: "name"})[0];
-
-        return {[`${name}/data.json`]: dataBlob};
+        return {[`${props.name}/data.json`]: dataBlob};
     }
 }

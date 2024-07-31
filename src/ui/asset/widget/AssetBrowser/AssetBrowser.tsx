@@ -6,9 +6,8 @@ import en from "./string/en.json";
 import {For, JSX, Show, createEffect, createResource, createSignal, on} from "solid-js";
 import i18next from "i18next";
 import {Asset, Id} from "@type";
-import {useEditorContext} from "@ui/editor/context";
 import {Button} from "@ui/widget";
-import {useStoreContext} from "@ui/app/context";
+import {useSignalContext, useStoreContext} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "asset", {"AssetBrowser": en}, true, true);
 
@@ -22,21 +21,16 @@ type Props = {
 };
 
 export function AssetBrowser(props: Props): JSX.Element {
-    const storeCtx = useStoreContext();
+    const {store} = useStoreContext();
+    const {signal} = useSignalContext();
 
     const fetch = (): Asset[] => props.type
-        ? storeCtx.store.asset
-            .getByParams<Asset>({assetTypeId: props.type})
-        : storeCtx.store.asset
-            .getAll<Asset>();
+        ? store.asset.getByParams<Asset>({assetTypeId: props.type})
+        : store.asset.getAll<Asset>();
 
     const [assets, {refetch}] = createResource<Asset[]>(fetch);
 
-    createEffect(on(
-        storeCtx.update.asset.get,
-        refetch,
-        {defer: true}
-    ));
+    createEffect(on(signal.asset.getUpdateById, refetch, {defer: true}));
 
     const [selected, setSelected] = createSignal<Id[]>([] as Id[]);
 
@@ -103,7 +97,7 @@ export function AssetBrowser(props: Props): JSX.Element {
                                                 icon={SaltireIconSvg}
                                                 onClick={() => {
                                                     if (props.onDelete) props.onDelete([asset.id]);
-                                                    storeCtx.update.asset.set();
+                                                    signal.asset.setUpdateById();
                                                 }}
                                             />
                                         </Show>

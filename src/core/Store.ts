@@ -1,90 +1,29 @@
-import {Data, Entity, Type, Layer, Asset, Param} from "@type";
-import {Collection} from "@core";
-import {ASSET, ENTITY, LAYER} from "@enum";
+import {Data, Entity, Type, Asset, Param} from "@type";
+import {Catalog} from "@core";
 
 export class Store {
     private data!: Data;
 
-    public config!: Collection<Param>;
+    public config!: Catalog<Param>;
 
-    public asset!: Collection<Asset>;
+    public asset!: Catalog<Asset>;
 
-    public assetType!: Collection<Type>;
+    public assetType!: Catalog<Type>;
 
-    public entity!: Collection<Entity>;
+    public entity!: Catalog<Entity>;
 
-    public entityType!: Collection<Type>;
+    public entityType!: Catalog<Type>;
 
-    constructor(data?: Partial<Data>) {
-        this.setData(data);
-    }
-
-    setData(data?: Partial<Data>): void {
-        this.data = this.initData(data);
-        this.config = new Collection<Param>(this.data.config);
-        this.asset = new Collection<Asset>(this.data.asset);
-        this.assetType = new Collection<Type>(this.data.assetType);
-        this.entity = new Collection<Entity>(this.data.entity);
-        this.entityType = new Collection<Type>(this.data.entityType);
+    setData(data: Data): void {
+        this.data = data;
+        this.config = new Catalog<Param>(this.data.config);
+        this.asset = new Catalog<Asset>(this.data.asset);
+        this.assetType = new Catalog<Type>(this.data.assetType);
+        this.entity = new Catalog<Entity>(this.data.entity);
+        this.entityType = new Catalog<Type>(this.data.entityType);
     }
 
     getData(): Data {
         return this.data;
-    }
-
-    initData(params?: Partial<Data>): Data {
-        const data: Data = {
-            system: {
-                1: {id: 1, name: "package", value: "0.0.1"},
-                2: {id: 2, name: "schema", value: 1},
-            },
-            config: {
-                1: {id: 1, name: "name", value: "New project"},
-                2: {id: 2, name: "width", value: 0},
-                3: {id: 3, name: "height", value: 0},
-            },
-            entityType: {
-                [ENTITY.ENTITY]: {id: ENTITY.ENTITY, name: "entity"},
-                [ENTITY.LAYER]: {id: ENTITY.LAYER, name: "layer"},
-                [ENTITY.TILE]: {id: ENTITY.TILE, name: "tile"},
-                [ENTITY.FOOTNOTE]: {id: ENTITY.FOOTNOTE, name: "footnote"},
-                [ENTITY.MARKER]: {id: ENTITY.MARKER, name: "marker"},
-                [ENTITY.DECOR]: {id: ENTITY.DECOR, name: "decor"},
-                [ENTITY.AREA]: {id: ENTITY.AREA, name: "area"},
-            },
-            assetType: {
-                [ASSET.ASSET]: {id: ASSET.ASSET, name: "asset"},
-                [ASSET.IMAGE]: {id: ASSET.IMAGE, name: "image"},
-                [ASSET.PROP]: {id: ASSET.PROP, name: "prop"},
-                [ASSET.FIGURE]: {id: ASSET.FIGURE, name: "figure"},
-                [ASSET.MOTION]: {id: ASSET.MOTION, name: "motion"},
-            },
-            entity: {
-                1: {
-                    id: 1,
-                    entityTypeId: ENTITY.LAYER,
-                    name: LAYER.ROOT,
-                    parentId: null,
-                    childIds: [2, 3],
-                } as Layer,
-                2: {
-                    id: 2,
-                    entityTypeId: ENTITY.LAYER,
-                    name: LAYER.BACKGROUND,
-                    parentId: 1,
-                    childIds: [],
-                } as Layer,
-                3: {
-                    id: 3,
-                    entityTypeId: ENTITY.LAYER,
-                    name: LAYER.OVERLAY,
-                    parentId: 1,
-                    childIds: [],
-                } as Layer,
-            },
-            asset: {},
-        };
-
-        return Object.assign(data, params);
     }
 }

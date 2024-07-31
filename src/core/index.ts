@@ -1,4 +1,4 @@
-export * from "./Collection";
+export * from "./Catalog";
 export * from "./Store";
 export * from "./Invoker";
 export * from "./Media";

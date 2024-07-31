@@ -65,16 +65,16 @@ export function Editor(props: Props): JSX.Element {
         const viewer = document.querySelector<HTMLDivElement>("#" + IDS.VIEWER);
         if (!viewer) throw new Error();
 
-        viewer.addEventListener("pointerdown", (event: PointerEvent) => {
-            editorCtx.userInput.active.onPointerDown(event);
+        viewer.addEventListener("mousedown", (event: MouseEvent) => {
+            editorCtx.userInput.active.onMouseDown(event);
         }, {capture: true});
 
-        viewer.addEventListener("pointermove", (event: PointerEvent) => {
-            editorCtx.userInput.active.onPointerMove(event);
+        viewer.addEventListener("mousemove", (event: MouseEvent) => {
+            editorCtx.userInput.active.onMouseMove(event);
         }, {capture: true});
 
-        viewer.addEventListener("pointerup", (event: PointerEvent) => {
-            editorCtx.userInput.active.onPointerUp(event);
+        viewer.addEventListener("mouseup", (event: MouseEvent) => {
+            editorCtx.userInput.active.onMouseUp(event);
         }, {capture: true});
 
         viewer.addEventListener("contextmenu", (event) => {

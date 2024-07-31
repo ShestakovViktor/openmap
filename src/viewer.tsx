@@ -6,7 +6,7 @@ import {render} from "solid-js/web";
 import {Viewer} from "@src/ui/viewer/widget";
 import {ViewerProvider} from "@ui/viewer/context";
 import {Store} from "@core";
-import {StoreProvider} from "@ui/app/context";
+import {SignalProvider, StoreProvider} from "@ui/app/context";
 
 (async(): Promise<void> => {
     const container = document.querySelector("#viewer[data-src]");
@@ -19,13 +19,19 @@ import {StoreProvider} from "@ui/app/context";
 
     const data = await response.json();
 
+    const store = new Store();
+
+    store.setData(data);
+
     render(() => {
         return (
-            <StoreProvider store={new Store(data)}>
-                <ViewerProvider>
-                    <Viewer/>
-                </ViewerProvider>
-            </StoreProvider>
+            <SignalProvider>
+                <StoreProvider store={store}>
+                    <ViewerProvider>
+                        <Viewer/>
+                    </ViewerProvider>
+                </StoreProvider>
+            </SignalProvider>
         );
     }, container);
 })();

@@ -1,6 +1,6 @@
 import styles from "./MarkerWidget.module.scss";
 import MarkerIconSvg from "@res/svg/marker.svg";
-import {JSX, Show, createEffect, createMemo, createSignal, on} from "solid-js";
+import {Accessor, JSX, Show, createEffect, createMemo, createSignal, on} from "solid-js";
 import {Marker, Prop} from "@type";
 import {assetToSrc} from "@ui/app/utiliy";
 import {EntityWidget} from "@ui/entity/widget";
@@ -9,39 +9,18 @@ import {useViewerContext} from "@ui/viewer/context";
 import {Icon} from "@ui/widget";
 
 type Props = {
-    entity: Marker;
+    entity: Accessor<Marker>;
 };
 
-export function MarkerWidget(props: Props): JSX.Element {
-    const storeCtx = useStoreContext();
-    const viewerCtx = useViewerContext();
+export function MarkerWidget({entity}: Props): JSX.Element {
+    const {store} = useStoreContext();
+    const {viewport} = useViewerContext();
+
     let element: HTMLDivElement | undefined;
 
-    const fetchEntity = (): Marker => {
-        const entity = storeCtx.store.entity.getById<Marker>(props.entity.id);
-        if (!entity) throw new Error(String(props.entity.id));
-        return entity;
-    };
-
-    const equals = (prev: Marker, next: Marker): boolean => {
-        return prev.x == next.x
-            && prev.y == next.y
-            && prev.width == next.width
-            && prev.height == next.height
-            && prev.propId == next.propId;
-    };
-
-    const [entity, setEntity] = createSignal<Marker>(props.entity, {equals});
-
-    createEffect(on(
-        storeCtx.update.entity.get,
-        (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
-        {defer: true}
-    ));
-
     const transform = createMemo((): string => {
-        const x = entity().x * viewerCtx.viewport.getScale();
-        const y = entity().y * viewerCtx.viewport.getScale();
+        const x = entity().x * viewport.getScale();
+        const y = entity().y * viewport.getScale();
         return `translate3d(${x}px, ${y}px, 0px)`;
     });
 
@@ -57,7 +36,7 @@ export function MarkerWidget(props: Props): JSX.Element {
         const propId = entity().propId;
 
         return propId
-            ? storeCtx.store.asset.getById<Prop>(propId)
+            ? store.asset.getById<Prop>(propId)
             : null;
     });
 
@@ -92,7 +71,7 @@ export function MarkerWidget(props: Props): JSX.Element {
             <div
                 class={styles.Marker}
                 style={style()}
-                onPointerDown={() => setShow(true)}
+                onMouseDown={() => setShow(true)}
             >
                 <Show
                     when={asset()}

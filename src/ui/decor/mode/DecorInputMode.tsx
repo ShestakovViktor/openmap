@@ -3,10 +3,17 @@ import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {ENTITY, LAYER} from "@enum";
 import {Decor, Layer} from "@type";
 import {EntityFocusMode, UserInputMode} from "@ui/editor/mode";
-import {StoreContextType, useStoreContext} from "@ui/app/context";
+import {
+    SignalContextType,
+    StoreContextType,
+    useSignalContext,
+    useStoreContext,
+} from "@ui/app/context";
 
 export class DecorInputMode extends UserInputMode{
     private storeCtx: StoreContextType;
+
+    private signalCtx: SignalContextType;
 
     private viewerCtx: ViewerContextType;
 
@@ -15,15 +22,19 @@ export class DecorInputMode extends UserInputMode{
     constructor() {
         super();
         this.storeCtx = useStoreContext();
+        this.signalCtx = useSignalContext();
         this.viewerCtx = useViewerContext();
         this.editorCtx = useEditorContext();
     }
 
     initEntity({x, y}: {x: number; y: number}): number {
-        const overlay = this.storeCtx.store.entity
+        const {store} = this.storeCtx;
+        const {signal} = this.signalCtx;
+
+        const overlay = store.entity
             .getByParams<Layer>({name: LAYER.OVERLAY})[0];
 
-        const decorId = this.storeCtx.store.entity.add<Decor>({
+        const decor = store.entity.create<Decor>({
             entityTypeId: ENTITY.DECOR,
             x,
             y,
@@ -34,18 +45,17 @@ export class DecorInputMode extends UserInputMode{
             parentId: overlay.id,
         });
 
-        this.storeCtx.store.entity.set<Layer>({
-            id: overlay.id,
-            childIds: [...overlay.childIds, decorId],
-        });
+        overlay.childIds.push(decor.id);
 
-        this.storeCtx.update.entity.set(overlay.id);
+        signal.entity.setUpdateById(overlay.id);
 
-        return decorId;
+        return decor.id;
     }
 
-    onPointerDown(event: MouseEvent): void {
-        const canvas = this.viewerCtx.viewport.getCanvas();
+    onMouseDown(event: MouseEvent): void {
+        const {viewport} = this.viewerCtx;
+
+        const canvas = viewport.getCanvas();
         const rect = canvas.getBoundingClientRect();
 
         const click = {

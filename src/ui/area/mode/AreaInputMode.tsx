@@ -3,11 +3,13 @@ import {EntityFocusMode, UserInputMode} from "@ui/editor/mode";
 import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {ENTITY, LAYER, MOUSE} from "@enum";
 import {pushAreaPoint} from "@ui/area/utility/pushAreaPoint";
-import {StoreContextType, useStoreContext} from "@ui/app/context";
+import {SignalContextType, StoreContextType, useSignalContext, useStoreContext} from "@ui/app/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 
 export class AreaInputMode extends UserInputMode {
     private storeCtx: StoreContextType;
+
+    private signalCtx: SignalContextType;
 
     private viewerCtx: ViewerContextType;
 
@@ -18,16 +20,19 @@ export class AreaInputMode extends UserInputMode {
     constructor() {
         super();
         this.storeCtx = useStoreContext();
+        this.signalCtx = useSignalContext();
         this.viewerCtx = useViewerContext();
         this.editorCtx = useEditorContext();
-
     }
 
     initArea(): Id {
-        const overlay = this.storeCtx.store.entity
+        const {store} = this.storeCtx;
+        const {signal} = this.signalCtx;
+
+        const overlay = store.entity
             .getByParams<Layer>({name: LAYER.OVERLAY})[0];
 
-        const areaId = this.storeCtx.store.entity.add<Area>({
+        const area = store.entity.create<Area>({
             entityTypeId: ENTITY.AREA,
             x: 0,
             y: 0,
@@ -38,28 +43,28 @@ export class AreaInputMode extends UserInputMode {
             footnoteId: null,
         });
 
-        this.storeCtx.store.entity.set<Layer>({
-            id: overlay.id,
-            childIds: [...overlay.childIds, areaId],
-        });
+        overlay.childIds.push(area.id);
 
-        const footnoteId = this.storeCtx.store.entity.add<Footnote>({
+        const footnote = store.entity.create<Footnote>({
             entityTypeId: ENTITY.FOOTNOTE,
             text: "",
             figureIds: [],
-            parentId: areaId,
+            parentId: area.id,
         });
 
-        this.storeCtx.store.entity.set<Area>({id: areaId, footnoteId});
+        area.footnoteId = footnote.id;
 
-        this.storeCtx.update.entity.set(overlay.id);
+        signal.entity.setUpdateById(overlay.id);
 
-        return areaId;
+        return area.id;
     }
 
-    onPointerDown(event: MouseEvent): void {
+    onMouseDown(event: MouseEvent): void {
         event.stopPropagation();
-        const canvas = this.viewerCtx.viewport.getCanvas();
+        const {signal} = this.signalCtx;
+        const {viewport} = this.viewerCtx;
+
+        const canvas = viewport.getCanvas();
         const rect = canvas.getBoundingClientRect();
 
         const click = {
@@ -81,8 +86,7 @@ export class AreaInputMode extends UserInputMode {
 
             pushAreaPoint(area, click);
 
-            this.storeCtx.store.entity.set(area);
-            this.storeCtx.update.entity.set(this.areaId);
+            signal.entity.setUpdateById(this.areaId);
         }
         else if (event.buttons == MOUSE.RIGHT) {
             if (this.areaId) {
@@ -94,7 +98,7 @@ export class AreaInputMode extends UserInputMode {
         }
     }
 
-    onPointerMove(event: PointerEvent): void {
+    onMouseMove(event: PointerEvent): void {
         event.stopPropagation();
     }
 }

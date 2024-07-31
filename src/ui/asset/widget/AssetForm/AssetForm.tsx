@@ -5,7 +5,7 @@ import i18next from "i18next";
 import {Asset, Id} from "@type";
 import {readFile} from "@ui/app/utiliy";
 import {DATA} from "@enum";
-import {useStoreContext} from "@ui/app/context";
+import {useSignalContext, useStoreContext} from "@ui/app/context";
 import {Form} from "@ui/widget";
 
 i18next.addResourceBundle("en", "asset", {AssetForm: en}, true, true);
@@ -19,7 +19,8 @@ type Props = {
 };
 
 export function AssetForm(props: Props): JSX.Element {
-    const storeCtx = useStoreContext();
+    const {store} = useStoreContext();
+    const {signal} = useSignalContext();
 
     const data: {[key: string]: string | number | File} = props.data ?? {};
 
@@ -42,17 +43,15 @@ export function AssetForm(props: Props): JSX.Element {
         event.preventDefault();
         if (!data.file) return;
 
-        const {file, ...asset} = data;
+        const {file, ...input} = data;
 
         readFile(file as File)
             .then((fileData) => {
-                Object.assign(asset, fileData);
-                const assetId = storeCtx.store.asset
-                    .add(asset as Omit<Asset, "id">);
+                Object.assign(input, fileData);
+                const asset = store.asset.create(input as Omit<Asset, "id">);
+                signal.asset.setUpdateById(asset.id);
 
-                storeCtx.update.asset.set(assetId);
-
-                if (props.onSubmit) props.onSubmit(assetId);
+                if (props.onSubmit) props.onSubmit(asset.id);
             })
             .catch((err) => {
                 throw err;

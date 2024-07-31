@@ -6,7 +6,7 @@ import {JSX} from "solid-js";
 import {NameField} from "@ui/asset/widget";
 import {MapField} from "../MapField";
 import {Form} from "@ui/widget";
-import {useCoreContext, useStoreContext} from "@ui/app/context";
+import {useCoreContext, useSignalContext} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "project", {ProjectForm: en}, true, true);
 
@@ -16,8 +16,8 @@ type Props = {
 };
 
 export function ProjectForm(props: Props): JSX.Element {
-    const storeCtx = useStoreContext();
-    const coreCtx = useCoreContext();
+    const {signal} = useSignalContext();
+    const {core} = useCoreContext();
 
     function projectCreate(event: SubmitEvent): void {
         event.preventDefault();
@@ -29,9 +29,9 @@ export function ProjectForm(props: Props): JSX.Element {
         const name = String(formData.get("name")) || "New project";
         const map = formData.get("map") as File;
 
-        coreCtx.core.initProject({name, map})
-            .then(() => storeCtx.initialize())
-            .then(() => storeCtx.update.entity.set())
+        core.initProject({name, map})
+            .then(() => signal.store.setInit())
+            .then(() => signal.entity.setUpdateById())
             .catch(error => {
                 throw new Error(error);
             });

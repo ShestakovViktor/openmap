@@ -1,14 +1,14 @@
-import {JSX, ValidComponent, createResource} from "solid-js";
+import {JSX, ValidComponent, createEffect, createSignal, on} from "solid-js";
 import {TileWidget} from "@src/ui/tile/widget";
 import {LayerWidget} from "@src/ui/layer/widget";
 import {MarkerWidget} from "@src/ui/marker/widget";
 import {Dynamic} from "solid-js/web";
 import {ENTITY} from "@enum";
-import {Id} from "@type";
+import {Entity, Id} from "@type";
 import {DecorWidget} from "@ui/decor/widget";
 import {AreaWidget} from "@ui/area/widget";
 import {FootnoteWidget} from "@ui/footnote/widget";
-import {useStoreContext} from "@ui/app/context";
+import {useSignalContext, useStoreContext} from "@ui/app/context";
 
 type Props = {
     entityId: Id;
@@ -16,17 +16,24 @@ type Props = {
 };
 
 export function EntityWidget(props: Props): JSX.Element {
-    const storeCtx = useStoreContext();
+    const {store} = useStoreContext();
+    const {signal} = useSignalContext();
 
-    const [entity] = createResource(
-        () => {
-            const entity = storeCtx.store.entity.getById(props.entityId);
-            if (!entity) {
-                throw new Error(`There is no entity with id ${props.entityId}`);
-            }
-            return entity;
+    const fetch = (): Entity => {
+        const entity = store.entity.getById(props.entityId);
+        if (!entity) {
+            throw new Error(`There is no entity with id ${props.entityId}`);
         }
-    );
+        return entity;
+    };
+
+    const [entity, setEntity] = createSignal(fetch(), {equals: false});
+
+    createEffect(on(
+        signal.entity.getUpdateById,
+        (id) => (!id || id == entity().id) && setEntity(fetch()),
+        {defer: true}
+    ));
 
     const entities: {[key: string]: ValidComponent} = {
         [ENTITY.LAYER]: LayerWidget,
@@ -39,8 +46,8 @@ export function EntityWidget(props: Props): JSX.Element {
 
     return (
         <Dynamic
-            component={entities[entity()!.entityTypeId]}
-            entity={entity()}
+            component={entities[entity().entityTypeId]}
+            entity={entity}
         />
     );
 }

@@ -2,11 +2,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 export class UserInputMode {
-    onPointerDown(event: PointerEvent): void {}
+    onMouseDown(event: MouseEvent): void {}
 
-    onPointerMove(event: PointerEvent): void {}
+    onMouseMove(event: MouseEvent): void {}
 
-    onPointerUp(event: PointerEvent): void {}
-
-    onPointerCancel(event: PointerEvent): void {}
+    onMouseUp(event: MouseEvent): void {}
 }

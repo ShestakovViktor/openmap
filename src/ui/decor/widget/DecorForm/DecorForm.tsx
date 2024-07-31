@@ -12,46 +12,47 @@ import {
     SystemSection,
     SizeSection,
 } from "@ui/entity/widget";
-import {NamespaceProvider, useStoreContext} from "@ui/app/context";
+import {
+    NamespaceProvider,
+    useSignalContext,
+    useStoreContext,
+} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "decor", {DecorForm: en}, true, true);
 
 type Props = {entityId: Accessor<Id | null>};
 
 export function DecorForm(props: Props): JSX.Element {
-    const storeCtx = useStoreContext();
+    const {store} = useStoreContext();
+    const {signal} = useSignalContext();
 
     const [entity, {refetch}] = createResource(props.entityId, (entityId) =>
-        storeCtx.store.entity.getById<Decor>(entityId) ?? undefined
+        store.entity.getById<Decor>(entityId) ?? undefined
     );
 
     createEffect(on(
-        storeCtx.update.entity.get,
+        signal.entity.getUpdateById,
         async (id) => id == props.entityId() && await refetch(),
         {defer: true}
     ));
 
     function handleDelete(id: Id): void {
-        const decor = storeCtx.store.entity
-            .getById<Decor>(id);
+        const decor = store.entity.getById<Decor>(id);
 
         if (!decor) throw new Error();
 
         if (decor.parentId) {
-            const parent = storeCtx.store.entity
+            const parent = store.entity
                 .getById<Parent>(decor.parentId);
 
             if (!parent) throw new Error();
 
-            storeCtx.store.entity.set<Parent>({
-                id: parent.id,
-                childIds: parent.childIds.filter(id => id != decor.id),
-            });
+            parent.childIds = parent.childIds.filter(id => id != decor.id);
 
-            storeCtx.update.entity.set(decor.parentId);
+            signal.entity.setUpdateById(decor.parentId);
         }
 
-        storeCtx.store.entity.del(decor.id);
+        store.entity.delete(decor.id);
     }
 
     return (

@@ -11,7 +11,7 @@ import {
     PositionSection,
     SystemSection,
 } from "@ui/entity/widget";
-import {NamespaceProvider, useStoreContext} from "@ui/app/context";
+import {NamespaceProvider, useSignalContext, useStoreContext} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "area", {AreaForm: en}, true, true);
 
@@ -20,48 +20,43 @@ type Props = {
 };
 
 export function AreaForm(props: Props): JSX.Element {
-    const storeCtx = useStoreContext();
+    const {store} = useStoreContext();
+    const {signal} = useSignalContext();
 
     const [entity, {refetch}] = createResource(props.entityId, (entityId) =>
-        storeCtx.store.entity.getById<Area>(entityId) ?? undefined
+        store.entity.getById<Area>(entityId) ?? undefined
     );
 
     createEffect(on(
-        storeCtx.update.entity.get,
+        signal.entity.getUpdateById,
         async (id) => id == props.entityId() && await refetch(),
         {defer: true}
     ));
 
     function handleDelete(id: Id): void {
-        const area = storeCtx.store.entity
-            .getById<Area>(id);
+        const area = store.entity.getById<Area>(id);
 
         if (!area) throw new Error();
 
         if (area.footnoteId) {
-            const footnote = storeCtx.store.entity
-                .getById<Footnote>(area.footnoteId);
+            const footnote = store.entity.getById<Footnote>(area.footnoteId);
 
             if (!footnote) throw new Error();
 
-            storeCtx.store.entity.del(footnote.id);
+            store.entity.delete(footnote.id);
         }
 
         if (area.parentId) {
-            const parent = storeCtx.store.entity
-                .getById<Parent>(area.parentId);
+            const parent = store.entity.getById<Parent>(area.parentId);
 
             if (!parent) throw new Error();
 
-            storeCtx.store.entity.set<Parent>({
-                id: parent.id,
-                childIds: parent.childIds.filter(id => id != area.id),
-            });
+            parent.childIds = parent.childIds.filter(id => id != area.id);
 
-            storeCtx.update.entity.set(area.parentId);
+            signal.entity.setUpdateById(area.parentId);
         }
 
-        storeCtx.store.entity.del(area.id);
+        store.entity.delete(area.id);
     }
 
     return (

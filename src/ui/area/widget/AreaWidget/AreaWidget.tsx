@@ -1,60 +1,33 @@
 import styles from "./AreaWidget.module.scss";
-import {
-    JSX,
-    createSignal,
-    createMemo,
-    Show,
-    createEffect,
-    on,
-} from "solid-js";
+import {JSX, createSignal, createMemo, Show, Accessor} from "solid-js";
 import {useViewerContext} from "@ui/viewer/context";
 import {Area} from "@type";
 import {EntityWidget} from "@ui/entity/widget";
-import {useStoreContext} from "@ui/app/context";
 
 type Props = {
-    entity: Area;
+    entity: Accessor<Area>;
 };
 
 export function AreaWidget(props: Props): JSX.Element {
-    const storeCtx = useStoreContext();
-    const viewerCtx = useViewerContext();
+    const {entity} = props;
+    const {viewport} = useViewerContext();
+
     const [show, setShow] = createSignal(false);
 
-    const fetchEntity = (): Area => {
-        const entity = storeCtx.store.entity.getById<Area>(props.entity.id);
-        if (!entity) throw new Error(`Entity not exists ${props.entity.id}`);
-        return entity;
-    };
-
-    const equals = (prev: Area, next: Area): boolean => {
-        return prev.x == next.x
-            && prev.y == next.y
-            && prev.points == next.points;
-    };
-
-    const [entity, setEntity] = createSignal<Area>(props.entity, {equals});
-
-    createEffect(on(
-        storeCtx.update.entity.get,
-        (id) => (!id || id == props.entity.id) && setEntity(fetchEntity),
-        {defer: true}
-    ));
-
-    const factor = createMemo((): number => 5 / viewerCtx.viewport.getScale());
+    const factor = createMemo((): number => 5 / viewport.getScale());
 
     const transform = createMemo((): string => {
-        const x = entity().x * viewerCtx.viewport.getScale();
-        const y = entity().y * viewerCtx.viewport.getScale();
+        const x = entity().x * viewport.getScale();
+        const y = entity().y * viewport.getScale();
         return `translate3d(${x}px, ${y}px, 0px)`;
     });
 
     const width = createMemo((): string => {
-        return entity().width * viewerCtx.viewport.getScale() + "px";
+        return entity().width * viewport.getScale() + "px";
     });
 
     const height = createMemo((): string => {
-        return entity().height * viewerCtx.viewport.getScale() + "px";
+        return entity().height * viewport.getScale() + "px";
     });
 
     const viewBox = createMemo((): string => {

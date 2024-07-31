@@ -9,7 +9,7 @@ import {JSX} from "solid-js";
 import {useCoreContext, useStoreContext} from "@ui/app/context";
 
 export function SystemKit(): JSX.Element {
-    const storeCtx = useStoreContext();
+    const {store} = useStoreContext();
     const coreCtx = useCoreContext();
 
     async function handleProjectSave(): Promise<void> {
@@ -26,17 +26,18 @@ export function SystemKit(): JSX.Element {
         const dataFileHandle = await root.getFileHandle("data.om", {create: true});
         const dataFileWritableStream = await dataFileHandle.createWritable();
         await dataFileWritableStream.write(
-            JSON.stringify(storeCtx.store.getData())
+            JSON.stringify(store.getData())
         );
         await dataFileWritableStream.close();
     }
 
     async function handleProjectExport(): Promise<void> {
-        const projectFile = await coreCtx.core.converter.exportAsFile();
+        const data = store.getData();
+        const projectFile = await coreCtx.core.converter.exportAsFile(data);
 
         const projectFileUrl = URL.createObjectURL(projectFile);
 
-        const {value: projectName} = storeCtx.store.config
+        const {value: projectName} = store.config
             .getByParams({name: "name"})[0];
         const tempLink = document.createElement("a");
         tempLink.download = projectName + ".om";
@@ -46,8 +47,12 @@ export function SystemKit(): JSX.Element {
     }
 
     async function handleProjectCompile(): Promise<void> {
+        const data = store.getData();
+        const {value: name} = store.config
+            .getByParams({name: "name"})[0];
+
         const websiteArchive = await coreCtx.core.converter
-            .exportAsSite();
+            .exportAsSite(data, {name: String(name)});
 
         const projectFileUrl = URL.createObjectURL(websiteArchive);
 

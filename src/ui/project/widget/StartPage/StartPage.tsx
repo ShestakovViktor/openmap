@@ -5,7 +5,7 @@ import {Button, Page} from "@ui/widget";
 
 import i18next from "i18next";
 import {JSX} from "solid-js";
-import {useCoreContext, useStoreContext} from "@ui/app/context";
+import {useCoreContext, useSignalContext, useStoreContext} from "@ui/app/context";
 
 i18next.addResourceBundle("en", "project", {StartChoice: en}, true, true);
 
@@ -15,7 +15,8 @@ type Props = {
 };
 
 export function StartPage(props: Props): JSX.Element {
-    const storeCtx = useStoreContext();
+    const {store} = useStoreContext();
+    const {signal} = useSignalContext();
     const coreCtx = useCoreContext();
 
     async function handleProjectRestore(): Promise<void> {
@@ -25,10 +26,9 @@ export function StartPage(props: Props): JSX.Element {
         const dataString = await dataFile.text();
         const data = JSON.parse(dataString);
 
-        coreCtx.core.converter.loadProject(data);
-
-        storeCtx.initialize();
-        storeCtx.update.entity.set();
+        store.setData(data);
+        signal.store.setInit();
+        signal.entity.setUpdateById();
 
         props.onComplete();
     }
@@ -43,9 +43,7 @@ export function StartPage(props: Props): JSX.Element {
             const file = input.files[0];
 
             coreCtx.core.converter.importProject(file)
-                .then(() => {
-                    storeCtx.initialize();
-                })
+                .then(() => signal.store.setInit())
                 .catch(error => {throw new Error(error);});
             props.onComplete();
         });

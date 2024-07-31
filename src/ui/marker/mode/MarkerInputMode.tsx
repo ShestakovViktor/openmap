@@ -3,10 +3,17 @@ import {ViewerContextType, useViewerContext} from "@ui/viewer/context";
 import {EditorContexType, useEditorContext} from "@ui/editor/context";
 import {Id, Layer, Footnote, Marker} from "@type";
 import {ENTITY, LAYER} from "@enum";
-import {StoreContextType, useStoreContext} from "@ui/app/context";
+import {
+    SignalContextType,
+    StoreContextType,
+    useSignalContext,
+    useStoreContext,
+} from "@ui/app/context";
 
 export class MarkerInputMode extends UserInputMode {
     private storeCtx: StoreContextType;
+
+    private signalCtx: SignalContextType;
 
     private viewerCtx: ViewerContextType;
 
@@ -15,15 +22,19 @@ export class MarkerInputMode extends UserInputMode {
     constructor() {
         super();
         this.storeCtx = useStoreContext();
+        this.signalCtx = useSignalContext();
         this.viewerCtx = useViewerContext();
         this.editorCtx = useEditorContext();
     }
 
     initMarker({x, y}: {x: number; y: number}): Id {
-        const overlay = this.storeCtx.store.entity
+        const {store} = this.storeCtx;
+        const {signal} = this.signalCtx;
+
+        const overlay = store.entity
             .getByParams<Layer>({name: LAYER.OVERLAY})[0];
 
-        const markerId = this.storeCtx.store.entity.add<Marker>({
+        const marker = store.entity.create<Marker>({
             entityTypeId: ENTITY.MARKER,
             x,
             y,
@@ -34,26 +45,23 @@ export class MarkerInputMode extends UserInputMode {
             footnoteId: null,
         });
 
-        this.storeCtx.store.entity.set<Layer>({
-            id: overlay.id,
-            childIds: [...overlay.childIds, markerId],
-        });
+        overlay.childIds.push(marker.id);
 
-        const footnoteId = this.storeCtx.store.entity.add<Footnote>({
+        const footnote = store.entity.create<Footnote>({
             entityTypeId: ENTITY.FOOTNOTE,
             text: "",
             figureIds: [],
-            parentId: markerId,
+            parentId: marker.id,
         });
 
-        this.storeCtx.store.entity.set<Marker>({id: markerId, footnoteId});
+        marker.footnoteId = footnote.id;
 
-        this.storeCtx.update.entity.set(overlay.id);
+        signal.entity.setUpdateById(overlay.id);
 
-        return markerId;
+        return marker.id;
     }
 
-    onPointerDown(event: MouseEvent): void {
+    onMouseDown(event: MouseEvent): void {
         const canvas = this.viewerCtx.viewport.getCanvas();
         const rect = canvas.getBoundingClientRect();
 

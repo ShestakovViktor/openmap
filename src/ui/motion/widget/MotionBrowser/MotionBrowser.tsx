@@ -41,7 +41,7 @@ export function MotionBrowser(props: Props): JSX.Element {
             }}
             onDelete={(ids) => {
                 ids.forEach((id) => {
-                    storeCtx.store.asset.del(id);
+                    storeCtx.store.asset.delete(id);
                 });
             }}
             onSelect={props.onSelect}
