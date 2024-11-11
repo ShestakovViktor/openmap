@@ -1,0 +1,6 @@
+{
+    "nameField": "name",
+    "mapField": "map",
+    "create": "create",
+    "cancel": "cancel"
+}

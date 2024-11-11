@@ -22,7 +22,13 @@ export default merge<Configuration>(common, {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./res/html/viewer.html",
+            template: "./res/html/viewer.ejs",
+            templateParameters: {
+                bundle: "<script defer src=\"viewer.js\"></script>",
+                title: "Viewer",
+                src: "./data",
+            },
+            inject: false,
             minify: false,
         }),
     ],

@@ -1,0 +1,52 @@
+.Accordion {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
+    .Section {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+
+        background-color: white;
+        border-radius: 8px;
+
+        overflow: hidden;
+
+        .Header {
+            cursor: pointer;
+            padding: 16px;
+
+            font-weight: 600;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+
+            .Title {
+                display: block;
+            }
+
+            .Expand {
+                display: block;
+            }
+        }
+
+        .Content {
+            display: none;
+            padding: 16px;
+
+            
+        }
+
+        &.Selected .Content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+    }
+}

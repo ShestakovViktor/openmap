@@ -1,6 +1,5 @@
 export const IDS = {
     VIEWER: "Viewer",
-    CANVAS: "Canvas",
     EDITOR: "Editor",
     WORK_SPACE: "WorkSpace",
     SIDE_PANEL: "SidePanel",

@@ -23,12 +23,6 @@
         "module": "CommonJs",
         "outDir": "./build",
         "paths": {
-            "@core": [
-                "src/core"
-            ],
-            "@core/*": [
-                "src/core/*"
-            ],
             "@enum": [
                 "src/enum"
             ],
@@ -47,11 +41,17 @@
             "@type/*": [
                 "src/type/*"
             ],
-            "@ui": [
-                "src/ui"
+            "@feature": [
+                "src/feature"
             ],
-            "@ui/*": [
-                "src/ui/*"
+            "@feature/*": [
+                "src/feature/*"
+            ],
+            "@shared": [
+                "src/shared"
+            ],
+            "@shared/*": [
+                "src/shared/*"
             ],
             "@src": [
                 "src",

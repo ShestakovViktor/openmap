@@ -1,7 +1,5 @@
-import {Id} from "@type";
-
 export type Param = {
-    id: Id;
+    id: number;
     name: string;
     value: string | number;
 };

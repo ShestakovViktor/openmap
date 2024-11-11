@@ -3,10 +3,9 @@ import "@res/style/colors.scss";
 import "@res/style/global.scss";
 
 import {render} from "solid-js/web";
-import {Viewer} from "@src/ui/viewer/widget";
-import {ViewerProvider} from "@ui/viewer/context";
-import {Store} from "@core";
-import {SignalProvider, StoreProvider} from "@ui/app/context";
+import {Viewer} from "@feature/viewer/widget";
+import {ViewerProvider} from "@feature/viewer/context";
+import {StoreProvider} from "@feature/store/context";
 
 (async(): Promise<void> => {
     const container = document.querySelector("#viewer[data-src]");
@@ -15,23 +14,21 @@ import {SignalProvider, StoreProvider} from "@ui/app/context";
 
     const path = container.getAttribute("data-src");
 
+    if (!path) throw new Error();
+
     const response = await fetch(path + "/data.json");
+
+    console.log(path + "/data.json");
 
     const data = await response.json();
 
-    const store = new Store();
-
-    store.setData(data);
-
     render(() => {
         return (
-            <SignalProvider>
-                <StoreProvider store={store}>
-                    <ViewerProvider>
-                        <Viewer/>
-                    </ViewerProvider>
-                </StoreProvider>
-            </SignalProvider>
+            <StoreProvider data={data}>
+                <ViewerProvider path={path}>
+                    <Viewer/>
+                </ViewerProvider>
+            </StoreProvider>
         );
     }, container);
 })();

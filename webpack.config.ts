@@ -35,6 +35,9 @@ export default {
             {
                 test: /\.html$/,
                 loader: "html-loader",
+                options: {
+                    minimize: false,
+                },
             },
             {
                 test: /\.svg$/,
@@ -58,6 +61,7 @@ export default {
                     {
                         loader: "sass-loader",
                         options: {
+                            api: "modern",
                             sassOptions: {
                                 includePaths: [
                                     path.join(__dirname, "src/style"),

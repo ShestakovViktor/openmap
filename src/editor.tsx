@@ -2,37 +2,38 @@ import "@src/i18n";
 import "@res/style/colors.scss";
 import "@res/style/global.scss";
 
-import {Core} from "@core";
-import {Store} from "@core";
 import {render} from "solid-js/web";
-import {Viewer} from "@src/ui/viewer/widget";
-import {ViewerProvider} from "@ui/viewer/context";
-import {Editor} from "./ui/editor/widget";
-import {EditorProvider} from "@ui/editor/context";
-import {CoreProvider, NamespaceProvider, SignalProvider, StoreProvider} from "@ui/app/context";
+import {StartupDialog, Editor} from "@feature/editor/widget";
+import {createSignal, Match, Switch} from "solid-js";
+import {Data} from "@type";
+import {StoreProvider} from "@feature/store/context";
+import {NamespaceProvider} from "@feature/app/context";
+import {EditorProvider, StartupProvider} from "@feature/editor/context";
+import {ViewerProvider} from "@feature/viewer/context";
 
 const container = document.querySelector("#editor");
 if (!container) throw new Error("There is no container element");
 
-const store = new Store();
-const core = new Core(store);
+const dataSignal = createSignal<Data>();
+const [data] = dataSignal;
 
-render(() => {
-    return (
-        <SignalProvider>
-            <StoreProvider store={store}>
-                <CoreProvider core={core}>
+render(() =>
+    <Switch>
+        <Match when={!data()}>
+            <StartupProvider dataSignal={dataSignal}>
+                <StartupDialog/>
+            </StartupProvider>
+        </Match>
+        <Match when={data()}>
+            <StoreProvider data={data()!}>
+                <NamespaceProvider namespace={"Editor"}>
                     <ViewerProvider>
                         <EditorProvider>
-                            <NamespaceProvider namespace={"Editor"}>
-                                <Editor>
-                                    <Viewer/>
-                                </Editor>
-                            </NamespaceProvider>
+                            <Editor/>
                         </EditorProvider>
                     </ViewerProvider>
-                </CoreProvider>
+                </NamespaceProvider>
             </StoreProvider>
-        </SignalProvider>
-    );
-}, container);
+        </Match>
+    </Switch>
+, container);

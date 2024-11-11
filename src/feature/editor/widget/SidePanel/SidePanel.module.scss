@@ -1,0 +1,12 @@
+.SidePanel {
+    height: 100%;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    & > :nth-child(2) {
+        flex: 1 1 auto;
+    }
+}
