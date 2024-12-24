@@ -1,4 +1,4 @@
-import {SetStoreFunction, Store} from "solid-js/store";
+import {SetStoreFunction} from "solid-js/store";
 
 export class Viewport {
     x = 0;
@@ -21,7 +21,7 @@ export class Viewport {
 
     private frame: DOMRect;
 
-    private attorMag = 0.3;
+    private attorMag = 0.4;
 
     private bndryMag = 0.8;
 
@@ -44,6 +44,13 @@ export class Viewport {
         timeStamp: number;
         timeDelta: number;
         shift: {x: number; y: number};
+    };
+
+    private focusTransition?: {
+        from: {x: number; y: number};
+        to: {x: number; y: number};
+        timeStamp: number;
+        timeDelta: number;
     };
 
     private mouseDown?: {
@@ -92,11 +99,31 @@ export class Viewport {
 
     handleMouseDown(event: MouseEvent): void {
         this.frame = this.viewerEl.getBoundingClientRect();
+        const bndryDirX = this.getBoundryForce(
+            this.x,
+            this.width * this.scale,
+            this.frame.width
+        );
+        const bndryDirY = this.getBoundryForce(
+            this.y,
+            this.height * this.scale,
+            this.frame.height
+        );
 
         this.moveTransition = {
             from: {x: this.x, y: this.y},
             to: {x: this.x, y: this.y},
         };
+
+        if (bndryDirX) {
+            this.moveTransition.from.x = this.x - bndryDirX * this.bndryMag / this.attorMag;
+            this.moveTransition.to.x = this.x - bndryDirX * this.bndryMag / this.attorMag;
+        }
+
+        if (bndryDirY) {
+            this.moveTransition.from.y = this.y - bndryDirY * this.bndryMag / this.attorMag;
+            this.moveTransition.to.y = this.y - bndryDirY * this.bndryMag / this.attorMag;
+        }
 
         this.mouseDown = {pointer: {x: event.clientX, y: event.clientY}};
         this.mouseMove = {pointer: {x: event.clientX, y: event.clientY}};
@@ -141,7 +168,7 @@ export class Viewport {
             this.scaleTransition = {
                 from: this.scale,
                 to: newScale,
-                timeStamp: event.timeStamp,
+                timeStamp: Date.now(),
                 timeDelta: 0,
                 shift: {
                     x: (event.clientX - this.frame.x - this.x) * (delta - 1),
@@ -198,7 +225,7 @@ export class Viewport {
                 this.scaleTransition = {
                     from: this.scale,
                     to: newScale,
-                    timeStamp: event.timeStamp,
+                    timeStamp: Date.now(),
                     timeDelta: 0,
                     shift: {
                         x: (this.touchStart.centroid.x - this.frame.x - this.x)
@@ -229,7 +256,7 @@ export class Viewport {
                 this.scaleTransition = {
                     from: this.scale,
                     to: newScale,
-                    timeStamp: event.timeStamp,
+                    timeStamp: Date.now(),
                     timeDelta: 0,
                     shift: {
                         x: (this.touchStart.centroid.x - this.frame.x - this.x)
@@ -298,7 +325,7 @@ export class Viewport {
     }
 
     launch(): void {
-        if (!this.updateId) requestAnimationFrame((time) => this.update(time));
+        if (!this.updateId) requestAnimationFrame(() => this.update());
     }
 
     getBoundryForce(
@@ -322,7 +349,8 @@ export class Viewport {
     }
 
     needUpdatePosition(): boolean {
-        return Boolean(this.moveTransition)
+        return Boolean(this.focusTransition)
+            || Boolean(this.moveTransition)
             || Math.abs(this.inertia.x) > .1
             || Math.abs(this.inertia.y) > .1;
     }
@@ -343,9 +371,9 @@ export class Viewport {
             const attorDirX = this.moveTransition.to.x - this.x;
             const attorDirY = this.moveTransition.to.y - this.y;
 
-            this.inertia.x = attorDirX * 0.3
+            this.inertia.x = attorDirX * this.attorMag
                 + bndryDirX * this.bndryMag;
-            this.inertia.y = attorDirY * 0.3
+            this.inertia.y = attorDirY * this.attorMag
                 + bndryDirY * this.bndryMag;
         }
         else {
@@ -392,8 +420,6 @@ export class Viewport {
             timeDelta
         );
 
-        const {shift} = this.scaleTransition;
-
         const corrX
             = this.lerp(0, this.scaleTransition.shift.x, timeDelta)
             - this.lerp(0, this.scaleTransition.shift.x, this.scaleTransition.timeDelta);
@@ -420,8 +446,65 @@ export class Viewport {
         }
     }
 
-    update(timeStamp: DOMHighResTimeStamp): void {
-        this.updatePosition();
+    focus(x: number, y: number): void {
+        this.focusTransition = {
+            from: {x: this.x, y: this.y},
+            to: {
+                x: this.frame.width / 2 - x * this.scale,
+                y: this.frame.height / 2 - y * this.scale,
+            },
+            timeStamp: Date.now(),
+            timeDelta: 0,
+        };
+
+        delete this.moveTransition;
+        delete this.scaleTransition;
+        delete this.mouseDown;
+        delete this.mouseMove;
+        this.inertia.x = 0;
+        this.inertia.y = 0;
+
+        this.launch();
+    }
+
+    updateTarget(timeStamp: number): void {
+        if (!this.focusTransition) return;
+
+        const timeDelta
+            = Math.min((timeStamp - this.focusTransition.timeStamp) / 300, 1);
+
+        this.x += this.lerp(
+            this.focusTransition.from.x,
+            this.focusTransition.to.x,
+            timeDelta
+        ) - this.lerp(
+            this.focusTransition.from.x,
+            this.focusTransition.to.x,
+            this.focusTransition.timeDelta
+        );
+
+        this.y += this.lerp(
+            this.focusTransition.from.y,
+            this.focusTransition.to.y,
+            timeDelta
+        ) - this.lerp(
+            this.focusTransition.from.y,
+            this.focusTransition.to.y,
+            this.focusTransition.timeDelta
+        );
+
+        this.focusTransition.timeDelta = timeDelta;
+
+        if (this.focusTransition.timeDelta == 1) {
+            delete this.focusTransition;
+        }
+    }
+
+    update(): void {
+        const timeStamp = Date.now();
+
+        if (this.focusTransition) this.updateTarget(timeStamp);
+        else this.updatePosition();
         this.updateScale(timeStamp);
 
         this.setState({
@@ -431,7 +514,7 @@ export class Viewport {
         });
 
         if (this.needUpdatePosition() || this.needUpdateScale()) {
-            this.updateId = requestAnimationFrame((time) => this.update(time));
+            this.updateId = requestAnimationFrame(() => this.update());
         }
         else {
             this.updateId = undefined;

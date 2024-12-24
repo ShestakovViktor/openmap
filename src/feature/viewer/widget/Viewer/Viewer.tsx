@@ -30,7 +30,7 @@ export function Viewer(): JSX.Element {
         const {value: height} = storeCtx.store.config
             .getByParams<Param>({name: "height"})[0];
 
-        new Viewport(viewer, viewerCtx.setState, {
+        viewerCtx.viewport = new Viewport(viewer, viewerCtx.setState, {
             width: Number(width),
             height: Number(height),
         });

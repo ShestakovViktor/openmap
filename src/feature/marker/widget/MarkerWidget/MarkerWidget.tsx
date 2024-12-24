@@ -63,6 +63,12 @@ export function MarkerWidget({entity}: Props): JSX.Element {
         }
     }, {defer: true}));
 
+    function handleClick(): void {
+        setShow(true);
+
+        viewerCtx.viewport?.focus(entity.x, entity.y);
+    }
+
     return (
         <div
             class={styles.MarkerWidget}
@@ -74,7 +80,7 @@ export function MarkerWidget({entity}: Props): JSX.Element {
             <div
                 class={styles.Marker}
                 style={style()}
-                onMouseDown={() => setShow(true)}
+                onMouseDown={handleClick}
             >
                 <Show
                     when={prop()}
