@@ -1,4 +1,6 @@
-.InfoPopup {
+@use "media";
+
+.FootnoteWidget {
     position: absolute;
     z-index: 100;
     left: 50%;
@@ -9,8 +11,6 @@
 
     padding: 20px;
     border-radius: 8px;
-
-    width: 400px;
 
     display: flex;
     flex-direction: column;
@@ -37,5 +37,17 @@
     .Figure {
         width: 100%;
         height: auto;
+    }
+}
+
+@media (max-width: media.$sm) {
+    .FootnoteWidget {
+        width: media.fv(300px, 700px, media.$xs, media.$sm);
+    }
+}
+
+@media (min-width: media.$sm) {
+    .FootnoteWidget {
+        width: media.fv(700px, 700px, media.$sm, media.$xxl);
     }
 }

@@ -81,6 +81,7 @@ export function MarkerWidget({entity}: Props): JSX.Element {
                 class={styles.Marker}
                 style={style()}
                 onMouseDown={handleClick}
+                onTouchStart={handleClick}
             >
                 <Show
                     when={prop()}

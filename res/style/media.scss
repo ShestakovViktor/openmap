@@ -1,3 +1,6 @@
+@use "sass:math";
+@use "sass:list";
+
 $xs: 320px;
 $sm: 768px;
 $md: 1024px;
@@ -6,16 +9,16 @@ $xl: 1600px;
 $xxl: 1920px;
 
 @function strip-unit($value) {
-    @if unitless($value) or index('px', unit($value)) == null {
+    @if math.is-unitless($value) or list.index('px', math.unit($value)) == null {
       @error "Property \"#{$value}\" must be in px unit.";
     }
     @else {
-        @return $value / ($value * 0 + 1);
+        @return $value * 1;
     }
 }
 
 @function pxToRem($px) {
-    $result: $px / 16 * 1rem;
+    $result: calc($px / 16px * 1rem);
     @return #{$result};
 }
 
@@ -25,7 +28,7 @@ $xxl: 1920px;
     $minViewportPx: strip-unit($minViewportPx);
     $maxViewportPx: strip-unit($maxViewportPx);
 
-    $slope: ($maxValuePx - $minValuePx) / ($maxViewportPx - $minViewportPx);
+    $slope: calc(($maxValuePx - $minValuePx) / ($maxViewportPx - $minViewportPx));
     $slopeToUnit: $slope * 100;
     $intersectRem: pxToRem($minValuePx - $slope * $minViewportPx);
 

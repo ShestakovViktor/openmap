@@ -63,8 +63,8 @@ export default {
                         options: {
                             api: "modern",
                             sassOptions: {
-                                includePaths: [
-                                    path.join(__dirname, "src/style"),
+                                loadPaths: [
+                                    path.join(__dirname, "res/style"),
                                 ],
                             },
                         },
