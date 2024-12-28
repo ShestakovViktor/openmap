@@ -9,7 +9,7 @@ import {Button, Icon} from "@shared/widget";
 import {useStoreContext} from "@feature/store/context";
 
 type Props = {
-    figureIds: (number | null)[];
+    figureIds: number[];
 };
 
 export function FigureGallery(props: Props): JSX.Element {

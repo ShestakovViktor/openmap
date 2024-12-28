@@ -18,7 +18,7 @@ import {Entity} from "@feature/entity/type";
 i18next.addResourceBundle("en", "figure", {"FigureSelect": en}, true, true);
 
 type Props = {
-    entity: Accessor<Entity & {figureIds: (number | null)[]}>;
+    entity: Accessor<Entity & {figureIds: number[]}>;
 };
 
 export function FigureSelect(props: Props): JSX.Element {
@@ -30,11 +30,11 @@ export function FigureSelect(props: Props): JSX.Element {
         return props.entity().figureIds;
     });
 
-    const [selected, setSelected] = createSignal<number>(0);
+    const [selected, setSelected] = createSignal<number>();
 
     const foo = createMemo(() => {
-        const id = figureIds()[selected()];
-        return id ? [id] : [];
+        const selectedIndex = selected();
+        return selectedIndex ? [figureIds()[selectedIndex]] : [];
     });
 
     const figureBrowserDialog = new Modal();
@@ -47,15 +47,18 @@ export function FigureSelect(props: Props): JSX.Element {
                 selected={foo()}
                 onSelect={(ids: number[]) => {
                     const entity = props.entity();
+                    const selectedIndex = selected();
 
-                    const figureIds = [...entity.figureIds];
-                    figureIds[selected()] = ids[0];
+                    if (selectedIndex != undefined) {
+                        const figureIds = [...entity.figureIds];
+                        figureIds[selectedIndex] = ids[0];
+                        store.entity.set<Entity & {figureIds: number[]}>(entity.id, {figureIds});
+                    }
+                    else {
+                        const figureIds = [...entity.figureIds, ids[0]];
+                        store.entity.set<Entity & {figureIds: number[]}>(entity.id, {figureIds});
+                    }
 
-                    store.entity
-                        .set<Entity & {figureIds: (number | null)[]}>(
-                            entity.id,
-                        {figureIds}
-                        );
                     figureBrowserDialog.hide();
                 }}
             />
@@ -95,20 +98,17 @@ export function FigureSelect(props: Props): JSX.Element {
                                     }
                                 </div>
                                 <div class={styles.Controls}>
-                                    <Button icon={PrevIconSvg}/>
+                                    {/* <Button icon={PrevIconSvg}/> */}
                                     <Button
                                         icon={SaltireIconSvg}
                                         onClick={() => {
-
-                                            // setFigureIds((prev) =>
-                                            //     prev.filter((v, i) => i != index())
-                                            // );
-                                            // input!.dispatchEvent(
-                                            //     new Event("change", {bubbles: true})
-                                            // );
+                                            const entity = props.entity();
+                                            const figureIds = [...entity.figureIds];
+                                            const filtered = figureIds.filter((v, i) => i != index());
+                                            store.entity.set<Entity & {figureIds: number[]}>(entity.id, {figureIds: filtered});
                                         }}
                                     />
-                                    <Button icon={NextIconSvg}/>
+                                    {/* <Button icon={NextIconSvg}/> */}
                                 </div>
                             </div>
                         );
@@ -119,11 +119,8 @@ export function FigureSelect(props: Props): JSX.Element {
                         <Button
                             icon={PlusIconSvg}
                             onClick={() => {
-                                const entity = props.entity();
-                                store.entity.set<Entity & {figureIds: (number | null)[]}>(
-                                    entity.id,
-                                {figureIds: [...entity.figureIds, null]}
-                                );
+                                setSelected();
+                                figureBrowserDialog.show();
                             }}
                         />
                     </div>
