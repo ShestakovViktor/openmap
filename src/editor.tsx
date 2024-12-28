@@ -3,7 +3,7 @@ import "@res/style/colors.scss";
 import "@res/style/global.scss";
 
 import {render} from "solid-js/web";
-import {StartupDialog, Editor} from "@feature/editor/widget";
+import {StartupDialog, Editor, ModalLayer} from "@feature/editor/widget";
 import {createSignal, Match, Switch} from "solid-js";
 import {Data} from "@type";
 import {StoreProvider} from "@feature/store/context";
@@ -21,7 +21,9 @@ render(() =>
     <Switch>
         <Match when={!data()}>
             <StartupProvider dataSignal={dataSignal}>
-                <StartupDialog/>
+                <ModalLayer>
+                    <StartupDialog/>
+                </ModalLayer>
             </StartupProvider>
         </Match>
         <Match when={data()}>
