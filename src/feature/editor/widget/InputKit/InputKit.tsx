@@ -21,6 +21,8 @@ export function InputKit(): JSX.Element {
         {
             icon: LoupeIconSvg,
             onClick(): void {
+                editorCtx.setSelected(undefined);
+
                 editorCtx.setState({
                     dockArea: {items: []},
                     inputMode: INPUT_MODE.DEFAULT_VIEW,
