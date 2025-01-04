@@ -1,6 +1,6 @@
 import styles from "./DecorWidget.module.scss";
 import ImageIconSvg from "@res/svg/image.svg";
-import {JSX, Show, createMemo} from "solid-js";
+import {Accessor, JSX, Show, createMemo} from "solid-js";
 import {useViewerContext} from "@feature/viewer/context";
 
 import {assetToSrc} from "@feature/app/utiliy";
@@ -11,12 +11,13 @@ import {Motion} from "@feature/motion/type";
 import {Prop} from "@feature/prop/type";
 
 type Props = {
-    entity: Decor;
+    entity: Accessor<Decor>;
 };
 
-export function DecorWidget({entity}: Props): JSX.Element {
-    const storeCtx = useStoreContext();
+export function DecorWidget(props: Props): JSX.Element {
+    const {store} = useStoreContext();
     const viewerCtx = useViewerContext();
+    const entity = props.entity();
 
     const transform = createMemo((): string => {
         const x = entity.x * viewerCtx.state.scale;
@@ -25,60 +26,61 @@ export function DecorWidget({entity}: Props): JSX.Element {
         return `translate3d(${x}px, ${y}px, 0px)`;
     });
 
-    const prop = createMemo((): Prop | undefined => {
+    const propSrc = createMemo((): string | undefined => {
         const propId = entity.propId;
 
-        return propId
-            ? storeCtx.store.asset.getById<Prop>(propId)
-            : undefined;
+        if (!propId) return undefined;
+
+        const prop = store.asset.getById<Prop>(propId);
+
+        if (!prop) return undefined;
+
+        const src = prop.path
+            ? viewerCtx.path + prop.path
+            : assetToSrc(prop);
+
+        return src;
     });
 
-    const motionStyle = createMemo((): string => {
+    const motionClass = createMemo((): string | undefined => {
         const motionId = entity.motionId;
 
-        return motionId
-            ? storeCtx.store.asset.getById<Motion>(motionId)?.class || ""
-            : "";
+        if (!motionId) return undefined;
+
+        const motion = store.asset.getById<Motion>(motionId);
+
+        if (!motion) return undefined;
+
+        return motion.class;
+    });
+
+    const classList = createMemo(() => {
+        return {[motionClass() || ""]:  Boolean(motionClass())};
     });
 
     return (
         <div
             class={styles.DecorWidget}
-            data-entity-id={entity.id}
             style={{transform: transform()}}
+            data-entity-id={entity.id}
         >
-            <div
-                class={styles.Decor}
-
-            >
+            <div class={styles.Decor}>
                 <Show
-                    when={prop()}
+                    when={propSrc()}
                     fallback={(
                         <Icon
                             svg={ImageIconSvg}
                             class={styles.Prop}
-                            classList={{
-                                [motionStyle()]: Boolean(motionStyle()),
-                            }}
+                            classList={classList()}
                         />
                     )}
                 >
-                    {(propMemo) => {
-                        const prop = propMemo();
-
-                        const src = prop.path
-                            ? viewerCtx.path + prop.path
-                            : assetToSrc(prop);
-
-                        return (<img
-                            class={styles.Prop}
-                            classList={{
-                                [motionStyle()]: Boolean(motionStyle()),
-                            }}
-                            src={src}
-                            draggable={false}
-                        />);
-                    }}
+                    {<img
+                        class={styles.Prop}
+                        classList={classList()}
+                        src={propSrc()}
+                        draggable={false}
+                    />}
                 </Show>
             </div>
         </div>

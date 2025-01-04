@@ -1,6 +1,6 @@
 import styles from "./MarkerWidget.module.scss";
 import MarkerIconSvg from "@res/svg/marker.svg";
-import {JSX, Show, createEffect, createMemo, createSignal, on} from "solid-js";
+import {Accessor, JSX, Show, createEffect, createMemo, createSignal, on} from "solid-js";
 import {assetToSrc} from "@feature/app/utiliy";
 import {EntityWidget} from "@feature/entity/widget";
 import {useStoreContext} from "@feature/store/context";
@@ -11,12 +11,13 @@ import {Prop} from "@feature/prop/type";
 import {VIEWER_MODE} from "@feature/viewer/enum";
 
 type Props = {
-    entity: Marker;
+    entity: Accessor<Marker>;
 };
 
-export function MarkerWidget({entity}: Props): JSX.Element {
+export function MarkerWidget(props: Props): JSX.Element {
     const storeCtx = useStoreContext();
     const viewerCtx = useViewerContext();
+    const entity = props.entity();
 
     let element: HTMLDivElement | undefined;
 
@@ -35,12 +36,20 @@ export function MarkerWidget({entity}: Props): JSX.Element {
         };
     });
 
-    const prop = createMemo((): Prop | undefined => {
+    const propSrc = createMemo((): string | undefined => {
         const propId = entity.propId;
 
-        return propId
-            ? storeCtx.store.asset.getById<Prop>(propId)
-            : undefined;
+        if (!propId) return undefined;
+
+        const prop = storeCtx.store.asset.getById<Prop>(propId);
+
+        if (!prop) return undefined;
+
+        const src = prop.path
+            ? viewerCtx.path + prop.path
+            : assetToSrc(prop);
+
+        return src;
     });
 
     const [show, setShow] = createSignal(false);
@@ -84,7 +93,7 @@ export function MarkerWidget({entity}: Props): JSX.Element {
                 onTouchStart={handleClick}
             >
                 <Show
-                    when={prop()}
+                    when={propSrc()}
                     fallback={(
                         <Icon
                             svg={MarkerIconSvg}
@@ -92,21 +101,11 @@ export function MarkerWidget({entity}: Props): JSX.Element {
                         />
                     )}
                 >
-                    {(propMemo) => {
-                        const prop = propMemo();
-
-                        const src = prop.path
-                            ? viewerCtx.path + prop.path
-                            : assetToSrc(prop);
-
-                        return (
-                            <img
-                                class={styles.Prop}
-                                src={src}
-                                draggable={false}
-                            />
-                        );
-                    }}
+                    {<img
+                        class={styles.Prop}
+                        src={propSrc()}
+                        draggable={false}
+                    />}
                 </Show>
             </div>
 

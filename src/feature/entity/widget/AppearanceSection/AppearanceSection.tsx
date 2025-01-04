@@ -8,12 +8,12 @@ import {Button, Dialog, Icon, Modal, Section, Toolbar} from "@shared/widget";
 import {Accessor, JSX, Show, createMemo} from "solid-js";
 import {PropBrowser} from "@feature/prop/widget";
 import {assetToSrc} from "@feature/app/utiliy";
-import {DATA_TYPE} from "@enum";
 import {useStoreContext} from "@feature/store/context";
 import {MotionBrowser} from "@feature/motion/widget";
 import {Entity} from "@feature/entity/type";
 import {Motion} from "@feature/motion/type";
 import {Prop} from "@feature/prop/type";
+import {useViewerContext} from "@feature/viewer/context";
 
 i18next.addResourceBundle("en", "entity", {AppearanceSection: en}, true, true);
 
@@ -27,18 +27,28 @@ type Props = {
 
 export function AppearanceSection(props: Props): JSX.Element {
     const {store} = useStoreContext();
-    let propInput: HTMLInputElement;
-    let motionInput: HTMLInputElement;
+    const {path} = useViewerContext();
+    const entity = props.entity();
 
-    const prop = createMemo((): Prop | undefined => {
-        const propId = props.entity().propId;
-        return propId ? store.asset.getById<Prop>(propId) : undefined;
+    const propSrc = createMemo((): string | undefined => {
+        const propId = entity.propId;
+
+        if (!propId) return undefined;
+
+        const prop = store.asset.getById<Prop>(propId);
+
+        if (!prop) return undefined;
+
+        const src = prop.path
+            ? path + prop.path
+            : assetToSrc(prop);
+
+        return src;
     });
 
     const selectedProp = createMemo(() => {
-        const entity = props.entity();
-        const id = entity.propId;
-        return id ? [id] : [];
+        const propId = entity.propId;
+        return propId ? [propId] : [];
     });
 
     const propBrowserDialog = new Modal();
@@ -60,9 +70,20 @@ export function AppearanceSection(props: Props): JSX.Element {
         </Dialog>
     );
 
-    const motion = createMemo((): Motion | undefined => {
-        const {motionId} = props.entity();
-        return motionId ? store.asset.getById<Motion>(motionId) : undefined;
+    const motionClass = createMemo((): string | undefined => {
+        const motionId = entity.motionId;
+
+        if (!motionId) return undefined;
+
+        const motion = store.asset.getById<Motion>(motionId);
+
+        if (!motion) return undefined;
+
+        return motion.class;
+    });
+
+    const classList = createMemo(() => {
+        return {[motionClass() || ""]:  Boolean(motionClass())};
     });
 
     const selectedMotion = createMemo(() => {
@@ -92,12 +113,10 @@ export function AppearanceSection(props: Props): JSX.Element {
     return (
         <Section
             class={styles.AppearanceSection}
-            title={
-                i18next.t(
-                    "entity:AppearanceSection.title",
-                    {postProcess: ["capitalize"]}
-                )
-            }
+            title={i18next.t(
+                "entity:AppearanceSection.title",
+                {postProcess: ["capitalize"]}
+            )}
         >
             <Toolbar>
                 <Button
@@ -112,47 +131,24 @@ export function AppearanceSection(props: Props): JSX.Element {
                 </Show>
             </Toolbar>
 
-            <input
-                ref={propInput!}
-                name={"propId"}
-                type={"hidden"}
-                value={props.entity().propId ?? ""}
-                data-type={DATA_TYPE.REFERENCE}
-            />
-            <Show when={props.motion}>
-                <input
-                    ref={motionInput!}
-                    name={"motionId"}
-                    type={"hidden"}
-                    value={props.entity().motionId ?? ""}
-                    data-type={DATA_TYPE.REFERENCE}
-                />
-            </Show>
-
             <Show
-                when={prop()}
+                when={propSrc()}
                 fallback={(
                     <Icon
                         class={styles.Preview}
-                        classList={{
-                            [motion()?.class ?? ""]: props.motion && Boolean(motion()),
-                        }}
+                        classList={classList()}
                         svg={ImageIconSvg}
                         onPointerDown={() => propBrowserDialog.show()}
                     />
                 )}
             >
-                {(asset) => (
-                    <img
-                        class={styles.Preview}
-                        classList={{
-                            [motion()?.class ?? ""]: props.motion && Boolean(motion()),
-                        }}
-                        src={asset().path || assetToSrc(asset())}
-                        draggable={false}
-                        onPointerDown={() => propBrowserDialog.show()}
-                    />
-                )}
+                {<img
+                    class={styles.Preview}
+                    classList={classList()}
+                    src={propSrc()}
+                    draggable={false}
+                    onPointerDown={() => propBrowserDialog.show()}
+                />}
             </Show>
         </Section>
     );

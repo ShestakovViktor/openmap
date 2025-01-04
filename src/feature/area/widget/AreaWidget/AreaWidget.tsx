@@ -1,16 +1,17 @@
 import styles from "./AreaWidget.module.scss";
-import {JSX, createSignal, createMemo, Show} from "solid-js";
+import {JSX, createSignal, createMemo, Show, Accessor} from "solid-js";
 import {useViewerContext} from "@feature/viewer/context";
 import {EntityWidget} from "@feature/entity/widget";
 import {VIEWER_MODE} from "@feature/viewer/enum";
 import {Area} from "@feature/area/type";
 
 type Props = {
-    entity: Area;
+    entity: Accessor<Area>;
 };
 
 export function AreaWidget(props: Props): JSX.Element {
-    const {entity} = props;
+    const entity = props.entity();
+
     const viewerCtx = useViewerContext();
 
     const [show, setShow] = createSignal(false);

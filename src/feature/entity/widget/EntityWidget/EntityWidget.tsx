@@ -1,4 +1,4 @@
-import {JSX, Show, ValidComponent} from "solid-js";
+import {createMemo, JSX, Show, ValidComponent} from "solid-js";
 import {TileWidget} from "@feature/tile/widget";
 import {LayerWidget} from "@feature/layer/widget";
 import {MarkerWidget} from "@feature/marker/widget";
@@ -15,11 +15,13 @@ type Props = {
 };
 
 export function EntityWidget(props: Props): JSX.Element {
-    const {store} = useStoreContext();
+    const storeCtx = useStoreContext();
 
-    const entity = store.entity.getById(props.entityId);
-
-    if (!entity) throw new Error();
+    const entity = createMemo(() => {
+        const entity = storeCtx.store.entity.getById(props.entityId);
+        if (!entity) throw new Error();
+        return entity;
+    });
 
     const entities: {[key: string]: ValidComponent} = {
         [ENTITY_TYPE.LAYER]: LayerWidget,
@@ -31,11 +33,9 @@ export function EntityWidget(props: Props): JSX.Element {
     };
 
     return (
-        <Show when={entity}>
-            <Dynamic
-                component={entities[entity.entityTypeId]}
-                entity={entity}
-            />
-        </Show>
+        <Dynamic
+            component={entities[entity().entityTypeId]}
+            entity={entity}
+        />
     );
 }

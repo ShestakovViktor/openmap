@@ -19,9 +19,8 @@ export class Collection<U extends {id: number}> {
 
     add<T extends U = U>(data: Partial<T>): T {
         const id = this.genId();
-        const record = {...data, id} as any;
-        this.setData(id, record);
-        return record;
+        this.setData(id, {...data, id} as T);
+        return this.data[id] as T;
     }
 
     set<T extends U = U>(id: number, data: Partial<T>): void {
