@@ -450,8 +450,8 @@ export class Viewport {
         this.focusTransition = {
             from: {x: this.x, y: this.y},
             to: {
-                x: this.frame.width / 2 - x * this.scale,
-                y: this.frame.height / 2 - y * this.scale,
+                x: this.frame.width * .5 - x * this.scale,
+                y: this.frame.height * .75 - y * this.scale,
             },
             timeStamp: Date.now(),
             timeDelta: 0,
