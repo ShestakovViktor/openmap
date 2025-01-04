@@ -1,9 +1,8 @@
 import en from "./string/en.json";
 import i18next from "i18next";
 
-import {Field} from "@shared/widget";
+import {Field, Input} from "@shared/widget";
 import {Accessor, JSX} from "solid-js";
-import {DATA_TYPE} from "@enum";
 
 i18next.addResourceBundle("en", "entity", {EntityTypeIdField: en}, true, true);
 
@@ -20,10 +19,9 @@ export function EntityTypeIdField(props: Props): JSX.Element {
                     {postProcess: ["capitalize"]}
                 )}
             </label>
-            <input
+            <Input
                 name="entityTypeId"
-                value={props.entity()?.entityTypeId ?? ""}
-                data-type={DATA_TYPE.REFERENCE}
+                value={String(props.entity()?.entityTypeId)}
                 readonly
             />
         </Field>

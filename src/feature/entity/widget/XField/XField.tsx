@@ -1,9 +1,8 @@
 import en from "./string/en.json";
 import i18next from "i18next";
 
-import {Field} from "@shared/widget";
+import {Field, Input} from "@shared/widget";
 import {Accessor, JSX} from "solid-js";
-import {DATA_TYPE} from "@enum";
 import {useStoreContext} from "@feature/store/context";
 import {Entity, Spatial} from "@feature/entity/type";
 
@@ -32,11 +31,10 @@ export function XField(props: Props): JSX.Element {
                     {postProcess: ["capitalize"]}
                 )}
             </label>
-            <input
+            <Input
                 type="number"
                 name="x"
-                value={props.entity().x}
-                data-type={DATA_TYPE.NUMBER}
+                value={String(props.entity().x)}
                 onChange={handleChange}
             />
         </Field>

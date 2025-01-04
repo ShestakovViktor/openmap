@@ -1,0 +1,17 @@
+.Input {
+    padding: 8px;
+    color: inherit;
+
+    border: 1px solid var(--grey-90);
+    border-radius: 8px;
+    outline: none;
+
+    &:read-only {
+        background-color: var(--grey-90);
+    }
+        
+
+    &[type="file"] {
+        background-color: unset;
+    }
+}

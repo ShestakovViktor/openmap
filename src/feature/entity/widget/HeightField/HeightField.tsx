@@ -1,7 +1,7 @@
 import en from "./string/en.json";
 import i18next from "i18next";
 
-import {Field} from "@shared/widget";
+import {Field, Input} from "@shared/widget";
 import {Accessor, JSX} from "solid-js";
 import {DATA_TYPE} from "@enum";
 import {useStoreContext} from "@feature/store/context";
@@ -33,10 +33,10 @@ export function HeightField(props: Props): JSX.Element {
                     {postProcess: ["capitalize"]}
                 )}
             </label>
-            <input
+            <Input
                 type="number"
                 name="height"
-                value={props.entity().height}
+                value={String(props.entity().height)}
                 data-type={DATA_TYPE.NUMBER}
                 onChange={handleChange}
             />

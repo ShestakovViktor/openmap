@@ -17,12 +17,10 @@ type Props = {
 export function PositionSection(props: Props): JSX.Element {
     return (
         <Section
-            title={
-                i18next.t(
-                    "entity:PositionSection.title",
-                    {postProcess: ["capitalize"]}
-                )
-            }
+            title={i18next.t(
+                "entity:PositionSection.title",
+                {postProcess: ["capitalize"]}
+            )}
             class={styles.PositionSection}
         >
             <XField entity={props.entity}/>
