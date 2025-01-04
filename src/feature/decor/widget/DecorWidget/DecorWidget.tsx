@@ -17,17 +17,16 @@ type Props = {
 export function DecorWidget(props: Props): JSX.Element {
     const {store} = useStoreContext();
     const viewerCtx = useViewerContext();
-    const entity = props.entity();
 
     const transform = createMemo((): string => {
-        const x = entity.x * viewerCtx.state.scale;
-        const y = entity.y * viewerCtx.state.scale;
+        const x = props.entity().x * viewerCtx.state.scale;
+        const y = props.entity().y * viewerCtx.state.scale;
 
         return `translate3d(${x}px, ${y}px, 0px)`;
     });
 
     const propSrc = createMemo((): string | undefined => {
-        const propId = entity.propId;
+        const propId = props.entity().propId;
 
         if (!propId) return undefined;
 
@@ -43,7 +42,7 @@ export function DecorWidget(props: Props): JSX.Element {
     });
 
     const motionClass = createMemo((): string | undefined => {
-        const motionId = entity.motionId;
+        const motionId = props.entity().motionId;
 
         if (!motionId) return undefined;
 
@@ -62,7 +61,7 @@ export function DecorWidget(props: Props): JSX.Element {
         <div
             class={styles.DecorWidget}
             style={{transform: transform()}}
-            data-entity-id={entity.id}
+            data-entity-id={props.entity().id}
         >
             <div class={styles.Decor}>
                 <Show

@@ -8,7 +8,6 @@ import {Icon} from "@shared/widget";
 import {useViewerContext} from "@feature/viewer/context";
 import {Marker} from "@feature/marker/type";
 import {Prop} from "@feature/prop/type";
-import {VIEWER_MODE} from "@feature/viewer/enum";
 
 type Props = {
     entity: Accessor<Marker>;
@@ -17,13 +16,12 @@ type Props = {
 export function MarkerWidget(props: Props): JSX.Element {
     const storeCtx = useStoreContext();
     const viewerCtx = useViewerContext();
-    const entity = props.entity();
 
     let element: HTMLDivElement | undefined;
 
     const transform = createMemo((): string => {
-        const x = entity.x * viewerCtx.state.scale;
-        const y = entity.y * viewerCtx.state.scale;
+        const x = props.entity().x * viewerCtx.state.scale;
+        const y = props.entity().y * viewerCtx.state.scale;
 
         return `translate3d(${x}px, ${y}px, 0px)`;
     });
@@ -31,13 +29,13 @@ export function MarkerWidget(props: Props): JSX.Element {
     const style = createMemo((): JSX.CSSProperties => {
         return {
             transform: "translate3d(-50%, -50%, 0)",
-            width: entity.width + "px",
-            height: entity.height + "px",
+            width: props.entity().width + "px",
+            height: props.entity().height + "px",
         };
     });
 
     const propSrc = createMemo((): string | undefined => {
-        const propId = entity.propId;
+        const propId = props.entity().propId;
 
         if (!propId) return undefined;
 
@@ -75,13 +73,13 @@ export function MarkerWidget(props: Props): JSX.Element {
     function handleClick(): void {
         setShow(true);
 
-        viewerCtx.viewport?.focus(entity.x, entity.y);
+        viewerCtx.viewport?.focus(props.entity().x, props.entity().y);
     }
 
     return (
         <div
             class={styles.MarkerWidget}
-            data-entity-id={entity.id}
+            data-entity-id={props.entity().id}
             style={{transform: transform()}}
             draggable={false}
             ref={element}
@@ -109,7 +107,7 @@ export function MarkerWidget(props: Props): JSX.Element {
                 </Show>
             </div>
 
-            <Show when={show() && entity.footnoteId}>
+            <Show when={show() && props.entity().footnoteId}>
                 {id => <EntityWidget entityId={id()}/>}
             </Show>
         </div>

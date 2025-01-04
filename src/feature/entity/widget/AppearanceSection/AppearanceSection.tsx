@@ -28,10 +28,9 @@ type Props = {
 export function AppearanceSection(props: Props): JSX.Element {
     const {store} = useStoreContext();
     const {path} = useViewerContext();
-    const entity = props.entity();
 
     const propSrc = createMemo((): string | undefined => {
-        const propId = entity.propId;
+        const propId = props.entity().propId;
 
         if (!propId) return undefined;
 
@@ -47,7 +46,7 @@ export function AppearanceSection(props: Props): JSX.Element {
     });
 
     const selectedProp = createMemo(() => {
-        const propId = entity.propId;
+        const propId = props.entity().propId;
         return propId ? [propId] : [];
     });
 
@@ -71,7 +70,7 @@ export function AppearanceSection(props: Props): JSX.Element {
     );
 
     const motionClass = createMemo((): string | undefined => {
-        const motionId = entity.motionId;
+        const motionId = props.entity().motionId;
 
         if (!motionId) return undefined;
 

@@ -46,17 +46,16 @@ export function FigureSelect(props: Props): JSX.Element {
             <FigureBrowser
                 selected={foo()}
                 onSelect={(ids: number[]) => {
-                    const entity = props.entity();
                     const selectedIndex = selected();
 
                     if (selectedIndex != undefined) {
-                        const figureIds = [...entity.figureIds];
+                        const figureIds = [...props.entity().figureIds];
                         figureIds[selectedIndex] = ids[0];
-                        store.entity.set<Entity & {figureIds: number[]}>(entity.id, {figureIds});
+                        store.entity.set<Entity & {figureIds: number[]}>(props.entity().id, {figureIds});
                     }
                     else {
-                        const figureIds = [...entity.figureIds, ids[0]];
-                        store.entity.set<Entity & {figureIds: number[]}>(entity.id, {figureIds});
+                        const figureIds = [...props.entity().figureIds, ids[0]];
+                        store.entity.set<Entity & {figureIds: number[]}>(props.entity().id, {figureIds});
                     }
 
                     figureBrowserDialog.hide();

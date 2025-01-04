@@ -8,15 +8,13 @@ type Props = {
 };
 
 export function FootnoteWidget(props: Props): JSX.Element {
-    const entity = props.entity();
-
-    const text = createMemo(() => entity.text);
+    const text = createMemo(() => props.entity().text);
 
     return (
         <div class={styles.FootnoteWidget}>
             <p class={styles.Text} innerHTML={text()}></p>
-            <Show when={entity.figureIds.length > 0}>
-                <FigureGallery figureIds={entity.figureIds}/>
+            <Show when={props.entity().figureIds.length > 0}>
+                <FigureGallery figureIds={props.entity().figureIds}/>
             </Show>
         </div>
     );

@@ -10,8 +10,6 @@ type Props = {
 };
 
 export function AreaWidget(props: Props): JSX.Element {
-    const entity = props.entity();
-
     const viewerCtx = useViewerContext();
 
     const [show, setShow] = createSignal(false);
@@ -19,8 +17,8 @@ export function AreaWidget(props: Props): JSX.Element {
     const factor = createMemo((): number => 5 / viewerCtx.state.scale);
 
     const transform = createMemo((): string => {
-        const x = entity.x * viewerCtx.state.scale;
-        const y = entity.y * viewerCtx.state.scale;
+        const x = props.entity().x * viewerCtx.state.scale;
+        const y = props.entity().y * viewerCtx.state.scale;
         const scale = viewerCtx.state.scale;
 
         return `translate3d(${x}px, ${y}px, 0px) scale(${scale})`;
@@ -28,22 +26,22 @@ export function AreaWidget(props: Props): JSX.Element {
 
     const style = createMemo((): JSX.CSSProperties => {
         return {
-            width: entity.width + factor() * 2 + "px",
-            height: entity.height + factor() * 2 + "px",
+            width: props.entity().width + factor() * 2 + "px",
+            height: props.entity().height + factor() * 2 + "px",
         };
     });
 
     const viewBox = createMemo((): string => {
-        const x = -entity.width / 2 - factor();
-        const y = -entity.height / 2 - factor();
-        const width = entity.width + factor() * 2;
-        const height = entity.height + factor() * 2;
+        const x = -props.entity().width / 2 - factor();
+        const y = -props.entity().height / 2 - factor();
+        const width = props.entity().width + factor() * 2;
+        const height = props.entity().height + factor() * 2;
 
         return `${x} ${y} ${width} ${height}`;
     });
 
     const polygon = createMemo((): JSX.Element => {
-        const points = entity.points
+        const points = props.entity().points
             .reduce((r, p) => r + ` ${p.x},${p.y}`, "");
 
         const fill = viewerCtx.state.mode == VIEWER_MODE.DEVELOPMENT
@@ -66,7 +64,7 @@ export function AreaWidget(props: Props): JSX.Element {
 
     const helpers = createMemo((): JSX.Element[] => {
         if (viewerCtx.state.mode == VIEWER_MODE.DEVELOPMENT) {
-            return entity.points
+            return props.entity().points
                 .map((point) =>
                     <circle
                         cx={point.x}
@@ -84,7 +82,7 @@ export function AreaWidget(props: Props): JSX.Element {
     return (
         <div
             class={styles.AreaWidget}
-            data-entity-id={entity.id}
+            data-entity-id={props.entity().id}
             style={{transform: transform()}}
         >
             <svg
@@ -97,7 +95,7 @@ export function AreaWidget(props: Props): JSX.Element {
                 {helpers()}
             </svg>
 
-            <Show when={show() && entity.footnoteId}>
+            <Show when={show() && props.entity().footnoteId}>
                 {id => <EntityWidget entityId={id()}/>}
             </Show>
         </div>
