@@ -1,7 +1,7 @@
 import styles from "./FootnoteDialog.module.scss";
 import en from "./string/en.json";
 import i18next from "i18next";
-import {Accessor, createMemo, JSX, Show} from "solid-js";
+import {Accessor, createMemo, JSX} from "solid-js";
 import {Dialog} from "@shared/widget";
 import {FootnoteForm} from "@feature/footnote/widget";
 import {useStoreContext} from "@feature/store/context";
@@ -19,14 +19,13 @@ export function FootnoteDialog(props: Props): JSX.Element {
     const {store} = useStoreContext();
 
     const footnote = createMemo(() => {
-        const id = props.entity().footnoteId;
-        if (!id) throw new Error();
+        const footnoteId = props.entity().footnoteId;
+        if (!footnoteId) throw new Error();
 
-        const entity = store.entity.getById<Footnote>(id);
+        const footnote = store.entity.getById<Footnote>(footnoteId);
+        if (!footnote) throw new Error();
 
-        if (!entity) throw new Error();
-
-        return entity;
+        return footnote;
     });
 
     return (
@@ -38,9 +37,7 @@ export function FootnoteDialog(props: Props): JSX.Element {
             )}
             onClose={props.onClose}
         >
-            <Show when={footnote()} fallback={<h1>No entity</h1>}>
-                {(footnote) => <FootnoteForm entity={footnote}/>}
-            </Show>
+            <FootnoteForm entity={footnote}/>
         </Dialog>
     );
 }

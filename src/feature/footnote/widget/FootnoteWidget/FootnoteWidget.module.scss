@@ -6,6 +6,7 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -100%);
+    overflow: auto;
 
     background: var(--white);
 
@@ -32,9 +33,7 @@
         transform: translate(-50%, 0%);
     }
 
-    .Text {}
-
-    .Figure {
+    img {
         width: 100%;
         height: auto;
     }
@@ -42,12 +41,14 @@
 
 @media (max-width: media.$sm) {
     .FootnoteWidget {
-        width: media.fv(300px, 700px, media.$xs, media.$sm);
+        width: media.fv(300px, 600px, media.$xs, media.$sm);
+        height: media.fv(400px, 400px, media.$xs, media.$sm);
     }
 }
 
 @media (min-width: media.$sm) {
     .FootnoteWidget {
-        width: media.fv(700px, 700px, media.$sm, media.$xxl);
+        width: media.fv(600px, 600px, media.$sm, media.$xxl);
+        height: media.fv(400px, 400px, media.$sm, media.$xxl);
     }
 }

@@ -11,17 +11,15 @@ i18next.addResourceBundle("en", "entity", {TextField: en}, true, true);
 
 type Props = {
     entity: Accessor<Entity & {text: string}>;
+    ref?: HTMLTextAreaElement;
 };
 
 export function TextField(props: Props): JSX.Element {
     const {store} = useStoreContext();
 
-    function handleChange(event: Event): void {
-        const target = event.target as HTMLInputElement;
-        store.entity.set<Entity & {text: string}>(
-            props.entity().id,
-            {text: String(target.value)}
-        );
+    function saveValue(event: Event): void {
+        const {value: text} = event.target as HTMLInputElement;
+        store.entity.set<Entity & {text: string}>(props.entity().id, {text});
     }
 
     return (
@@ -35,9 +33,10 @@ export function TextField(props: Props): JSX.Element {
             <textarea
                 id="text"
                 name="text"
+                ref={props.ref}
                 data-tipe="string"
                 value={props.entity().text}
-                onChange={handleChange}
+                onBlur={saveValue}
             />
         </Field>
     );
