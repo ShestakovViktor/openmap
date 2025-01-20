@@ -20,11 +20,9 @@ export async function initProject(params: {
         .initImage(params.map, mime);
 
     const data = initData({
-        config: {
-            1: {id: 1, name: "name", value: params.name},
-            2: {id: 2, name: "width", value: width},
-            3: {id: 3, name: "height", value: height},
-        },
+        1: {id: 1, name: "name", value: params.name},
+        2: {id: 2, name: "width", value: width},
+        3: {id: 3, name: "height", value: height},
     });
 
     const store = new Store(data);

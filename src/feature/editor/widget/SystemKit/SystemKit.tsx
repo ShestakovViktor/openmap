@@ -7,7 +7,8 @@ import GearIconSvg from "@res/svg/gear.svg";
 import i18next from "i18next";
 
 import {JSX} from "solid-js";
-import {Button, Toolbar} from "@shared/widget";
+import {Button, Dialog, Modal, Toolbar} from "@shared/widget";
+import en from "./string/en.json";
 import {useStoreContext} from "@feature/store/context";
 import {useEditorContext} from "@feature/editor/context";
 import {
@@ -15,22 +16,38 @@ import {
     exportProject,
     saveDataToBrowser,
 } from "@feature/editor/service";
+import {ProjectSettings} from "@feature/editor/widget";
+
+i18next.addResourceBundle("en", "editor", {SystemKit: en}, true, true);
 
 export function SystemKit(): JSX.Element {
-    const {store} = useStoreContext();
+    const storeCtx = useStoreContext();
     const {archiveDriver} = useEditorContext();
 
+    const projectSettingsDialog = new Modal();
+    projectSettingsDialog.render(
+        <Dialog
+            class={styles.ProjectSettingsDialog}
+            onClose={() => projectSettingsDialog.hide()}
+            title={i18next.t(
+                "editor:SystemKit.projectSettings",
+                {postProcess: ["capitalize"]}
+            )}
+        >
+            <ProjectSettings/>
+        </Dialog>
+    );
     return (
         <Toolbar class={styles.SystemKit}>
             <Button
                 class={styles.Button}
                 icon={DisketteIconSvg}
                 tooltip={i18next.t(
-                    "layout:SystemBar.exportProject",
+                    "editor:SystemKit.saveProject",
                     {postProcess: ["capitalize"]}
                 )}
                 onClick={() => {
-                    saveDataToBrowser(store)
+                    saveDataToBrowser(storeCtx.store)
                         .catch(err => err);
                 }}
             />
@@ -39,40 +56,43 @@ export function SystemKit(): JSX.Element {
                 class={styles.Button}
                 icon={FileIconSvg}
                 tooltip={i18next.t(
-                    "layout:SystemBar.exportProject",
+                    "editor:SystemKit.exportProject",
                     {postProcess: ["capitalize"]}
                 )}
                 onClick={() => {
-                    exportProject(store, archiveDriver)
+                    exportProject(storeCtx.store, archiveDriver)
                         .catch(err => err);
                 }}
             />
+
             <Button
                 class={styles.Button}
                 icon={DownloadIconSvg}
                 tooltip={i18next.t(
-                    "layout:SystemBar.compileProject",
+                    "editor:SystemKit.compileProject",
                     {postProcess: ["capitalize"]}
                 )}
                 onClick={() => {
-                    compileProject(store, archiveDriver)
+                    compileProject(storeCtx.store, archiveDriver)
                         .catch(err => err);
                 }}
             />
-            {/* <Button
+
+            <Button
                 class={styles.Button}
                 icon={SlidersIconSvg}
                 tooltip={i18next.t(
-                    "layout:SystemBar.compileProject",
+                    "editor:SystemKit.projectSettings",
                     {postProcess: ["capitalize"]}
                 )}
-                onClick={() => {console.log("qwe");}}
+                onClick={() => projectSettingsDialog.show()}
             />
-            <Button
+
+            {/* <Button
                 class={styles.Button}
                 icon={GearIconSvg}
                 tooltip={i18next.t(
-                    "layout:SystemBar.compileProject",
+                    "editor:SystemBar.editorSettingsDialog",
                     {postProcess: ["capitalize"]}
                 )}
                 onClick={() => {console.log("qwe");}}

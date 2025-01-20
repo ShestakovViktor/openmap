@@ -1,5 +1,5 @@
 import styles from "./Viewer.module.scss";
-import {JSX, createMemo, Show, For} from "solid-js";
+import {JSX, createMemo, Show, For, createEffect} from "solid-js";
 import {Portal} from "solid-js/web";
 
 import {useViewerContext} from "@feature/viewer/context";
@@ -25,15 +25,7 @@ export function Viewer(): JSX.Element {
     });
 
     function onViewerMount(viewer: HTMLElement): void {
-        const {value: width} = storeCtx.store.config
-            .getByParams<Param>({name: "width"})[0];
-        const {value: height} = storeCtx.store.config
-            .getByParams<Param>({name: "height"})[0];
-
-        viewerCtx.viewport = new Viewport(viewer, viewerCtx.setState, {
-            width: Number(width),
-            height: Number(height),
-        });
+        viewerCtx.viewport = new Viewport(viewer);
     }
 
     return (

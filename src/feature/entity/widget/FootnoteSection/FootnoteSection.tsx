@@ -25,12 +25,10 @@ export function FootnoteSection(props: Props): JSX.Element {
 
     return (
         <Section
-            title={
-                i18next.t(
-                    "entity:FootnoteSection.title",
-                    {postProcess: ["capitalize"]}
-                )
-            }
+            title={i18next.t(
+                "entity:FootnoteSection.title",
+                {postProcess: ["capitalize"]}
+            )}
         >
             <Toolbar>
                 <Button

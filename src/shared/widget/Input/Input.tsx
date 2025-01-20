@@ -6,6 +6,7 @@ type Props = {
     name?: string;
     readonly?: boolean;
     value?: string;
+    step?: string;
     onChange?: (event: Event) => void;
 };
 
@@ -24,6 +25,7 @@ export function Input(props: Props): JSX.Element {
             type={props.type}
             name={props.name}
             value={props.value}
+            step={props.step}
             onKeyDown={handleKeyDown}
             onChange={props.onChange}
             readonly={props.readonly}

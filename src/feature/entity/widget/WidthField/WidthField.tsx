@@ -3,7 +3,6 @@ import i18next from "i18next";
 
 import {Field, Input} from "@shared/widget";
 import {Accessor, JSX} from "solid-js";
-import {DATA_TYPE} from "@enum";
 import {useStoreContext} from "@feature/store/context";
 import {Entity} from "@feature/entity/type";
 
@@ -37,7 +36,6 @@ export function WidthField(props: Props): JSX.Element {
                 name="width"
                 value={String(props.entity().width)}
                 onChange={handleChange}
-                data-type={DATA_TYPE.NUMBER}
             />
         </Field>
     );

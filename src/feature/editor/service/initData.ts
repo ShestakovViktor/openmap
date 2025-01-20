@@ -2,9 +2,9 @@ import {ASSET_TYPE} from "@feature/asset/enum";
 import {DISPLAY_OPTION} from "@feature/entity/enum";
 import {ENTITY_TYPE} from "@feature/entity/enum";
 import {Layer} from "@feature/layer/type";
-import {Data} from "@type";
+import {Data, Param} from "@type";
 
-export function initData(params?: Partial<Data>): Data {
+export function initData(config?: {[key: number]: Param}): Data {
     const data: Data = {
         system: {
             1: {id: 1, name: "package", value: "0.0.1"},
@@ -14,6 +14,8 @@ export function initData(params?: Partial<Data>): Data {
             1: {id: 1, name: "name", value: "New project"},
             2: {id: 2, name: "width", value: 0},
             3: {id: 3, name: "height", value: 0},
+            4: {id: 4, name: "minScale", value: 0.5},
+            5: {id: 5, name: "maxScale", value: 2},
         },
         entityType: {
             [ENTITY_TYPE.ENTITY]: {
@@ -112,5 +114,7 @@ export function initData(params?: Partial<Data>): Data {
         asset: {},
     };
 
-    return Object.assign(data, params);
+    Object.assign(data.config, config);
+
+    return data;
 }

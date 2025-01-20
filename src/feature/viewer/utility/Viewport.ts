@@ -1,6 +1,11 @@
-import {SetStoreFunction} from "solid-js/store";
+import {useStoreContext} from "@feature/store/context";
+import {Param} from "@type";
+import {useViewerContext, ViewerContextType} from "../context";
+import {createEffect} from "solid-js";
 
 export class Viewport {
+    viewerCtx: ViewerContextType;
+
     x = 0;
 
     y = 0;
@@ -72,17 +77,26 @@ export class Viewport {
         perimeter: number;
     };
 
-    constructor(
-        private viewerEl: HTMLElement,
-        private setState: SetStoreFunction<{
-            x: number;
-            y: number;
-            scale: number;
-        }>,
-        props: {width: number; height: number}
-    ) {
-        this.width = props.width;
-        this.height = props.height;
+    constructor(private viewerEl: HTMLElement) {
+        const storeCtx = useStoreContext();
+        this.viewerCtx = useViewerContext();
+
+        this.width = Number(storeCtx.store.config
+            .getByParams<Param>({name: "width"})[0].value);
+        this.height = Number(storeCtx.store.config
+            .getByParams<Param>({name: "height"})[0].value);
+
+        createEffect(() => {
+            this.minScale = Number(
+                storeCtx.store.config.getByParams({name: "minScale"})[0].value
+            );
+        });
+
+        createEffect(() => {
+            this.maxScale = Number(
+                storeCtx.store.config.getByParams({name: "maxScale"})[0].value
+            );
+        });
 
         this.frame = viewerEl.getBoundingClientRect();
 
@@ -507,7 +521,7 @@ export class Viewport {
         else this.updatePosition();
         this.updateScale(timeStamp);
 
-        this.setState({
+        this.viewerCtx.setState({
             x: this.x,
             y: this.y,
             scale: this.scale,
