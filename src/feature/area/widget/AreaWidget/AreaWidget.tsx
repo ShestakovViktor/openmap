@@ -11,8 +11,10 @@ type Props = {
 
 export function AreaWidget(props: Props): JSX.Element {
     const viewerCtx = useViewerContext();
+    let area!: HTMLDivElement;
+    let footnote!: HTMLDivElement;
 
-    const [show, setShow] = createSignal(false);
+    const [getShowArea, setShowArea] = createSignal(false);
 
     const factor = createMemo((): number => 5 / viewerCtx.state.scale);
 
@@ -40,6 +42,24 @@ export function AreaWidget(props: Props): JSX.Element {
         return `${x} ${y} ${width} ${height}`;
     });
 
+    function handleAreaMouseEnter(): void {
+        setShowArea(true);
+    }
+
+    function handleAreaMouseLeave(event: MouseEvent): void {
+        const relatedTarget = event.relatedTarget as HTMLElement;
+        if (!footnote.contains(relatedTarget)) {
+            setShowArea(false);
+        }
+    }
+
+    function handleFootnoteMouseLeave(event: MouseEvent): void {
+        const relatedTarget = event.relatedTarget as HTMLElement;
+        if (!area.contains(relatedTarget)){
+            setShowArea(false);
+        }
+    }
+
     const polygon = createMemo((): JSX.Element => {
         const points = props.entity().points
             .reduce((r, p) => r + ` ${p.x},${p.y}`, "");
@@ -52,12 +72,8 @@ export function AreaWidget(props: Props): JSX.Element {
             <polygon
                 fill={fill}
                 points={points}
-                onMouseEnter={() => {
-                    setShow(true);
-                }}
-                onMouseLeave={() => {
-                    setShow(false);
-                }}
+                onMouseEnter={handleAreaMouseEnter}
+                onMouseLeave={handleAreaMouseLeave}
             />
         );
     });
@@ -84,6 +100,7 @@ export function AreaWidget(props: Props): JSX.Element {
             class={styles.AreaWidget}
             data-entity-id={props.entity().id}
             style={{transform: transform()}}
+            ref={area}
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -95,8 +112,14 @@ export function AreaWidget(props: Props): JSX.Element {
                 {helpers()}
             </svg>
 
-            <Show when={show() && props.entity().footnoteId}>
-                {id => <EntityWidget entityId={id()}/>}
+            <Show when={getShowArea() && props.entity().footnoteId}>
+                {id =>
+                    <EntityWidget
+                        ref={footnote}
+                        entityId={id()}
+                        onMouseLeave={handleFootnoteMouseLeave}
+                    />
+                }
             </Show>
         </div>
     );

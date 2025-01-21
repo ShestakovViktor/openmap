@@ -12,6 +12,7 @@ import {useStoreContext} from "@feature/store/context";
 type Props = {
     entityId: number;
     ref?: HTMLDivElement | ((el: HTMLElement) => void);
+    onMouseLeave?: (event: MouseEvent) => void;
 };
 
 export function EntityWidget(props: Props): JSX.Element {
@@ -36,6 +37,8 @@ export function EntityWidget(props: Props): JSX.Element {
         <Dynamic
             component={entities[entity().entityTypeId]}
             entity={entity}
+            ref={props.ref}
+            onMouseLeave={props.onMouseLeave}
         />
     );
 }

@@ -6,6 +6,8 @@ import {FootnoteFigure} from "@feature/footnote/widget";
 
 type Props = {
     entity: Accessor<Footnote>;
+    ref?: HTMLDivElement;
+    onMouseLeave?: (event: MouseEvent) => void;
 };
 
 export function FootnoteWidget(props: Props): JSX.Element {
@@ -37,7 +39,7 @@ export function FootnoteWidget(props: Props): JSX.Element {
         return renderContent(props.entity().text);
     });
 
-    function handleWheel(event: WheelEvent): void {
+    function handleWheel(event: MouseEvent): void {
         event.stopPropagation();
     }
 
@@ -45,6 +47,8 @@ export function FootnoteWidget(props: Props): JSX.Element {
         <div
             class={styles.FootnoteWidget}
             onWheel={handleWheel}
+            onMouseLeave={props.onMouseLeave}
+            ref={props.ref}
         >
             {content()}
         </div>
