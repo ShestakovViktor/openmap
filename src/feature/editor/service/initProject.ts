@@ -11,13 +11,13 @@ import {ENTITY_TYPE} from "@feature/entity/enum/ENTITY_TYPE";
 
 export async function initProject(params: {
     name: string;
-    map: File;
+    background: File;
 }): Promise<Data> {
     const imageDriver = new WebImageDriver();
 
     const mime = "image/jpeg";
     const {width, height, tiles: imageTiles} = await imageDriver
-        .initImage(params.map, mime);
+        .initImage(params.background, mime);
 
     const data = initData({
         1: {id: 1, name: "name", value: params.name},

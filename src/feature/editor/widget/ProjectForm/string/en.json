@@ -1,6 +1,6 @@
 {
     "nameField": "name",
-    "mapField": "map",
+    "backgroundField": "background",
     "create": "create",
     "cancel": "cancel"
 }

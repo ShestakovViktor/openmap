@@ -21,9 +21,9 @@ export function ProjectForm(): JSX.Element {
         form.reset();
 
         const name = String(formData.get("name")) || "New project";
-        const map = formData.get("map") as File;
+        const background = formData.get("background") as File;
 
-        initProject({name, map})
+        initProject({name, background})
             .then((data) => {
                 const [, setData] = startupCtx.dataSignal;
                 setData(data);
@@ -49,15 +49,15 @@ export function ProjectForm(): JSX.Element {
                 />
             </Field>
             <Field>
-                <label for="map">
+                <label for="background">
                     {i18next.t(
-                        "editor:ProjectForm.mapField",
+                        "editor:ProjectForm.backgroundField",
                         {postProcess: ["capitalize"]}
                     )}
                 </label>
                 <input
                     type="file"
-                    name="map"
+                    name="background"
                     accept="image/*"
                 />
             </Field>

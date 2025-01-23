@@ -1,3 +1,5 @@
+## ILTO - Interactive Layout TOolkit
+
 #### To work with the project locally you need:
 1. Download the project sources.
 1. Install Node.js from [nodejs.org](https://nodejs.org)

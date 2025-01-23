@@ -1,7 +1,7 @@
 {
-    "name": "openmap",
+    "name": "ilto",
     "version": "0.0.1",
-    "description": "",
+    "description": "Interactive Layout Tool",
     "scripts": {
         "editor-dev": "ts-node node_modules/.bin/webpack-dev-server --config webpack.editor.dev.ts",
         "editor-build": "ts-node node_modules/.bin/webpack --config webpack.editor.build.ts",

@@ -17,5 +17,3 @@ declare module "*.module.scss" {
     const content: {[key: string]: string} = {};
     export default content;
 }
-
-declare const OPEN_MAP_DATA: string = undefined;
