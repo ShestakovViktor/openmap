@@ -21,12 +21,14 @@ type Props = {
 };
 
 export function AssetBrowser(props: Props): JSX.Element {
-    const {store} = useStoreContext();
+    const storeCtx = useStoreContext();
 
     const assets = createMemo(() => {
+        console.log(storeCtx.store.asset.data[0]);
+
         return props.type
-            ? store.asset.getByParams<Asset>({assetTypeId: props.type})
-            : store.asset.getAll<Asset>();
+            ? storeCtx.store.asset.getByParams<Asset>({assetTypeId: props.type})
+            : storeCtx.store.asset.getAll<Asset>();
     });
 
     const [selected, setSelected] = createSignal<number[]>([] as number[]);
@@ -94,7 +96,6 @@ export function AssetBrowser(props: Props): JSX.Element {
                                                 icon={SaltireIconSvg}
                                                 onClick={() => {
                                                     if (props.onDelete) props.onDelete([asset.id]);
-                                                    //signal.asset.setUpdateById();
                                                 }}
                                             />
                                         </Show>

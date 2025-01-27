@@ -1,7 +1,7 @@
 import {createStore, SetStoreFunction} from "solid-js/store";
 
 export class Collection<U extends {id: number}> {
-    private data: {[key: number]: U};
+    public data: {[key: number]: U};
 
     private setData: SetStoreFunction<{[key: number]: U}>;
 
@@ -28,10 +28,7 @@ export class Collection<U extends {id: number}> {
     }
 
     del(id: number): void {
-        this.setData((entities) => {
-            delete entities[id];
-            return entities;
-        });
+        this.setData(id, undefined!);
     }
 
     getById<T extends U = U>(id: number): T | undefined {

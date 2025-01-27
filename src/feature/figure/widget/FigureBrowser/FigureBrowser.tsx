@@ -17,7 +17,7 @@ type Props = {
 };
 
 export function FigureBrowser(props: Props): JSX.Element {
-    const {store} = useStoreContext();
+    const storeCtx = useStoreContext();
 
     const assetFormDialog = new Modal();
     assetFormDialog.render(
@@ -38,7 +38,7 @@ export function FigureBrowser(props: Props): JSX.Element {
             }}
             onDelete={(ids) => {
                 ids.forEach((id) => {
-                    // store.asset.delete(id);
+                    storeCtx.store.asset.del(id);
                 });
             }}
             onSelect={props.onSelect}
