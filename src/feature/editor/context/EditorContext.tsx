@@ -3,6 +3,7 @@ import {SetStoreFunction} from "solid-js/store";
 import {ArchiveDriver, ImageDriver} from "@interface";
 import {EditorState} from "@feature/editor/type";
 import {Entity, Parent} from "@feature/entity/type";
+import {Invoker} from "@feature/editor/service";
 
 export type EditorContexType = {
     selected: Accessor<Entity | undefined>;
@@ -14,6 +15,7 @@ export type EditorContexType = {
     state: EditorState;
     setState: SetStoreFunction<EditorState>;
 
+    invoker: Invoker;
     archiveDriver: ArchiveDriver;
     imageDriver: ImageDriver;
 };

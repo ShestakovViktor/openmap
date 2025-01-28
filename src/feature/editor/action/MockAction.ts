@@ -1,6 +1,6 @@
 import {Action} from "./Action";
 
-export class MockAction extends Action {
+export class MockAction extends Action<void> {
     constructor(private store: string[]) {
         super();
     }
@@ -9,7 +9,7 @@ export class MockAction extends Action {
         this.store.push("Mock string");
     }
 
-    cancel(): void {
+    revert(): void {
         this.store.pop();
     }
 }

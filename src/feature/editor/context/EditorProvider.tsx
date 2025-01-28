@@ -5,6 +5,7 @@ import {INPUT_MODE} from "@feature/editor/enum";
 import {WebArchiveDriver, WebImageDriver} from "@feature/editor/driver";
 import {EditorState} from "@feature/editor/type";
 import {Entity, Parent} from "@feature/entity/type";
+import {Invoker} from "@feature/editor/service/Invoker";
 
 type Props = {
     children: JSX.Element | JSX.Element[];
@@ -13,6 +14,8 @@ type Props = {
 export function EditorProvider(props: Props): JSX.Element {
     const [selected, setSelected] = createSignal<Entity | undefined>();
     const [layer, setLayer] = createSignal<Entity & Parent | undefined>();
+
+    const invoker = new Invoker();
 
     const archiveDriver = new WebArchiveDriver();
     const imageDriver = new WebImageDriver();
@@ -42,6 +45,8 @@ export function EditorProvider(props: Props): JSX.Element {
     const value = {
         selected,
         setSelected,
+
+        invoker,
 
         layer,
         setLayer,

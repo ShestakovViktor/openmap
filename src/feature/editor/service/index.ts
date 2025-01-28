@@ -6,3 +6,4 @@ export * from "./initProject";
 export * from "./saveDataToBrowser";
 export * from "./exportProject";
 export * from "./compileProject";
+export * from "./Invoker";

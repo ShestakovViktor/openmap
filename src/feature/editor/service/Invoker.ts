@@ -1,31 +1,32 @@
-// import {Action} from "@core/action";
+import {Action} from "@feature/editor/action";
 
-// export class Invoker {
+export class Invoker {
 
-//     private executed: Action[] = [];
+    private executed: Action<any>[] = [];
 
-//     private canceled: Action[] = [];
+    private canceled: Action<any>[] = [];
 
-//     execute(action: Action): void {
-//         action.execute();
-//         this.executed.push(action);
-//         this.canceled.length = 0;
-//     }
+    execute<T>(action: Action<T>): T {
+        const result = action.execute();
+        this.executed.push(action);
+        this.canceled.length = 0;
+        return result;
+    }
 
-//     undo(): void {
-//         const action = this.executed.pop();
-//         if (!action) return;
+    undo(): void {
+        const action = this.executed.pop();
+        if (!action) return;
 
-//         action.cancel();
-//         this.canceled.push(action);
-//     }
+        action.revert();
+        this.canceled.push(action);
+    }
 
-//     redo(): void {
-//         const action = this.canceled.pop();
+    redo(): void {
+        const action = this.canceled.pop();
 
-//         if (!action) return;
+        if (!action) return;
 
-//         action.execute();
-//         this.executed.push(action);
-//     }
-// }
+        action.execute();
+        this.executed.push(action);
+    }
+}

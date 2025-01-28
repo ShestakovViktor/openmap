@@ -1,7 +1,7 @@
 import styles from "./CommandKit.module.scss";
 
 import {JSX} from "solid-js";
-import {SystemKit, InputKit} from "@feature/editor/widget";
+import {SystemToolkit, InputToolkit, EditToolkit} from "@feature/editor/widget";
 import {IDS} from "@enum";
 
 export function CommandKit(): JSX.Element {
@@ -10,8 +10,9 @@ export function CommandKit(): JSX.Element {
             id={IDS.COMMAND_KIT}
             class={styles.CommandKit}
         >
-            <SystemKit/>
-            <InputKit/>
+            <SystemToolkit/>
+            <EditToolkit/>
+            <InputToolkit/>
         </div>
     );
 }

@@ -1,38 +1,38 @@
-// import assert from "assert";
-// import {Invoker} from "@core";
-// import {MockAction} from "@core/action";
+import assert from "assert";
+import {Invoker} from "./Invoker";
+import {MockAction} from "@feature/editor/action";
 
-// describe("Invoker", () => {
-//     it("Execute", () => {
-//         const store: string[] = [];
-//         const action = new MockAction(store);
-//         const invoker = new Invoker();
-//         invoker.execute(action);
+describe("Invoker", () => {
+    it("Execute", () => {
+        const store: string[] = [];
+        const action = new MockAction(store);
+        const invoker = new Invoker();
+        invoker.execute(action);
 
-//         assert.equal(store.length, 1);
-//     });
+        assert.equal(store.length, 1);
+    });
 
-//     it("Undo", () => {
-//         const store: string[] = [];
-//         const action = new MockAction(store);
-//         const invoker = new Invoker();
-//         invoker.execute(action);
+    it("Undo", () => {
+        const store: string[] = [];
+        const action = new MockAction(store);
+        const invoker = new Invoker();
+        invoker.execute(action);
 
-//         invoker.undo();
+        invoker.undo();
 
-//         assert.equal(store.length, 0);
-//     });
+        assert.equal(store.length, 0);
+    });
 
-//     it("Redo", () => {
-//         const store: string[] = [];
-//         const action = new MockAction(store);
-//         const invoker = new Invoker();
-//         invoker.execute(action);
+    it("Redo", () => {
+        const store: string[] = [];
+        const action = new MockAction(store);
+        const invoker = new Invoker();
+        invoker.execute(action);
 
-//         invoker.undo();
+        invoker.undo();
 
-//         invoker.redo();
+        invoker.redo();
 
-//         assert.equal(store.length, 1);
-//     });
-// });
+        assert.equal(store.length, 1);
+    });
+});

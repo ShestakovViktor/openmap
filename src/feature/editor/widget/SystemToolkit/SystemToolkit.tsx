@@ -1,9 +1,7 @@
-import styles from "./SystemKit.module.scss";
+import styles from "./SystemToolkit.module.scss";
 import FileIconSvg from "@res/svg/file.svg";
-import DisketteIconSvg from "@res/svg/diskette.svg";
 import DownloadIconSvg from "@res/svg/download.svg";
 import SlidersIconSvg from "@res/svg/sliders.svg";
-import GearIconSvg from "@res/svg/gear.svg";
 import i18next from "i18next";
 
 import {JSX} from "solid-js";
@@ -14,13 +12,12 @@ import {useEditorContext} from "@feature/editor/context";
 import {
     compileProject,
     exportProject,
-    saveDataToBrowser,
 } from "@feature/editor/service";
 import {ProjectSettings} from "@feature/editor/widget";
 
 i18next.addResourceBundle("en", "editor", {SystemKit: en}, true, true);
 
-export function SystemKit(): JSX.Element {
+export function SystemToolkit(): JSX.Element {
     const storeCtx = useStoreContext();
     const {archiveDriver} = useEditorContext();
 
@@ -38,20 +35,7 @@ export function SystemKit(): JSX.Element {
         </Dialog>
     );
     return (
-        <Toolbar class={styles.SystemKit}>
-            <Button
-                class={styles.Button}
-                icon={DisketteIconSvg}
-                tooltip={i18next.t(
-                    "editor:SystemKit.saveProject",
-                    {postProcess: ["capitalize"]}
-                )}
-                onClick={() => {
-                    saveDataToBrowser(storeCtx.store)
-                        .catch(err => err);
-                }}
-            />
-
+        <Toolbar class={styles.SystemToolkit}>
             <Button
                 class={styles.Button}
                 icon={FileIconSvg}

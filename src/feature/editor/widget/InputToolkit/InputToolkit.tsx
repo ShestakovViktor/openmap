@@ -1,4 +1,4 @@
-import styles from "./InputKit.module.scss";
+import styles from "./InputToolkit.module.scss";
 import LoupeIconSvg from "@res/svg/loupe.svg";
 import CursorIconSvg from "@res/svg/cursor.svg";
 import MarkerIconSvg from "@res/svg/marker.svg";
@@ -12,7 +12,7 @@ import {INPUT_MODE, UI_MODE} from "@feature/editor/enum";
 import {useViewerContext} from "@feature/viewer/context";
 import {VIEWER_MODE} from "@feature/viewer/enum";
 
-export function InputKit(): JSX.Element {
+export function InputToolkit(): JSX.Element {
     const editorCtx = useEditorContext();
     const viewerCtx = useViewerContext();
     const [pressed, setPressed] = createSignal(0);
@@ -84,7 +84,7 @@ export function InputKit(): JSX.Element {
     });
 
     return (
-        <Toolbar class={styles.InputKit}>
+        <Toolbar class={styles.InputToolkit}>
             <For each={buttons}>
                 {(button, index) =>
                     <Button

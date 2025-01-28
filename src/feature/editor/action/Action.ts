@@ -1,10 +1,9 @@
-export class Action {
-    execute() {
-
+export class Action<T> {
+    execute(): T {
+        throw new Error("implement me");
     }
 
-    cancel() {
-
+    revert(): void {
+        throw new Error("implement me");
     }
-
 }
