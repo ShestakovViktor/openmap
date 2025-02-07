@@ -1,5 +1,5 @@
 import styles from "./Viewer.module.scss";
-import {JSX, createMemo, Show, For, createEffect} from "solid-js";
+import {JSX, createMemo, Show, For} from "solid-js";
 import {Portal} from "solid-js/web";
 
 import {useViewerContext} from "@feature/viewer/context";
@@ -7,8 +7,6 @@ import {Viewport} from "@feature/viewer/utility";
 import {EntityWidget} from "@feature/entity/widget";
 import {IDS} from "@enum";
 import {useStoreContext} from "@feature/store/context";
-import {assetToSrc} from "@feature/app/utiliy";
-import {Param} from "@type";
 import {ASSET_TYPE} from "@feature/asset/enum";
 
 export function Viewer(): JSX.Element {
@@ -32,9 +30,7 @@ export function Viewer(): JSX.Element {
         <div id={IDS.VIEWER} class={styles.Viewer} ref={onViewerMount} draggable="false">
             <For each={motions()}>
                 {(motion) => {
-                    const href = motion.path
-                        ? viewerCtx.path + motion.path
-                        : assetToSrc(motion);
+                    const href = viewerCtx.path + motion.path;
 
                     return (
                         <Portal mount={document.querySelector("head")!}>

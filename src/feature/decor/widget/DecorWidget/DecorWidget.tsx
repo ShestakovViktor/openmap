@@ -3,7 +3,6 @@ import ImageIconSvg from "@res/svg/image.svg";
 import {Accessor, JSX, Show, createMemo} from "solid-js";
 import {useViewerContext} from "@feature/viewer/context";
 
-import {assetToSrc} from "@feature/app/utiliy";
 import {useStoreContext} from "@feature/store/context";
 import {Icon} from "@shared/widget";
 import {Decor} from "@feature/decor/type";
@@ -34,9 +33,7 @@ export function DecorWidget(props: Props): JSX.Element {
 
         if (!prop) return undefined;
 
-        const src = prop.path
-            ? viewerCtx.path + prop.path
-            : assetToSrc(prop);
+        const src = viewerCtx.path + prop.path;
 
         return src;
     });

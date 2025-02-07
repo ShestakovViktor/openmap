@@ -22,7 +22,7 @@ export function MotionBrowser(props: Props): JSX.Element {
     const motionFormDialog = new Modal();
     motionFormDialog.render(
         <Dialog
-            class={styles.AssetFormDialog}
+            class={styles.MotionFormDialog}
             onClose={() => motionFormDialog.hide()}
         >
             <MotionForm onSubmit={() => {

@@ -16,9 +16,7 @@ import {StoreProvider} from "@feature/store/context";
 
     if (!path) throw new Error();
 
-    const response = await fetch(path + "/data.json");
-
-    console.log(path + "/data.json");
+    const response = await fetch(path + "data.json");
 
     const data = await response.json();
 

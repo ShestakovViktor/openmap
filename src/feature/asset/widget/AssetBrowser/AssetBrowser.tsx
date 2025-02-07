@@ -24,8 +24,6 @@ export function AssetBrowser(props: Props): JSX.Element {
     const storeCtx = useStoreContext();
 
     const assets = createMemo(() => {
-        console.log(storeCtx.store.asset.data[0]);
-
         return props.type
             ? storeCtx.store.asset.getByParams<Asset>({assetTypeId: props.type})
             : storeCtx.store.asset.getAll<Asset>();

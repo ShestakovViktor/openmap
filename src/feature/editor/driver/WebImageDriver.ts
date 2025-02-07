@@ -44,9 +44,8 @@ export class WebImageDriver implements ImageDriver {
             height: number;
             tiles: ImageTile[];
         }> {
-        const url = URL.createObjectURL(blob);
         const image = document.createElement("img");
-        image.src = url;
+        image.src = URL.createObjectURL(blob);
         await new Promise(resolve => image.onload = resolve);
 
         const canvas = document.createElement("canvas");
@@ -54,7 +53,7 @@ export class WebImageDriver implements ImageDriver {
         if (!context) throw new Error();
 
         const tile = 512;
-        const tiles: ImageTile[] = [];
+        const promises: Promise<ImageTile>[] = [];
 
         for (let y = 0; y < image.height; y += tile) {
             const heightRem = image.height - y;
@@ -72,24 +71,29 @@ export class WebImageDriver implements ImageDriver {
                     0, 0, tileWidth, tileHeight
                 );
 
-                const dataUrl = canvas.toDataURL(mime);
-                const data = dataUrl.split(/[;:,]/);
-                const size = atob(data[3]).length;
+                promises.push(
+                    new Promise<ImageTile>((resolve) => {
+                        canvas.toBlob((blob) => {
+                            if (!blob) return;
 
-                tiles.push({
-                    x,
-                    y,
-                    width: tileWidth,
-                    height: tileHeight,
-                    media: data[1],
-                    encoding: data[2],
-                    data: data[3],
-                    size,
-                });
+                            resolve({
+                                x,
+                                y,
+                                width: tileWidth,
+                                height: tileHeight,
+                                media: mime,
+                                size: blob.size,
+                                path: URL.createObjectURL(blob),
+                            });
+                        }, mime);
+                    })
+                );
             }
         }
 
         image.remove();
+
+        const tiles = await Promise.all(promises);
 
         return {
             width: image.width,

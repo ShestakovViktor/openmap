@@ -9,11 +9,12 @@ import {Button, Dialog, Modal, Toolbar} from "@shared/widget";
 import en from "./string/en.json";
 import {useStoreContext} from "@feature/store/context";
 import {useEditorContext} from "@feature/editor/context";
-import {
-    compileProject,
-    exportProject,
-} from "@feature/editor/service";
+import {archiveData, compileData} from "@feature/editor/service/data";
+
 import {ProjectSettings} from "@feature/editor/widget";
+import {Store} from "@feature/store";
+import {ArchiveDriver} from "@interface";
+import {downloadFile} from "@feature/editor/service/browser";
 
 i18next.addResourceBundle("en", "editor", {SystemKit: en}, true, true);
 
@@ -34,6 +35,19 @@ export function SystemToolkit(): JSX.Element {
             <ProjectSettings/>
         </Dialog>
     );
+
+    async function handleExport(): Promise<void> {
+        const data = storeCtx.store.extract();
+        const archive = await archiveData(archiveDriver, data);
+        downloadFile(archive, "test.ilto");
+    }
+
+    async function handleCompile(): Promise<void> {
+        const data = storeCtx.store.extract();
+        const archive = await compileData(archiveDriver, data);
+        downloadFile(archive, "test.ilto");
+    }
+
     return (
         <Toolbar class={styles.SystemToolkit}>
             <Button
@@ -43,10 +57,7 @@ export function SystemToolkit(): JSX.Element {
                     "editor:SystemKit.exportProject",
                     {postProcess: ["capitalize"]}
                 )}
-                onClick={() => {
-                    exportProject(storeCtx.store, archiveDriver)
-                        .catch(err => err);
-                }}
+                onClick={() => {void handleExport();}}
             />
 
             <Button
@@ -56,10 +67,7 @@ export function SystemToolkit(): JSX.Element {
                     "editor:SystemKit.compileProject",
                     {postProcess: ["capitalize"]}
                 )}
-                onClick={() => {
-                    compileProject(storeCtx.store, archiveDriver)
-                        .catch(err => err);
-                }}
+                onClick={() => {void handleCompile();}}
             />
 
             <Button
@@ -84,3 +92,4 @@ export function SystemToolkit(): JSX.Element {
         </Toolbar>
     );
 }
+

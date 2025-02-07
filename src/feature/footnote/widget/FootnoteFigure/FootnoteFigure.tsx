@@ -1,12 +1,10 @@
 import en from "./string/en.json";
-import styles from "./FootnoteFigure.module.scss";
 
 import {createMemo, JSX} from "solid-js";
 import i18next from "i18next";
 import {useStoreContext} from "@feature/store/context";
 import {Figure as Fig} from "@feature/figure/type";
 import {useViewerContext} from "@feature/viewer/context";
-import {assetToSrc} from "@feature/app/utiliy";
 
 i18next.addResourceBundle("en", "prop", {"PropSelect": en}, true, true);
 
@@ -28,9 +26,7 @@ export function FootnoteFigure(props: Props): JSX.Element {
 
         if (!figure) return undefined;
 
-        const src = figure.path
-            ? viewerCtx.path + figure.path
-            : assetToSrc(figure);
+        const src = viewerCtx.path + figure.path;
 
         return src;
     });

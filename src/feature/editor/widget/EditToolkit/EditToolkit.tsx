@@ -8,7 +8,8 @@ import {Button, Toolbar} from "@shared/widget";
 import {JSX} from "solid-js";
 import i18next from "i18next";
 
-import {saveDataToBrowser} from "@feature/editor/service";
+import {archiveData} from "@feature/editor/service/data";
+import {putBlobToBrowser} from "@feature/editor/service/browser";
 import {useStoreContext} from "@feature/store/context";
 import {useEditorContext} from "@feature/editor/context";
 
@@ -17,6 +18,12 @@ i18next.addResourceBundle("en", "editor", {EditToolkit: en}, true, true);
 export function EditToolkit(): JSX.Element {
     const storeCtx = useStoreContext();
     const editorCtx = useEditorContext();
+
+    async function handleSave(): Promise<void> {
+        const data = storeCtx.store.extract();
+        const archive = await archiveData(editorCtx.archiveDriver, data);
+        await putBlobToBrowser("save.ilto", archive);
+    }
 
     return (
         <Toolbar class={styles.SystemToolkit}>
@@ -27,10 +34,7 @@ export function EditToolkit(): JSX.Element {
                     "editor:EditToolkit.save",
                     {postProcess: ["capitalize"]}
                 )}
-                onClick={() => {
-                    saveDataToBrowser(storeCtx.store)
-                        .catch(err => err);
-                }}
+                onClick={() => {void handleSave();}}
             />
             <Button
                 class={styles.Button}

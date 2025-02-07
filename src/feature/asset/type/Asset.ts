@@ -7,5 +7,4 @@ export type Asset = {
     path: string;
     data: string;
     media: string;
-    encoding: string;
 };

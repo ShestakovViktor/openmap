@@ -1,7 +1,6 @@
 import styles from "./TileWidget.module.scss";
 import {Accessor, JSX, createMemo} from "solid-js";
 import {Tile} from "@feature/tile/type";
-import {assetToSrc} from "@feature/app/utiliy";
 import {useStoreContext} from "@feature/store/context";
 import {useViewerContext} from "@feature/viewer/context";
 
@@ -10,8 +9,8 @@ type Props = {
 };
 
 export function TileWidget({entity}: Props): JSX.Element {
-    const {store} = useStoreContext();
-    const {path} = useViewerContext();
+    const storeCtx = useStoreContext();
+    const viewerCtx = useViewerContext();
 
     const style = createMemo((): JSX.CSSProperties => {
         return {transform: `translate3d(${entity().x}px, ${entity().y}px, 0)`};
@@ -24,11 +23,13 @@ export function TileWidget({entity}: Props): JSX.Element {
             return "";
         }
         else {
-            const asset = store.asset.getById(imageId);
+            const tile = storeCtx.store.asset.getById(imageId);
 
-            if (!asset) throw new Error();
+            if (!tile) throw new Error();
 
-            return path + asset.path || assetToSrc(asset);
+            const src = viewerCtx.path + tile.path;
+
+            return src;
         }
     });
 

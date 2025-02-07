@@ -1,5 +1,5 @@
 import {WebImageDriver} from "@feature/editor/driver";
-import {initData} from "@feature/editor/service";
+import {initData} from "@feature/editor/service/data";
 import {Parent} from "@feature/entity/type";
 import {Layer} from "@feature/layer/type";
 import {Store} from "@feature/store";
@@ -37,10 +37,8 @@ export async function initProject(params: {
         const image = store.asset.add<Image>({
             assetTypeId: ASSET_TYPE.IMAGE,
             name: `tile ${index + 1}`,
-            data: imageTile.data,
             media: imageTile.media,
-            encoding: imageTile.encoding,
-            path: "",
+            path: imageTile.path,
             size: imageTile.size,
         });
 

@@ -19,14 +19,14 @@ type Props = {
 export function PropBrowser(props: Props): JSX.Element {
     const storeCtx = useStoreContext();
 
-    const assetFormDialog = new Modal();
-    assetFormDialog.render(
+    const propFormDialog = new Modal();
+    propFormDialog.render(
         <Dialog
-            class={styles.AssetFormDialog}
-            onClose={() => assetFormDialog.hide()}
+            class={styles.PropFormDialog}
+            onClose={() => propFormDialog.hide()}
         >
             <PropForm onSubmit={() => {
-                assetFormDialog.hide();
+                propFormDialog.hide();
             }}/>
         </Dialog>
     );
@@ -36,7 +36,7 @@ export function PropBrowser(props: Props): JSX.Element {
             type={ASSET_TYPE.PROP}
             selected={props.selected}
             onCreate={() => {
-                assetFormDialog.show();
+                propFormDialog.show();
             }}
             onDelete={(ids) => {
                 ids.forEach((id) => {

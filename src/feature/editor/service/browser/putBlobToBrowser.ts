@@ -1,7 +1,7 @@
-import {Store} from "@feature/store";
-
-export async function saveDataToBrowser(store: Store): Promise<void> {
-    const data = store.extract();
+export async function putBlobToBrowser(
+    name: string,
+    file: Blob
+): Promise<void> {
     const persistent = await navigator.storage.persist();
     if (persistent) {
         console.log("Storage will not be cleared except by explicit user action");
@@ -12,8 +12,8 @@ export async function saveDataToBrowser(store: Store): Promise<void> {
 
     const root = await navigator.storage.getDirectory();
 
-    const dataFileHandle = await root.getFileHandle("data.om", {create: true});
+    const dataFileHandle = await root.getFileHandle(name, {create: true});
     const dataFileWritableStream = await dataFileHandle.createWritable();
-    await dataFileWritableStream.write(JSON.stringify(data));
+    await dataFileWritableStream.write(file);
     await dataFileWritableStream.close();
 }

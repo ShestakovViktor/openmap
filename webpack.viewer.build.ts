@@ -21,7 +21,7 @@ export default merge<Configuration>(common, {
             templateParameters: {
                 bundle: "<script defer src=\"viewer.js\"></script>",
                 title: "Viewer",
-                src: "./data",
+                src: "./project/",
             },
             inject: false,
             minify: false,

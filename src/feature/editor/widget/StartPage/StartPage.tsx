@@ -5,10 +5,10 @@ import {Button, Page} from "@shared/widget";
 
 import i18next from "i18next";
 import {JSX} from "solid-js";
-import {Data} from "@type";
 import {useStartupContext} from "@feature/editor/context";
-import {importDataFromArchive} from "@feature/editor/service";
-import {WebArchiveDriver} from "@feature/editor/driver";
+import {importData} from "@feature/editor/service/data";
+import {uploadFile} from "@feature/editor/service/browser/uploadFIle";
+import {getBlobFromBrowser} from "@feature/editor/service/browser";
 
 i18next.addResourceBundle("en", "editor", {StartChoice: en}, true, true);
 
@@ -18,30 +18,15 @@ export function StartPage(): JSX.Element {
     const [,setPage] = startupCtx.pageSignal;
 
     async function handleProjectRestore(): Promise<void> {
-        const root = await navigator.storage.getDirectory();
-        const dataFileHandle = await root.getFileHandle("data.om");
-        const dataFile = await dataFileHandle.getFile();
-        const dataString = await dataFile.text();
-        const data = JSON.parse(dataString) as Data;
-
+        const file = await getBlobFromBrowser("save.ilto");
+        const data = await importData(file, startupCtx.archiveDriver);
         setData(data);
     }
 
-    function handleProjectUpload(): void {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = ".om";
-        input.click();
-        input.addEventListener("change", (): void => {
-            if (!input.files?.length) return;
-            const file = input.files[0];
-
-            const archiveDriver = new WebArchiveDriver();
-
-            importDataFromArchive(archiveDriver, file)
-                .then((data) => setData(data))
-                .catch(error => new Error(error));
-        });
+    async function handleProjectUpload(): Promise<void> {
+        const file = await uploadFile({type: "file", accept: ".ilto"});
+        const data = await importData(file, startupCtx.archiveDriver);
+        setData(data);
     }
 
     return (
@@ -59,7 +44,7 @@ export function StartPage(): JSX.Element {
                     "editor:StartChoice.continue",
                     {postProcess: ["capitalize"]}
                 )}
-                onClick={() => handleProjectUpload()}
+                onClick={() => {void handleProjectUpload();}}
             />
 
             <Button
@@ -67,10 +52,7 @@ export function StartPage(): JSX.Element {
                     "editor:StartChoice.load",
                     {postProcess: ["capitalize"]}
                 )}
-                onClick={() => {
-                    handleProjectRestore()
-                        .catch((error) => {throw new Error(error);});
-                }}
+                onClick={() => {void handleProjectRestore();}}
             />
         </Page>
     );

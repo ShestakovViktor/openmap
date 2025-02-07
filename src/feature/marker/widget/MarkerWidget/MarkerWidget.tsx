@@ -1,7 +1,14 @@
 import styles from "./MarkerWidget.module.scss";
 import MarkerIconSvg from "@res/svg/marker.svg";
-import {Accessor, JSX, Show, createEffect, createMemo, createSignal, on} from "solid-js";
-import {assetToSrc} from "@feature/app/utiliy";
+import {
+    JSX,
+    Show,
+    Accessor,
+    on,
+    createEffect,
+    createMemo,
+    createSignal,
+} from "solid-js";
 import {EntityWidget} from "@feature/entity/widget";
 import {useStoreContext} from "@feature/store/context";
 import {Icon} from "@shared/widget";
@@ -43,9 +50,7 @@ export function MarkerWidget(props: Props): JSX.Element {
 
         if (!prop) return undefined;
 
-        const src = prop.path
-            ? viewerCtx.path + prop.path
-            : assetToSrc(prop);
+        const src = viewerCtx.path + prop.path;
 
         return src;
     });

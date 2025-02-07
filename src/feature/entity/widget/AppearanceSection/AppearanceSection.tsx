@@ -7,7 +7,6 @@ import MotionIconSvg from "@res/svg/motion.svg";
 import {Button, Dialog, Icon, Modal, Section, Toolbar} from "@shared/widget";
 import {Accessor, JSX, Show, createMemo} from "solid-js";
 import {PropBrowser} from "@feature/prop/widget";
-import {assetToSrc} from "@feature/app/utiliy";
 import {useStoreContext} from "@feature/store/context";
 import {MotionBrowser} from "@feature/motion/widget";
 import {Entity} from "@feature/entity/type";
@@ -26,21 +25,19 @@ type Props = {
 };
 
 export function AppearanceSection(props: Props): JSX.Element {
-    const {store} = useStoreContext();
-    const {path} = useViewerContext();
+    const storeCtx = useStoreContext();
+    const viewerCtx = useViewerContext();
 
     const propSrc = createMemo((): string | undefined => {
         const propId = props.entity().propId;
 
         if (!propId) return undefined;
 
-        const prop = store.asset.getById<Prop>(propId);
+        const prop = storeCtx.store.asset.getById<Prop>(propId);
 
         if (!prop) return undefined;
 
-        const src = prop.path
-            ? path + prop.path
-            : assetToSrc(prop);
+        const src = viewerCtx.path + prop.path;
 
         return src;
     });
@@ -59,7 +56,7 @@ export function AppearanceSection(props: Props): JSX.Element {
             <PropBrowser
                 selected={selectedProp()}
                 onSelect={(ids: number[]) => {
-                    store.entity.set<Entity & {propId: number}>(
+                    storeCtx.store.entity.set<Entity & {propId: number}>(
                         props.entity().id,
                         {propId: ids[0]}
                     );
@@ -74,7 +71,7 @@ export function AppearanceSection(props: Props): JSX.Element {
 
         if (!motionId) return undefined;
 
-        const motion = store.asset.getById<Motion>(motionId);
+        const motion = storeCtx.store.asset.getById<Motion>(motionId);
 
         if (!motion) return undefined;
 
@@ -99,7 +96,7 @@ export function AppearanceSection(props: Props): JSX.Element {
             <MotionBrowser
                 selected={selectedMotion()}
                 onSelect={(ids: number[]) => {
-                    store.entity.set<Entity & {motionId: number}>(
+                    storeCtx.store.entity.set<Entity & {motionId: number}>(
                         props.entity().id,
                         {motionId: ids[0]}
                     );

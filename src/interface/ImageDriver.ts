@@ -4,9 +4,8 @@ export type ImageTile = {
     width: number;
     height: number;
     media: string;
-    encoding: string;
-    data: string;
     size: number;
+    path: string;
 };
 
 export interface ImageDriver {

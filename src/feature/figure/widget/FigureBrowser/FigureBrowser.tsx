@@ -19,13 +19,13 @@ type Props = {
 export function FigureBrowser(props: Props): JSX.Element {
     const storeCtx = useStoreContext();
 
-    const assetFormDialog = new Modal();
-    assetFormDialog.render(
+    const FigureFormDialog = new Modal();
+    FigureFormDialog.render(
         <Dialog
-            class={styles.AssetFormDialog}
-            onClose={() => assetFormDialog.hide()}
+            class={styles.FigureFormDialog}
+            onClose={() => FigureFormDialog.hide()}
         >
-            <FigureForm onSubmit={() => assetFormDialog.hide()}/>
+            <FigureForm onSubmit={() => FigureFormDialog.hide()}/>
         </Dialog>
     );
 
@@ -34,7 +34,7 @@ export function FigureBrowser(props: Props): JSX.Element {
             type={ASSET_TYPE.FIGURE}
             selected={props.selected}
             onCreate={() => {
-                assetFormDialog.show();
+                FigureFormDialog.show();
             }}
             onDelete={(ids) => {
                 ids.forEach((id) => {
