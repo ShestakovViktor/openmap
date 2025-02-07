@@ -3,7 +3,7 @@ import {ViewerContextType, useViewerContext} from "@feature/viewer/context";
 import {EditorContexType, useEditorContext} from "@feature/editor/context";
 import {StoreContextType, useStoreContext} from "@feature/store/context";
 import {UI_MODE} from "@feature/editor/enum";
-import {MarkerCreateAction} from "@feature/editor/action";
+import {CreateMarkerAction} from "@feature/marker/action";
 
 export class MarkerCreate extends InputMode {
     private storeCtx: StoreContextType;
@@ -28,15 +28,12 @@ export class MarkerCreate extends InputMode {
         );
 
         const marker = this.editorCtx.invoker.execute(
-            new MarkerCreateAction(this.storeCtx, this.editorCtx, x, y)
+            new CreateMarkerAction(this.storeCtx, this.editorCtx, x, y)
         );
 
         this.editorCtx.setSelected(marker);
-        this.editorCtx.setState({
-            dockArea: {items: [UI_MODE.ENTITY_FORM]},
-        });
+        this.editorCtx.setState({dockArea: {items: [UI_MODE.ENTITY_FORM]}});
 
         event.preventDefault();
     }
-
 }

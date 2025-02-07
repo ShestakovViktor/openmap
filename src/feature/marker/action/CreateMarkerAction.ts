@@ -2,12 +2,12 @@ import {ENTITY_TYPE} from "@feature/entity/enum";
 import {Footnote} from "@feature/footnote/type";
 import {Layer} from "@feature/layer/type";
 import {Marker} from "@feature/marker/type";
-import {Action} from "./Action";
+import {Action} from "../../editor/action/Action";
 import {StoreContextType} from "@feature/store/context";
 import {EditorContexType} from "@feature/editor/context";
 import {Parent} from "@feature/entity/type";
 
-export class MarkerCreateAction extends Action<Marker> {
+export class CreateMarkerAction extends Action<Marker> {
     private parentId?: number;
 
     private markerId?: number;
